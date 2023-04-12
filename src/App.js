@@ -1,13 +1,13 @@
-import "./styles/App.scss";
-import { Button } from "react-bootstrap";
-import Header from "./components/Header";
+import { Route, Routes } from "react-router";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
 
 function App() {
   return (
-    <>
-      <Header />
-      <Button>test</Button>
-    </>
+    <Routes>
+      <Route path="/*" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+    </Routes>
   );
 }
 
