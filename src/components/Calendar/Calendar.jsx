@@ -1,7 +1,33 @@
 import React from "react";
+import styled from "styled-components";
+import SideBar from "../SideBar/SideBar";
+import { Container } from "react-bootstrap";
+
+const Styles = styled.div`
+  .calendar-wrapper {
+    width: 100%;
+    height: 100vh;
+    background: #f6f6f6;
+  }
+`;
 
 const Calendar = () => {
-  return <div>Calendar</div>;
+  return (
+    <Styles>
+      <div className="calendar-wrapper">
+        <SideBar
+          calendar
+          filters={[
+            { title: "Важные" },
+            { title: "Оплачиваемые" },
+            { title: "Завершенные" },
+          ]}
+          search
+        />
+        <Container>Calendar</Container>
+      </div>
+    </Styles>
+  );
 };
 
 export default Calendar;

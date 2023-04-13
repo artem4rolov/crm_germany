@@ -3,6 +3,9 @@ import { Container } from "react-bootstrap";
 
 import CalendarImage from "../../assets/icon_calendar.svg";
 import SettingsImage from "../../assets/icon_setting.svg";
+import SearchImage from "../../assets/icon_search.svg";
+import ImportImage from "../../assets/icon_download.svg";
+import ExportImage from "../../assets/icon_upload.svg";
 import styled from "styled-components";
 
 const Styles = styled.div`
@@ -15,15 +18,21 @@ const Styles = styled.div`
       display: flex;
       flex-direction: row;
       flex-wrap: no-wrap;
-      gap: 40px;
+      justify-content: space-between;
+
+      .sidebar-left {
+        display: flex;
+        gap: 30px;
+      }
     }
   }
 
   .sidebar-calendar {
     max-width: 210px;
+    height: 40px;
     border: 1px solid #bebebe;
     border-radius: 4px;
-    padding: 8px 10px;
+    padding: 2px 10px;
     cursor: pointer;
 
     display: flex;
@@ -50,6 +59,8 @@ const Styles = styled.div`
   }
 
   .sidebar-settings {
+    width: 40px;
+    height: 40px;
     border: 1px solid #bebebe;
     display: flex;
     justify-content: center;
@@ -75,7 +86,7 @@ const Styles = styled.div`
     .check-block {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 3px;
 
       input {
         width: 18px;
@@ -83,12 +94,61 @@ const Styles = styled.div`
       }
 
       label {
-        margin-left: 6px;
+        margin-left: 3px;
         cursor: pointer;
         font-weight: 400;
         font-size: 14px;
         line-height: 19px;
         color: #4b4e51;
+      }
+    }
+  }
+
+  .sidebar-download {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    .import,
+    .export {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 19px;
+      color: #676767;
+
+      &:hover {
+        border-bottom: 1px solid #354a5f;
+      }
+    }
+  }
+
+  .sidebar-search {
+    border: 1px solid #bebebe;
+    border-radius: 4px;
+    height: 40px;
+    padding: 10px;
+    width: 450px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+
+    input {
+      border: none;
+      width: 400px;
+      outline: none;
+
+      &:focus {
+        border: none;
+      }
+
+      &:active {
+        border: none;
       }
     }
   }
@@ -101,22 +161,24 @@ const SideBar = (props) => {
     <Styles>
       <div className="sidebar">
         <Container>
-          <div className="sidebar-calendar">
-            <img src={CalendarImage} alt="" />
-            <div className="start-date">Feb 2022</div>
-            <div className="finish-date">Mai 2023</div>
-          </div>
-          {/* если переданы настройки - рендерим их */}
+          <div className="sidebar-left">
+            <div className="sidebar-calendar">
+              <img src={CalendarImage} alt="" />
+              <div className="start-date">Feb 2022</div>
+              <div className="finish-date">Mai 2023</div>
+            </div>
 
-          <div className="sidebar-settings">
-            <img src={SettingsImage} alt="" />
-          </div>
+            {/* если переданы настройки - рендерим их */}
+            {props.settings && (
+              <div className="sidebar-settings">
+                <img src={SettingsImage} alt="" />
+              </div>
+            )}
 
-          {/* если переданы фильтры - рендерим их */}
-          {filters && (
-            <div className="sidebar-filters">
-              {filters &&
-                filters.map((filter, index) => {
+            {/* если переданы фильтры - рендерим их */}
+            {props.filters && (
+              <div className="sidebar-filters">
+                {props.filters.map((filter, index) => {
                   const { title } = filter;
 
                   return (
@@ -126,19 +188,31 @@ const SideBar = (props) => {
                     </div>
                   );
                 })}
+              </div>
+            )}
+          </div>
+          {/* если переданы кнопки загрузки и выгрузки - рендерим их */}
+          {props.download && (
+            <div className="sidebar-download">
+              <div className="import">
+                <img src={ImportImage} alt="import icon" />
+                <span>Загрузить</span>
+              </div>
+              <div className="export">
+                <img src={ExportImage} alt="export icon" />
+                <span>Выгрузить</span>
+              </div>
             </div>
           )}
           {/* если передан поиск - рендерим его */}
           {props.search && (
             <div className="sidebar-search">
-              <input type="search" />
-            </div>
-          )}
-          {/* если переданы кнопки загрузки и выгрузки - рендерим их */}
-          {props.download && (
-            <div className="sidebar-download">
-              <span>Вагрузить</span>
-              <span>Выгрузить</span>
+              <img src={SearchImage} alt="search icon" />
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Введи название проекта, контракта или праздника"
+              />
             </div>
           )}
         </Container>

@@ -28,7 +28,10 @@ const Projects = () => {
   return (
     <Styles>
       <div className="projects-wrapper">
-        <SideBar />
+        <SideBar
+          filters={[{ title: "Важные" }, { title: "Очистить пустые" }]}
+          search
+        />
         <Container>
           <div>
             Projects
