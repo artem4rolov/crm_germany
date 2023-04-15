@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import SideBar from "../SideBar/SideBar";
+import SideBar from "../../components/SideBar/SideBar";
 import { Container } from "react-bootstrap";
 
 const Styles = styled.div`

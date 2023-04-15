@@ -1,25 +1,25 @@
 import React from "react";
 import { Container } from "react-bootstrap";
-import SideBar from "../SideBar/SideBar";
 import styled from "styled-components";
+import SideBar from "../../components/SideBar/SideBar";
 
 const Styles = styled.div`
-  .dashboard-wrapper {
+  .holidays-wrapper {
     width: 100%;
     height: 100vh;
     background: #f6f6f6;
   }
 `;
 
-const Dashboard = () => {
+const Holidays = () => {
   return (
     <Styles>
-      <div className="dashboard-wrapper">
-        <SideBar calendar settings search />
-        <Container>Dashboard</Container>
+      <div className="holidays-wrapper">
+        <SideBar calendar download />
+        <Container>Holidays</Container>
       </div>
     </Styles>
   );
 };
 
-export default Dashboard;
+export default Holidays;

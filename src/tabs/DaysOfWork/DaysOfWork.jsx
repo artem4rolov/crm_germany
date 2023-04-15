@@ -1,7 +1,7 @@
 import React from "react";
 import { Container } from "react-bootstrap";
 import styled from "styled-components";
-import SideBar from "../SideBar/SideBar";
+import SideBar from "../../components/SideBar/SideBar";
 
 const Styles = styled.div`
   .daysofwork-wrapper {

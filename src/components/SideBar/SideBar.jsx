@@ -7,6 +7,8 @@ import SearchImage from "../../assets/icon_search.svg";
 import ImportImage from "../../assets/icon_download.svg";
 import ExportImage from "../../assets/icon_upload.svg";
 import styled from "styled-components";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const Styles = styled.div`
   .sidebar {
@@ -24,6 +26,12 @@ const Styles = styled.div`
         display: flex;
         gap: 30px;
       }
+    }
+
+    &.sticky-nav {
+      top: 0;
+      position: fixed;
+      z-index: 1;
     }
   }
 
@@ -157,9 +165,29 @@ const Styles = styled.div`
 const filters = [{ title: "Важные" }, { title: "Очистить пустые" }];
 
 const SideBar = (props) => {
+  // стейт для закрепления сайд-бара наверху
+  const [stickyClass, setStickyClass] = useState("relative");
+
+  // функция для закрпеления сайдбара наверху
+  const stickNavbar = () => {
+    if (window !== undefined) {
+      let windowHeight = window.scrollY;
+      windowHeight > 100 ? setStickyClass("sticky-nav") : setStickyClass("");
+    }
+  };
+
+  // следим за скроллом
+  useEffect(() => {
+    window.addEventListener("scroll", stickNavbar);
+
+    return () => {
+      window.removeEventListener("scroll", stickNavbar);
+    };
+  }, []);
+
   return (
     <Styles>
-      <div className="sidebar">
+      <div className={`sidebar ${stickyClass}`}>
         <Container>
           <div className="sidebar-left">
             <div className="sidebar-calendar">
