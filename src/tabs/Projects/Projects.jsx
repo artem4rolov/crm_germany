@@ -66,15 +66,15 @@ const Styles = styled.div`
 `;
 
 const columnTitle = [
-  { title: "KW", size: "col" },
-  { title: "Datum", size: "col-1" },
-  { title: "Projekt", size: "col-3" },
-  { title: "Von", size: "col" },
-  { title: "Bis", size: "col" },
-  { title: "Pause", size: "col" },
-  { title: "Zeit", size: "col" },
-  { title: "PT", size: "col" },
-  { title: "Tätigkeiten", size: "col-4" },
+  { title: "KW", classes: "col" },
+  { title: "Datum", classes: "col-1" },
+  { title: "Projekt", classes: "col-3" },
+  { title: "Von", classes: "col" },
+  { title: "Bis", classes: "col" },
+  { title: "Pause", classes: "col" },
+  { title: "Zeit", classes: "col" },
+  { title: "PT", classes: "col" },
+  { title: "Tätigkeiten", classes: "col-4" },
 ];
 
 const Projects = () => {
@@ -86,20 +86,11 @@ const Projects = () => {
       <div className="projects-wrapper">
         <SideBar
           filters={[{ title: "Важные" }, { title: "Очистить пустые" }]}
+          columnTitle={columnTitle}
           search
         />
         <Container>
-          Projects
           <Table responsive>
-            <thead>
-              <tr className="table-titles">
-                {columnTitle.map((item, index) => (
-                  <th className={item.size} key={index}>
-                    {item.title}
-                  </th>
-                ))}
-              </tr>
-            </thead>
             <tbody>
               {data.map((row, index) => (
                 <tr
@@ -112,6 +103,7 @@ const Projects = () => {
                   {row.map((col, index) => (
                     <th key={index}>{col}</th>
                   ))}
+                  {/* модалка в углу строки при клике на строку */}
                   {index === activeRow ? (
                     <th className="row-modal">
                       <div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Container } from "react-bootstrap";
+import { Container, Table } from "react-bootstrap";
 
 import CalendarImage from "../../assets/icon_calendar.svg";
 import SettingsImage from "../../assets/icon_setting.svg";
@@ -11,20 +11,36 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 const Styles = styled.div`
+  tbody,
+  td,
+  tfoot,
+  th,
+  thead,
+  tr {
+    border: none;
+  }
+
+  .table {
+    margin-bottom: 0;
+  }
+
   .sidebar {
     width: 100%;
-    padding: 17px 0;
     background: #fff;
 
-    .container {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: no-wrap;
-      justify-content: space-between;
+    .sidebar-table-title {
+      border-top: 1px solid #e1e1e1;
+    }
 
-      .sidebar-left {
+    .container {
+      .sidebar-top {
         display: flex;
-        gap: 30px;
+        justify-content: space-between;
+
+        .sidebar-left {
+          display: flex;
+          gap: 30px;
+        }
       }
     }
 
@@ -162,8 +178,6 @@ const Styles = styled.div`
   }
 `;
 
-const filters = [{ title: "Важные" }, { title: "Очистить пустые" }];
-
 const SideBar = (props) => {
   // стейт для закрепления сайд-бара наверху
   const [stickyClass, setStickyClass] = useState("relative");
@@ -172,7 +186,7 @@ const SideBar = (props) => {
   const stickNavbar = () => {
     if (window !== undefined) {
       let windowHeight = window.scrollY;
-      windowHeight > 100 ? setStickyClass("sticky-nav") : setStickyClass("");
+      windowHeight > 60 ? setStickyClass("sticky-nav") : setStickyClass("");
     }
   };
 
@@ -189,61 +203,82 @@ const SideBar = (props) => {
     <Styles>
       <div className={`sidebar ${stickyClass}`}>
         <Container>
-          <div className="sidebar-left">
-            <div className="sidebar-calendar">
-              <img src={CalendarImage} alt="" />
-              <div className="start-date">Feb 2022</div>
-              <div className="finish-date">Mai 2023</div>
-            </div>
+          <div className="sidebar-top">
+            <div className="sidebar-left">
+              <div className="sidebar-calendar">
+                <img src={CalendarImage} alt="" />
+                <div className="start-date">Feb 2022</div>
+                <div className="finish-date">Mai 2023</div>
+              </div>
 
-            {/* если переданы настройки - рендерим их */}
-            {props.settings && (
-              <div className="sidebar-settings">
-                <img src={SettingsImage} alt="" />
+              {/* если переданы настройки - рендерим их */}
+              {props.settings && (
+                <div className="sidebar-settings">
+                  <img src={SettingsImage} alt="" />
+                </div>
+              )}
+
+              {/* если переданы фильтры - рендерим их */}
+              {props.filters && (
+                <div className="sidebar-filters">
+                  {props.filters.map((filter, index) => {
+                    const { title } = filter;
+
+                    return (
+                      <div className="check-block" key={index}>
+                        <input type="checkbox" id={title} />
+                        <label htmlFor={title}>{title}</label>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+            {/* если переданы кнопки загрузки и выгрузки - рендерим их */}
+            {props.download && (
+              <div className="sidebar-download">
+                <div className="import">
+                  <img src={ImportImage} alt="import icon" />
+                  <span>Загрузить</span>
+                </div>
+                <div className="export">
+                  <img src={ExportImage} alt="export icon" />
+                  <span>Выгрузить</span>
+                </div>
               </div>
             )}
-
-            {/* если переданы фильтры - рендерим их */}
-            {props.filters && (
-              <div className="sidebar-filters">
-                {props.filters.map((filter, index) => {
-                  const { title } = filter;
-
-                  return (
-                    <div className="check-block" key={index}>
-                      <input type="checkbox" id={title} />
-                      <label htmlFor={title}>{title}</label>
-                    </div>
-                  );
-                })}
+            {/* если передан поиск - рендерим его */}
+            {props.search && (
+              <div className="sidebar-search">
+                <img src={SearchImage} alt="search icon" />
+                <input
+                  type="text"
+                  className="search-input"
+                  placeholder="Введи название проекта, контракта или праздника"
+                />
               </div>
             )}
           </div>
-          {/* если переданы кнопки загрузки и выгрузки - рендерим их */}
-          {props.download && (
-            <div className="sidebar-download">
-              <div className="import">
-                <img src={ImportImage} alt="import icon" />
-                <span>Загрузить</span>
-              </div>
-              <div className="export">
-                <img src={ExportImage} alt="export icon" />
-                <span>Выгрузить</span>
-              </div>
-            </div>
-          )}
-          {/* если передан поиск - рендерим его */}
-          {props.search && (
-            <div className="sidebar-search">
-              <img src={SearchImage} alt="search icon" />
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Введи название проекта, контракта или праздника"
-              />
-            </div>
-          )}
         </Container>
+        {/* заголовки для каждой отдельной таблицы */}
+        {props.columnTitle && (
+          <div className="sidebar-table-title">
+            <Container>
+              <Table responsive>
+                <thead>
+                  <tr className="table-titles">
+                    {props &&
+                      props.columnTitle.map((item, index) => (
+                        <th className={item.classes} key={index}>
+                          {item.title}
+                        </th>
+                      ))}
+                  </tr>
+                </thead>
+              </Table>
+            </Container>
+          </div>
+        )}
       </div>
     </Styles>
   );
