@@ -109,6 +109,8 @@ const Contracts = () => {
     setCurrentProject(project);
   };
 
+  console.log("render");
+
   return (
     <Styles>
       <div className="contracts-wrapper">
@@ -265,17 +267,20 @@ const Contracts = () => {
         </Container>
       </div>
       {/* модальные окна */}
+      {/* создание нового ПРОЕКТА */}
       {toggleNewProjectModal && (
         <Modal
+          important
           new_project
-          title="new"
+          title="Proekt erstellen"
           toggle={() => setToggleNewProjectModal(false)}
         />
       )}
+      {/* редактирование CURRENT ПРОЕКТА */}
       {toggleCurrentProjectModal && (
         <Modal
           current_project={currentProject}
-          title="current"
+          title={currentProject.project}
           toggle={() => setToggleCurrentProjectModal(false)}
         />
       )}
@@ -283,7 +288,7 @@ const Contracts = () => {
       {toggleProjectDataModal && (
         <Modal
           current_project_data={currentProject}
-          title="current_data"
+          title={currentProject.project}
           toggle={() => setToggleProjectDataModal(false)}
         />
       )}
