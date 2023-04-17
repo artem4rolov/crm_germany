@@ -10,6 +10,8 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useEffect } from "react";
 
+import data from "../../mock/table-contracts.json";
+
 const Styles = styled.div`
   tbody,
   td,
@@ -28,12 +30,25 @@ const Styles = styled.div`
     width: 100%;
     background: #fff;
 
+    .hidden {
+      display: none;
+
+      &.sticky-nav {
+        display: block;
+
+        &.side-bar-titles {
+          border-top: 1px solid #e1e1e1;
+        }
+      }
+    }
+
     .sidebar-table-title {
       border-top: 1px solid #e1e1e1;
     }
 
     .container {
       .sidebar-top {
+        padding: 15px 0;
         display: flex;
         justify-content: space-between;
 
@@ -115,6 +130,7 @@ const Styles = styled.div`
       input {
         width: 18px;
         height: 18px;
+        border-radius: 3px;
       }
 
       label {
@@ -226,7 +242,11 @@ const SideBar = (props) => {
 
                     return (
                       <div className="check-block" key={index}>
-                        <input type="checkbox" id={title} />
+                        <input
+                          type="checkbox"
+                          className="check-box"
+                          id={title}
+                        />
                         <label htmlFor={title}>{title}</label>
                       </div>
                     );
@@ -262,7 +282,7 @@ const SideBar = (props) => {
         </Container>
         {/* заголовки для каждой отдельной таблицы */}
         {props.columnTitle && (
-          <div className="sidebar-table-title">
+          <div className={`hidden ${stickyClass} side-bar-titles`}>
             <Container>
               <Table responsive>
                 <thead>

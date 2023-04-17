@@ -17,11 +17,16 @@ const Styles = styled.div`
     background: #f6f6f6;
   }
 
-  table {
-    .table-titles {
-      font-weight: 700;
-    }
+  .row-project {
+    background: #e7ebf0;
+    border-radius: 4px;
+  }
 
+  .contracts-label {
+    font-weight: 500;
+  }
+
+  table {
     .table-content {
       position: relative;
 
@@ -39,6 +44,10 @@ const Styles = styled.div`
         padding: 8px;
         box-shadow: 0px 6px 30px rgba(147, 147, 147, 0.18);
         border-radius: 4px;
+
+        &.project {
+          width: 100px;
+        }
 
         img {
           padding: 4px;
@@ -80,27 +89,24 @@ const columnTitle = [
 
 const Contracts = () => {
   const [activeRow, setActiveRow] = useState(null);
-  const [toggleModal, setToggleModal] = useState(false);
 
-  const selectContentModal = (param) => {
-    setToggleModal((prev) => !prev);
+  //стейт для установки current project
+  const [currentProject, setCurrentProject] = useState(null);
 
-    switch (param) {
-      case "":
-        return (
-          toggleModal && (
-            <Modal project title="Projekt hinzufügen" toggle={setToggleModal} />
-          )
-        );
-      case 4:
-        alert("В точку!");
-        break;
-      case 5:
-        alert("Перебор");
-        break;
-      default:
-        alert("Нет таких значений");
-    }
+  // стейт модалок для project
+  const [toggleNewProjectModal, setToggleNewProjectModal] = useState(false);
+  const [toggleCurrentProjectModal, setToggleCurrentProjectModal] =
+    useState(false);
+  const [toggleProjectDataModal, setToggleProjectDataModal] = useState(false);
+  // стейт модалок для contracts
+  const [toggleNewContractModal, setToggleNewContractModal] = useState(false);
+  const [toggleCurrentContractModal, setToggleCurrentContractModal] =
+    useState(false);
+  const [toggleRemoveContractModal, setToggleRemoveContractModal] =
+    useState(false);
+
+  const selectProjectData = (project) => {
+    setCurrentProject(project);
   };
 
   return (
@@ -118,9 +124,9 @@ const Contracts = () => {
         />
         <Container>
           <Table responsive>
-            <thead>
+            <thead className="table-titles">
               {/* формируем столбцы */}
-              <tr className="table-titles">
+              <tr>
                 {columnTitle.map((item, index) => (
                   <th className={item.classes} key={index}>
                     {item.title}
@@ -130,14 +136,18 @@ const Contracts = () => {
             </thead>
             <tbody>
               {data.map((row, index) => (
-                <>
+                <React.Fragment key={index}>
                   {/* данные о проекте */}
                   <tr
                     key={row.project}
-                    className={`table-content ${
+                    className={`table-content row-project ${
                       activeRow === row.project ? "active" : ""
                     } `}
                     onClick={() => setActiveRow(row.project)}
+                    onDoubleClick={() => {
+                      setToggleProjectDataModal((prev) => !prev);
+                      selectProjectData(row);
+                    }}
                   >
                     <th>{row.project}</th>
                     <th>{row.start}</th>
@@ -165,8 +175,34 @@ const Contracts = () => {
                         onChange={() => {}}
                       />
                     </th>
+                    {/* модалка в углу строки при клике на проект */}
+                    {row.project === activeRow ? (
+                      <th className="row-modal project">
+                        <div>
+                          <img
+                            src={PlusIcon}
+                            alt="plus icon"
+                            onClick={() =>
+                              setToggleNewProjectModal((prev) => !prev)
+                            }
+                          />
+                        </div>
+                        <div>
+                          <img
+                            src={EditIcon}
+                            alt="edit icon"
+                            onClick={() => {
+                              setToggleCurrentProjectModal((prev) => !prev);
+                              selectProjectData(row);
+                            }}
+                          />
+                        </div>
+                      </th>
+                    ) : null}
                   </tr>
-                  <h3>Verträge</h3>
+                  <tr>
+                    <th className="contracts-label">Verträge</th>
+                  </tr>
                   {/* контракты к проекту */}
                   {row.contracts.map((contract, index) => (
                     <tr
@@ -202,14 +238,55 @@ const Contracts = () => {
                           onChange={() => {}}
                         />
                       </th>
+                      {/* модалка в углу строки при клике на контракт */}
+                      {contract[0] === activeRow ? (
+                        <th className="row-modal">
+                          <div>
+                            <img
+                              src={PlusIcon}
+                              alt="plus icon"
+                              onClick={() => {}}
+                            />
+                          </div>
+                          <div>
+                            <img src={EditIcon} alt="edit icon" />
+                          </div>
+                          <div>
+                            <img src={TrashIcon} alt="trash icon" />
+                          </div>
+                        </th>
+                      ) : null}
                     </tr>
                   ))}
-                </>
+                </React.Fragment>
               ))}
             </tbody>
           </Table>
         </Container>
       </div>
+      {/* модальные окна */}
+      {toggleNewProjectModal && (
+        <Modal
+          new_project
+          title="new"
+          toggle={() => setToggleNewProjectModal(false)}
+        />
+      )}
+      {toggleCurrentProjectModal && (
+        <Modal
+          current_project={currentProject}
+          title="current"
+          toggle={() => setToggleCurrentProjectModal(false)}
+        />
+      )}
+      {/* двойной клик по проекту */}
+      {toggleProjectDataModal && (
+        <Modal
+          current_project_data={currentProject}
+          title="current_data"
+          toggle={() => setToggleProjectDataModal(false)}
+        />
+      )}
     </Styles>
   );
 };

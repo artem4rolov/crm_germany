@@ -91,6 +91,16 @@ const Projects = () => {
         />
         <Container>
           <Table responsive>
+            <thead className="table-titles">
+              {/* формируем столбцы */}
+              <tr>
+                {columnTitle.map((item, index) => (
+                  <th className={item.classes} key={index}>
+                    {item.title}
+                  </th>
+                ))}
+              </tr>
+            </thead>
             <tbody>
               {data.map((row, index) => (
                 <tr

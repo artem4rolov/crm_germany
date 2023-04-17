@@ -257,7 +257,12 @@ const Modal = (props) => {
             <div className="modal-content">
               {/* страница Contract */}
               {props.new_project && <div className="">new project</div>}
-              {props.current_project && <div className="">current project</div>}
+              {props.current_project && (
+                <div className="">{props.current_project.project}</div>
+              )}
+              {props.current_project_data && (
+                <div className="">{props.current_project_data.project}</div>
+              )}
 
               {/* страница Project */}
               {props.add_project_today && (
