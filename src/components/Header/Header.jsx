@@ -6,7 +6,7 @@ import Navbar from "react-bootstrap/Navbar";
 import LogoDoor from "../../assets/icon_door-open.svg";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import React, { useState } from "react";
 
 const Styles = styled.div`
   .navbar {
@@ -56,7 +56,16 @@ const navBarData = [
 ];
 
 function Header() {
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(null);
+
+  const handleActive = (index) => {
+    setActive(index);
+    localStorage.setItem("activeTab", index);
+  };
+
+  React.useEffect(() => {
+    setActive(parseInt(localStorage.getItem("activeTab")));
+  }, []);
 
   return (
     <Styles>
@@ -70,7 +79,7 @@ function Header() {
 
               return (
                 <Link
-                  onClick={() => setActive(index)}
+                  onClick={() => handleActive(index)}
                   key={index}
                   to={href}
                   className={`nav-link ${active === index ? "active" : ""}`}

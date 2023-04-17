@@ -2,9 +2,14 @@ import React from "react";
 import { useEffect } from "react";
 import { Container } from "react-bootstrap";
 
-import CalendarImage from "../../assets/icon_calendar.svg";
-import ClockImage from "../../assets/icon_time.svg";
 import styled from "styled-components";
+
+import AddProjectTodayModal from "./ProjectsModal/AddProjectToday";
+import NewProject from "./Projects&ContractsModal/Projects/NewProject";
+import EditProject from "./Projects&ContractsModal/Projects/EditProject";
+import CurrentProjectTable from "./Projects&ContractsModal/Projects/CurrentProjectTable";
+import NewContract from "./Projects&ContractsModal/Contracts/NewContract";
+import EditContract from "./Projects&ContractsModal/Contracts/EditContract";
 
 const Styles = styled.div`
   .modal-wrapper {
@@ -41,6 +46,18 @@ const Styles = styled.div`
       justify-content: space-between;
       background: #fcfcfc;
       border-bottom: 1px solid #e1e1e1;
+
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 28px;
+      color: #32363a;
+
+      .current_project_table_desc {
+        font-size: 13px;
+        line-height: 16px;
+        color: #676767;
+        margin-top: 10px;
+      }
     }
     /* ******************************* */
 
@@ -49,384 +66,12 @@ const Styles = styled.div`
       padding: 30px;
       display: flex;
       height: 100%;
+      overflow: auto;
       align-items: start;
+      position: relative;
       flex-direction: column;
 
-      /* add project TODAY */
-      .add_project_today {
-        display: flex;
-        flex-direction: column;
-        justify-content: start;
-        gap: 40px;
-
-        .inputs {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-
-          .vertrag {
-            display: flex;
-            flex-direction: column;
-            justify-content: start;
-
-            label {
-              font-weight: 500;
-              font-size: 15px;
-              line-height: 21px;
-              color: #32363a;
-            }
-            select {
-              width: 620px;
-              background: #ffffff;
-              border: 1px solid #e1e1e1;
-              border-radius: 4px;
-              padding: 10px;
-            }
-          }
-
-          .project-select {
-            select {
-              width: 300px;
-              background: #ffffff;
-              border: 1px solid #e1e1e1;
-              border-radius: 4px;
-              padding: 10px;
-            }
-          }
-        }
-        .textareas {
-          display: flex;
-          justify-content: space-between;
-          gap: 16px;
-          width: 100%;
-
-          .first,
-          .second {
-            width: 620px;
-            max-height: 175px;
-            display: flex;
-            flex-direction: column;
-            justify-content: start;
-
-            textarea {
-              background: #ffffff;
-              width: 620px;
-              padding: 12px;
-              border: 1px solid #e1e1e1;
-              border-radius: 4px;
-              font-weight: 400;
-              font-size: 14px;
-              line-height: 19px;
-              color: #4b4e51;
-            }
-          }
-        }
-        .time {
-          display: flex;
-          justify-content: start;
-          align-items: center;
-          gap: 16px;
-
-          .datum,
-          .von,
-          .bis,
-          .pause,
-          .zeit {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-
-            font-weight: 500;
-            font-size: 15px;
-            line-height: 21px;
-            color: #32363a;
-
-            .datum__content,
-            .von__content,
-            .bis__content,
-            .pause__content,
-            .zeit__content {
-              max-width: 106px;
-              background: #ffffff;
-              border: 1px solid #e1e1e1;
-              border-radius: 4px;
-              display: flex;
-              padding: 8px;
-              input {
-                border: none;
-                outline: none;
-                width: 100%;
-              }
-            }
-          }
-        }
-      }
-      /* *********************************** */
-
-      /* new project */
-      .new_project {
-        display: flex;
-        flex-direction: column;
-
-        .new_project-header {
-          display: flex;
-          gap: 16px;
-          padding: 48px 0;
-          border-bottom: 1px solid #e1e1e1;
-
-          .project_name,
-          .kurze_beschreibung,
-          .start,
-          .ende {
-            display: flex;
-            justify-content: start;
-            flex-direction: column;
-            gap: 8px;
-
-            input {
-              padding: 10px;
-              background: #ffffff;
-              border: 1px solid #e1e1e1;
-              border-radius: 4px;
-
-              &.project_name {
-                width: 300px;
-              }
-              &.kurze_beschreibung {
-                width: 700px;
-              }
-              &.start {
-                width: 100px;
-              }
-              &.ende {
-                width: 100px;
-              }
-            }
-          }
-        }
-
-        .new_project_main {
-          display: flex;
-          justify-content: space-between;
-          padding: 40px 0;
-
-          .vertag,
-          .bezeichnung_vermittler,
-          .bezeichnung_kunde,
-          .budget,
-          .start,
-          .ende {
-            display: flex;
-            justify-content: start;
-            flex-direction: column;
-            gap: 8px;
-
-            input {
-              padding: 10px;
-              background: #ffffff;
-              border: 1px solid #e1e1e1;
-              border-radius: 4px;
-
-              &.vertag {
-                width: 300px;
-              }
-              &.bezeichnung_vermittler {
-                width: 300px;
-              }
-              &.bezeichnung_kunde {
-                width: 300px;
-              }
-              &.budget {
-                width: 60px;
-              }
-              &.start {
-                width: 100px;
-              }
-              &.ende {
-                width: 100px;
-              }
-            }
-          }
-        }
-
-        .new_project_footer {
-          display: flex;
-          justify-content: start;
-          gap: 16px;
-
-          .aktiv,
-          .fakturierbar,
-          .excel_format {
-            display: flex;
-            justify-content: start;
-            flex-direction: column;
-            gap: 8px;
-
-            select {
-              background: #ffffff;
-              border: 1px solid #e1e1e1;
-              border-radius: 4px;
-              padding: 10px;
-            }
-          }
-        }
-      }
-      /* ***************************************** */
-
-      /* edit current project */
-      .current_project {
-        width: 100%;
-        .current_project_header {
-          display: flex;
-          justify-content: space-between;
-
-          .projekt_name,
-          .kurze_beschreibung,
-          .start,
-          .ende {
-            display: flex;
-            justify-content: start;
-            flex-direction: column;
-            gap: 8px;
-
-            input {
-              padding: 10px;
-              background: #ffffff;
-              border: 1px solid #e1e1e1;
-              border-radius: 4px;
-
-              &.projekt_name {
-                width: 300px;
-              }
-              &.kurze_beschreibung {
-                width: 700px;
-              }
-              &.start {
-                width: 100px;
-              }
-              &.ende {
-                width: 100px;
-              }
-            }
-          }
-        }
-      }
-
-      .current_project_data {
-        display: flex;
-        flex-direction: column;
-        justify-content: start;
-        gap: 40px;
-        width: 100%;
-
-        .current_project_data_header {
-          display: flex;
-          justify-content: space-between;
-
-          .vertag,
-          .bezeichnung_vermittler,
-          .bezeichnung_kunde,
-          .budget,
-          .start,
-          .ende {
-            display: flex;
-            justify-content: start;
-            flex-direction: column;
-            gap: 8px;
-
-            input {
-              padding: 10px;
-              background: #ffffff;
-              border: 1px solid #e1e1e1;
-              border-radius: 4px;
-
-              &.vertag {
-                width: 300px;
-              }
-              &.bezeichnung_vermittler {
-                width: 300px;
-              }
-              &.bezeichnung_kunde {
-                width: 300px;
-              }
-              &.budget {
-                width: 60px;
-              }
-              &.start {
-                width: 100px;
-              }
-              &.ende {
-                width: 100px;
-              }
-            }
-          }
-        }
-
-        .current_project_data_main {
-          display: flex;
-          justify-content: start;
-          gap: 16px;
-
-          .aktiv,
-          .fakturierbar,
-          .excel_format {
-            display: flex;
-            justify-content: start;
-            flex-direction: column;
-            gap: 8px;
-
-            select {
-              background: #ffffff;
-              border: 1px solid #e1e1e1;
-              border-radius: 4px;
-              padding: 10px;
-
-              .excel_format {
-                width: 106px;
-              }
-            }
-          }
-        }
-
-        .current_project_data_footer {
-          display: flex;
-          justify-content: space-between;
-
-          .projekt_name,
-          .kurze_beschreibung,
-          .start,
-          .ende {
-            display: flex;
-            justify-content: start;
-            flex-direction: column;
-            gap: 8px;
-
-            input {
-              padding: 10px;
-              background: #ffffff;
-              border: 1px solid #e1e1e1;
-              border-radius: 4px;
-
-              &.projekt_name {
-                width: 300px;
-              }
-              &.kurze_beschreibung {
-                width: 700px;
-              }
-              &.start {
-                width: 100px;
-              }
-              &.ende {
-                width: 100px;
-              }
-
-              &:disabled {
-                background: #f2f3f4;
-              }
-            }
-          }
-        }
-      }
+      /* remove contract */
     }
     /* ************************************ */
 
@@ -448,6 +93,10 @@ const Styles = styled.div`
           border-radius: 4px;
           padding: 12px;
           background: #fff;
+
+          &:hover {
+            background: #ffadad75;
+          }
         }
 
         .footer-decline {
@@ -511,12 +160,25 @@ const Modal = (props) => {
 
   return (
     <Styles>
-      <div className="modal-wrapper">
+      <div
+        className="modal-wrapper"
+        onClick={(e) =>
+          e.target.classList.contains("modal-wrapper") && props.toggle()
+        }
+      >
         <Container>
-          <div className="modal-window">
+          <form className="modal-window">
             {/* header модального окна */}
             <div className="modal-header">
-              <span className="header-title">{props.title}</span>
+              <div>
+                <span className="header-title">{props.title}</span>
+                {/* по клику на проект, в шапке показываем дату начала работы */}
+                {props.current_project_table && (
+                  <div className="current_project_table_desc">
+                    <span>Действует с {props.current_project_table.start}</span>
+                  </div>
+                )}
+              </div>
               {/* если есть такой пропс - рендерим чекбокс "важный проект" */}
               {props.important && (
                 <div className="check-block">
@@ -527,246 +189,37 @@ const Modal = (props) => {
             </div>
             {/* content модального окна */}
             <div className="modal-content">
-              {/* страница Contract */}
-              {props.new_project && (
-                <div className="new_project">
-                  {/* new project header */}
-                  <div className="new_project-header">
-                    <div className="project_name">
-                      <label htmlFor="">Project</label>
-                      <input type="text" className="project_name" />
-                    </div>
-                    <div className="kurze_beschreibung">
-                      <label htmlFor="">Kurze beschreibung</label>
-                      <input type="text" className="kurze_beschreibung" />
-                    </div>
-                    <div className="start">
-                      <label htmlFor="">Start</label>
-                      <input type="date" className="start" />
-                    </div>
-                    <div className="ende">
-                      <label htmlFor="">Ende</label>
-                      <input type="date" className="ende" />
-                    </div>
-                  </div>
-                  {/* new project main */}
-                  <div className="new_project_main">
-                    <div className="vertag">
-                      <label htmlFor="">Vertag</label>
-                      <input type="text" className="vertag" />
-                    </div>
-                    <div className="bezeichnung_vermittler">
-                      <label htmlFor="">Bezeichnung Vermittler</label>
-                      <input type="text" className="bezeichnung_vermittler" />
-                    </div>
-                    <div className="bezeichnung_kunde">
-                      <label htmlFor="">Bezeichnung Kunde</label>
-                      <input type="text" className="bezeichnung_vermittler" />
-                    </div>
-                    <div className="budget">
-                      <label htmlFor="">Budget</label>
-                      <input type="text" className="budget" />
-                    </div>
-                    <div className="start">
-                      <label htmlFor="">Start</label>
-                      <input type="date" className="start" />
-                    </div>
-                    <div className="ende">
-                      <label htmlFor="">Ende</label>
-                      <input type="date" className="ende" />
-                    </div>
-                  </div>
-                  {/* new project footer */}
-                  <div className="new_project_footer">
-                    <div className="aktiv">
-                      <label htmlFor="">Aktiv</label>
-                      <input type="checkbox" className="vertag" />
-                    </div>
-                    <div className="fakturierbar">
-                      <label htmlFor="">Fakturierbar</label>
-                      <input type="checkbox" className="vertag" />
-                    </div>
-                    <div className="excel_format">
-                      <label htmlFor="">Excel-Format</label>
-                      <select type="checkbox" className="vertag" />
-                    </div>
-                  </div>
-                </div>
+              {/* страница Projecte (проекты с контрактами) */}
+              {/* модалки Проектов */}
+              {/* создание нового проекта */}
+              {props.new_project && <NewProject />}
+              {/* редактирование current проекта */}
+              {props.current_project && <EditProject />}
+              {/* просмотр контрактов current проекта */}
+              {props.current_project_table && (
+                <CurrentProjectTable
+                  current_project_table={props.current_project_table}
+                />
               )}
-              {props.current_project && (
-                <div className="current_project">
-                  {/* current project header */}
-                  <div className="current_project_header">
-                    <div className="projekt_name">
-                      <label htmlFor="">Projekt</label>
-                      <input type="text" className="projekt_name" />
-                    </div>
-                    <div className="kurze_beschreibung">
-                      <label htmlFor="">Kurze beschreibung</label>
-                      <input type="text" className="kurze_beschreibung" />
-                    </div>
-                    <div className="start">
-                      <label htmlFor="">Start</label>
-                      <input type="date" className="start" />
-                    </div>
-                    <div className="ende">
-                      <label htmlFor="">Ende</label>
-                      <input type="date" className="ende" />
-                    </div>
-                  </div>
-                </div>
+              {/* модалки Контрактов */}
+              {/* создание нового контракта в current проекте */}
+              {props.current_project_for_new_contract && (
+                <NewContract
+                  current_project_for_new_contract={
+                    props.current_project_for_new_contract
+                  }
+                />
               )}
-              {props.current_project_data && (
-                <div className="current_project_data">
-                  {/* current_project_data header */}
-                  <div className="current_project_data_header">
-                    <div className="vertag">
-                      <label htmlFor="">Vertag</label>
-                      <input type="text" className="vertag" />
-                    </div>
-                    <div className="bezeichnung_vermittler">
-                      <label htmlFor="">Bezeichnung Vermittler</label>
-                      <input type="text" className="bezeichnung_vermittler" />
-                    </div>
-                    <div className="bezeichnung_kunde">
-                      <label htmlFor="">Bezeichnung Kunde</label>
-                      <input type="text" className="bezeichnung_vermittler" />
-                    </div>
-                    <div className="budget">
-                      <label htmlFor="">Budget</label>
-                      <input type="text" className="budget" />
-                    </div>
-                    <div className="start">
-                      <label htmlFor="">Start</label>
-                      <input type="date" className="start" />
-                    </div>
-                    <div className="ende">
-                      <label htmlFor="">Ende</label>
-                      <input type="date" className="ende" />
-                    </div>
-                  </div>
-                  {/* current_project_data main */}
-                  <div className="current_project_data_main">
-                    <div className="aktiv">
-                      <label htmlFor="">Aktiv</label>
-                      <input type="checkbox" className="vertag" />
-                    </div>
-                    <div className="fakturierbar">
-                      <label htmlFor="">Fakturierbar</label>
-                      <input type="checkbox" className="vertag" />
-                    </div>
-                    <div className="excel_format">
-                      <label htmlFor="">Excel-Format</label>
-                      <select type="checkbox" className="vertag" />
-                    </div>
-                  </div>
-                  {/* current_project_data footer */}
-                  <div className="current_project_data_footer">
-                    <div className="projekt_name">
-                      <label htmlFor="">Projekt</label>
-                      <input
-                        disabled
-                        type="text"
-                        value={props.current_project_data.project}
-                        className="projekt_name"
-                      />
-                    </div>
-                    <div className="kurze_beschreibung">
-                      <label htmlFor="">Kurze beschreibung</label>
-                      <input
-                        disabled
-                        type="text"
-                        className="kurze_beschreibung"
-                      />
-                    </div>
-                    <div className="start">
-                      <label htmlFor="">Start</label>
-                      <input
-                        disabled
-                        value={props.current_project_data.start}
-                        type="text"
-                        className="start"
-                      />
-                    </div>
-                    <div className="ende">
-                      <label htmlFor="">Ende</label>
-                      <input
-                        disabled
-                        value={props.current_project_data.start}
-                        type="text"
-                        className="ende"
-                      />
-                    </div>
-                  </div>
-                </div>
+              {/* редактирование current контракта */}
+              {props.current_contract && props.current_project_disabled && (
+                <EditContract
+                  current_project_disabled={props.current_project_disabled}
+                />
               )}
-
-              {/* страница Project */}
-              {props.add_project_today && (
-                <div className="add_project_today">
-                  {/* инпуты */}
-                  <div className="inputs">
-                    <div className="vertrag">
-                      <label className="mb-2">Vertrag</label>
-                      <select name="" id=""></select>
-                    </div>
-                    <div className="project-select">
-                      <select name="" id=""></select>
-                    </div>
-                  </div>
-                  {/* поля текста textarea */}
-                  <div className="textareas">
-                    <div className="first">
-                      <label className="mb-2">Tätigkeiten</label>
-                      <textarea name="" id="" cols="30" rows="10"></textarea>
-                    </div>
-                    <div className="second">
-                      <label className="mb-2">Kommentar</label>
-                      <textarea name="" id="" cols="30" rows="10"></textarea>
-                    </div>
-                  </div>
-                  {/* время внизу */}
-                  <div className="time">
-                    <div className="datum">
-                      <label>Datum</label>
-                      <div className="datum__content">
-                        <label htmlFor="date">
-                          <img src={CalendarImage} alt="calendar icon" />
-                        </label>
-                        <input type="date" id="date" />
-                      </div>
-                    </div>
-                    <div className="von">
-                      <label>Von</label>
-                      <div className="von__content">
-                        <img src={ClockImage} alt="von icon" />
-                        <input type="text" id="date" />
-                      </div>
-                    </div>
-                    <div className="bis">
-                      <label>Bis</label>
-                      <div className="bis__content">
-                        <img src={ClockImage} alt="bis icon" />
-                        <input type="text" id="date" />
-                      </div>
-                    </div>
-                    <div className="pause">
-                      <label>Pause</label>
-                      <div className="pause__content">
-                        <img src={ClockImage} alt="pause icon" />
-                        <input type="text" id="date" />
-                      </div>
-                    </div>
-                    <div className="zeit">
-                      <label>Zeit</label>
-                      <div className="zeit__content">
-                        <img src={ClockImage} alt="zeit icon" />
-                        <input type="text" id="date" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {/* удаление current контракта */}
+              {props.current_contract && props.current_project_disabled && null}
+              {/* страница Zeiterfassung (Projects.jsx) */}
+              {props.add_project_today && <AddProjectTodayModal />}
             </div>
             {/* footer модального окна */}
             <div className="modal-footer">
@@ -774,6 +227,7 @@ const Modal = (props) => {
                 {props.footer_desc ? props.footer_desc : ""}
               </div>
               <div className="footer-buttons">
+                {/* кнопка удаления контента */}
                 {props.footer_delete ? (
                   <button className="footer-delete">
                     <svg
@@ -806,16 +260,24 @@ const Modal = (props) => {
                     </svg>
                   </button>
                 ) : null}
-                <button
+                {/* кнопка сброса формы */}
+                <input
+                  type="reset"
                   className="footer-decline"
+                  value="Abbrechen"
+                  onChange={() => {}}
                   onClick={() => props.toggle()}
-                >
-                  Abbrechen
-                </button>
-                <button className="footer-confirm">Erstellen</button>
+                />
+                {/* кнопка отправки данных */}
+                <input
+                  className="footer-confirm"
+                  value="Erstellen"
+                  onChange={() => {}}
+                  type="submit"
+                />
               </div>
             </div>
-          </div>
+          </form>
         </Container>
       </div>
     </Styles>

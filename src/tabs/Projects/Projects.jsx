@@ -79,11 +79,17 @@ const columnTitle = [
 
 const Projects = () => {
   const [activeRow, setActiveRow] = useState(null);
-  const [toggleModal, setToggleModal] = useState(false);
+
+  const [toggleAddProjectToday, setToggleAddProjectToday] = useState(false);
 
   return (
     <Styles>
-      <div className="projects-wrapper">
+      <div
+        className="projects-wrapper"
+        onClick={(e) =>
+          e.target.classList.contains("projects-wrapper") && setActiveRow(null)
+        }
+      >
         <SideBar
           filters={[{ title: "Важные" }, { title: "Очистить пустые" }]}
           columnTitle={columnTitle}
@@ -120,7 +126,9 @@ const Projects = () => {
                         <img
                           src={PlusIcon}
                           alt="plus icon"
-                          onClick={() => setToggleModal((prev) => !prev)}
+                          onClick={() =>
+                            setToggleAddProjectToday((prev) => !prev)
+                          }
                         />
                       </div>
                       <div>
@@ -136,12 +144,12 @@ const Projects = () => {
             </tbody>
           </Table>
         </Container>
-        {toggleModal && (
+        {toggleAddProjectToday && (
           <Modal
             important
             add_project_today
             title="Projekt hinzufügen"
-            toggle={setToggleModal}
+            toggle={setToggleAddProjectToday}
           />
         )}
       </div>

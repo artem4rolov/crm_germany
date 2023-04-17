@@ -26,7 +26,7 @@ const Styles = styled.div`
     font-weight: 500;
   }
 
-  table {
+  .table {
     .table-content {
       position: relative;
 
@@ -70,6 +70,22 @@ const Styles = styled.div`
       th {
         font-weight: 400;
       }
+
+      input {
+        &.check-box {
+          width: 18px;
+          height: 18px;
+          color: yellow;
+
+          &:checked {
+            background-color: green;
+          }
+
+          &:disabled {
+            fill: red;
+          }
+        }
+      }
     }
   }
 `;
@@ -88,32 +104,43 @@ const columnTitle = [
 ];
 
 const Contracts = () => {
+  // стейт для окрашивания активной строки в таблице
   const [activeRow, setActiveRow] = useState(null);
 
   //стейт для установки current project
   const [currentProject, setCurrentProject] = useState(null);
+  //стейт для установки current contract
+  const [currentContract, setCurrentContract] = useState(null);
 
   // стейт модалок для project
+  // создание нового проекта
   const [toggleNewProjectModal, setToggleNewProjectModal] = useState(false);
+  // изменение текущего проекта
   const [toggleCurrentProjectModal, setToggleCurrentProjectModal] =
     useState(false);
+  // просмотр всех контрактов текущего проекта
   const [toggleProjectDataModal, setToggleProjectDataModal] = useState(false);
+
   // стейт модалок для contracts
+  // создание нового контракта
   const [toggleNewContractModal, setToggleNewContractModal] = useState(false);
+  // редактирование выбранного контракта
   const [toggleCurrentContractModal, setToggleCurrentContractModal] =
     useState(false);
+  // удаление выбранного контракта
   const [toggleRemoveContractModal, setToggleRemoveContractModal] =
     useState(false);
-
-  const selectProjectData = (project) => {
-    setCurrentProject(project);
-  };
 
   console.log("render");
 
   return (
     <Styles>
-      <div className="contracts-wrapper">
+      <div
+        className="contracts-wrapper"
+        onClick={(e) =>
+          e.target.classList.contains("contracts-wrapper") && setActiveRow(null)
+        }
+      >
         <SideBar
           calendar
           filters={[
@@ -146,9 +173,10 @@ const Contracts = () => {
                       activeRow === row.project ? "active" : ""
                     } `}
                     onClick={() => setActiveRow(row.project)}
+                    // устанавливаем current project и открываем модалку
                     onDoubleClick={() => {
+                      setCurrentProject(row);
                       setToggleProjectDataModal((prev) => !prev);
-                      selectProjectData(row);
                     }}
                   >
                     <th>{row.project}</th>
@@ -162,19 +190,19 @@ const Contracts = () => {
                     <th className="text-center">
                       <input
                         type="checkbox"
-                        name=""
-                        id=""
                         checked={row.aktiv}
                         onChange={() => {}}
+                        disabled
                       />
                     </th>
                     <th className="text-center">
                       <input
+                        className="check-box"
+                        name="checkbox"
                         type="checkbox"
-                        name=""
-                        id=""
                         checked={row.fakturierbar}
                         onChange={() => {}}
+                        disabled
                       />
                     </th>
                     {/* модалка в углу строки при клике на проект */}
@@ -194,8 +222,8 @@ const Contracts = () => {
                             src={EditIcon}
                             alt="edit icon"
                             onClick={() => {
+                              setCurrentProject(row);
                               setToggleCurrentProjectModal((prev) => !prev);
-                              selectProjectData(row);
                             }}
                           />
                         </div>
@@ -206,6 +234,7 @@ const Contracts = () => {
                     <th className="contracts-label">Verträge</th>
                   </tr>
                   {/* контракты к проекту */}
+                  {/* заранее задаем стили для каждой строки, поскольку контент везде разный */}
                   {row.contracts.map((contract, index) => (
                     <tr
                       key={contract[0] + index}
@@ -225,8 +254,7 @@ const Contracts = () => {
                       <th className="text-center">
                         <input
                           type="checkbox"
-                          name=""
-                          id=""
+                          disabled
                           checked={contract[8]}
                           onChange={() => {}}
                         />
@@ -234,8 +262,7 @@ const Contracts = () => {
                       <th className="text-center">
                         <input
                           type="checkbox"
-                          name=""
-                          id=""
+                          disabled
                           checked={contract[9]}
                           onChange={() => {}}
                         />
@@ -247,11 +274,23 @@ const Contracts = () => {
                             <img
                               src={PlusIcon}
                               alt="plus icon"
-                              onClick={() => {}}
+                              onClick={() => {
+                                setCurrentProject(row);
+                                setToggleNewContractModal((prev) => !prev);
+                              }}
                             />
                           </div>
                           <div>
-                            <img src={EditIcon} alt="edit icon" />
+                            <img
+                              src={EditIcon}
+                              alt="edit icon"
+                              // при клике на контракт, устанавливаем current project, затем current contract, и потом открываем модалку
+                              onClick={() => {
+                                setCurrentProject(row);
+                                setCurrentContract(contract);
+                                setToggleCurrentContractModal((prev) => !prev);
+                              }}
+                            />
                           </div>
                           <div>
                             <img src={TrashIcon} alt="trash icon" />
@@ -266,7 +305,7 @@ const Contracts = () => {
           </Table>
         </Container>
       </div>
-      {/* модальные окна */}
+      {/* модальные окна ПРОЕКТОВ */}
       {/* создание нового ПРОЕКТА */}
       {toggleNewProjectModal && (
         <Modal
@@ -279,17 +318,42 @@ const Contracts = () => {
       {/* редактирование CURRENT ПРОЕКТА */}
       {toggleCurrentProjectModal && (
         <Modal
+          important
+          footer_delete
           current_project={currentProject}
           title={currentProject.project}
           toggle={() => setToggleCurrentProjectModal(false)}
         />
       )}
-      {/* двойной клик по проекту */}
+      {/* двойной клик по ПРОЕКТУ (список всех контрактов проекта) */}
       {toggleProjectDataModal && (
         <Modal
-          current_project_data={currentProject}
+          important
+          footer_desc="Фильтр по дате не применен"
+          current_project_table={currentProject}
           title={currentProject.project}
           toggle={() => setToggleProjectDataModal(false)}
+        />
+      )}
+      {/* модальные окна КОНТРАКТОВ */}
+      {/* создание нового КОНТРАКТА */}
+      {toggleNewContractModal && (
+        <Modal
+          important
+          current_project_for_new_contract={currentProject}
+          title="Vertrag erstellen"
+          toggle={() => setToggleNewContractModal(false)}
+        />
+      )}
+      {/* редактирование CURRENT КОНТРАКТА */}
+      {toggleCurrentContractModal && (
+        <Modal
+          important
+          footer_delete
+          current_contract={currentContract}
+          current_project_disabled={currentProject}
+          title={currentContract[0]}
+          toggle={() => setToggleCurrentContractModal(false)}
         />
       )}
     </Styles>
