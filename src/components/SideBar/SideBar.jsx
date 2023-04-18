@@ -10,8 +10,6 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useEffect } from "react";
 
-import data from "../../mock/table-contracts.json";
-
 const Styles = styled.div`
   tbody,
   td,
@@ -291,6 +289,10 @@ const SideBar = (props) => {
                       props.columnTitle.map((item, index) => (
                         <th className={item.classes} key={index}>
                           {item.title}
+                          {item.subtitles &&
+                            item.subtitles.map((subtitle, index) => (
+                              <th>{subtitle}</th>
+                            ))}
                         </th>
                       ))}
                   </tr>

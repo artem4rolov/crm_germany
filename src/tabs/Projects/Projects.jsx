@@ -29,6 +29,7 @@ const Styles = styled.div`
         position: absolute;
         top: 0;
         right: 0;
+        visibility: hidden;
 
         display: flex;
         justify-content: center;
@@ -50,8 +51,11 @@ const Styles = styled.div`
       }
 
       &:hover {
+        background-color: white;
         cursor: pointer;
-        background: #e5e5e5;
+        .row-modal {
+          visibility: visible;
+        }
       }
 
       &.active {
@@ -78,18 +82,13 @@ const columnTitle = [
 ];
 
 const Projects = () => {
-  const [activeRow, setActiveRow] = useState(null);
-
   const [toggleAddProjectToday, setToggleAddProjectToday] = useState(false);
+
+  console.log("render");
 
   return (
     <Styles>
-      <div
-        className="projects-wrapper"
-        onClick={(e) =>
-          e.target.classList.contains("projects-wrapper") && setActiveRow(null)
-        }
-      >
+      <div className="projects-wrapper">
         <SideBar
           filters={[{ title: "Важные" }, { title: "Очистить пустые" }]}
           columnTitle={columnTitle}
@@ -109,36 +108,28 @@ const Projects = () => {
             </thead>
             <tbody>
               {data.map((row, index) => (
-                <tr
-                  key={index}
-                  className={`table-content ${
-                    activeRow === index ? "active" : ""
-                  } `}
-                  onClick={() => setActiveRow(index)}
-                >
+                <tr key={index} className={`table-content`}>
                   {row.map((col, index) => (
                     <th key={index}>{col}</th>
                   ))}
                   {/* модалка в углу строки при клике на строку */}
-                  {index === activeRow ? (
-                    <th className="row-modal">
-                      <div>
-                        <img
-                          src={PlusIcon}
-                          alt="plus icon"
-                          onClick={() =>
-                            setToggleAddProjectToday((prev) => !prev)
-                          }
-                        />
-                      </div>
-                      <div>
-                        <img src={EditIcon} alt="edit icon" />
-                      </div>
-                      <div>
-                        <img src={TrashIcon} alt="trash icon" />
-                      </div>
-                    </th>
-                  ) : null}
+                  <th className="row-modal">
+                    <div>
+                      <img
+                        src={PlusIcon}
+                        alt="plus icon"
+                        onClick={() =>
+                          setToggleAddProjectToday((prev) => !prev)
+                        }
+                      />
+                    </div>
+                    <div>
+                      <img src={EditIcon} alt="edit icon" />
+                    </div>
+                    <div>
+                      <img src={TrashIcon} alt="trash icon" />
+                    </div>
+                  </th>
                 </tr>
               ))}
             </tbody>

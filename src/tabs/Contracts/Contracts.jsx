@@ -34,6 +34,7 @@ const Styles = styled.div`
         position: absolute;
         top: 0;
         right: 0;
+        visibility: hidden;
 
         display: flex;
         justify-content: center;
@@ -60,7 +61,11 @@ const Styles = styled.div`
 
       &:hover {
         cursor: pointer;
-        background: #e5e5e5;
+        background: white;
+
+        .row-modal {
+          visibility: visible;
+        }
       }
 
       &.active {
@@ -104,9 +109,6 @@ const columnTitle = [
 ];
 
 const Contracts = () => {
-  // стейт для окрашивания активной строки в таблице
-  const [activeRow, setActiveRow] = useState(null);
-
   //стейт для установки current project
   const [currentProject, setCurrentProject] = useState(null);
   //стейт для установки current contract
@@ -131,16 +133,20 @@ const Contracts = () => {
   const [toggleRemoveContractModal, setToggleRemoveContractModal] =
     useState(false);
 
-  console.log("render");
+  // открытие таблицы контрактов проекта
+  const openProjectDetails = (e, row) => {
+    if (!e.target.parentNode.parentNode.classList.contains("row-modal")) {
+      setCurrentProject(row);
+      setToggleProjectDataModal((prev) => !prev);
+      return;
+    }
+
+    return;
+  };
 
   return (
     <Styles>
-      <div
-        className="contracts-wrapper"
-        onClick={(e) =>
-          e.target.classList.contains("contracts-wrapper") && setActiveRow(null)
-        }
-      >
+      <div className="contracts-wrapper">
         <SideBar
           calendar
           filters={[
@@ -169,15 +175,8 @@ const Contracts = () => {
                   {/* данные о проекте */}
                   <tr
                     key={row.project}
-                    className={`table-content row-project ${
-                      activeRow === row.project ? "active" : ""
-                    } `}
-                    onClick={() => setActiveRow(row.project)}
-                    // устанавливаем current project и открываем модалку
-                    onDoubleClick={() => {
-                      setCurrentProject(row);
-                      setToggleProjectDataModal((prev) => !prev);
-                    }}
+                    className="table-content row-project"
+                    onClick={(e) => openProjectDetails(e, row)}
                   >
                     <th>{row.project}</th>
                     <th>{row.start}</th>
@@ -206,29 +205,28 @@ const Contracts = () => {
                       />
                     </th>
                     {/* модалка в углу строки при клике на проект */}
-                    {row.project === activeRow ? (
-                      <th className="row-modal project">
-                        <div>
-                          <img
-                            src={PlusIcon}
-                            alt="plus icon"
-                            onClick={() =>
-                              setToggleNewProjectModal((prev) => !prev)
-                            }
-                          />
-                        </div>
-                        <div>
-                          <img
-                            src={EditIcon}
-                            alt="edit icon"
-                            onClick={() => {
-                              setCurrentProject(row);
-                              setToggleCurrentProjectModal((prev) => !prev);
-                            }}
-                          />
-                        </div>
-                      </th>
-                    ) : null}
+
+                    <th className="row-modal project">
+                      <div>
+                        <img
+                          src={PlusIcon}
+                          alt="plus icon"
+                          onClick={() =>
+                            setToggleNewProjectModal((prev) => !prev)
+                          }
+                        />
+                      </div>
+                      <div>
+                        <img
+                          src={EditIcon}
+                          alt="edit icon"
+                          onClick={() => {
+                            setCurrentProject(row);
+                            setToggleCurrentProjectModal((prev) => !prev);
+                          }}
+                        />
+                      </div>
+                    </th>
                   </tr>
                   <tr>
                     <th className="contracts-label">Verträge</th>
@@ -236,13 +234,7 @@ const Contracts = () => {
                   {/* контракты к проекту */}
                   {/* заранее задаем стили для каждой строки, поскольку контент везде разный */}
                   {row.contracts.map((contract, index) => (
-                    <tr
-                      key={contract[0] + index}
-                      className={`table-content ${
-                        activeRow === contract[0] ? "active" : ""
-                      } `}
-                      onClick={() => setActiveRow(contract[0])}
-                    >
+                    <tr key={contract[0] + index} className={`table-content`}>
                       <th>{contract[0]}</th>
                       <th>{contract[1]}</th>
                       <th>{contract[2]}</th>
@@ -268,35 +260,34 @@ const Contracts = () => {
                         />
                       </th>
                       {/* модалка в углу строки при клике на контракт */}
-                      {contract[0] === activeRow ? (
-                        <th className="row-modal">
-                          <div>
-                            <img
-                              src={PlusIcon}
-                              alt="plus icon"
-                              onClick={() => {
-                                setCurrentProject(row);
-                                setToggleNewContractModal((prev) => !prev);
-                              }}
-                            />
-                          </div>
-                          <div>
-                            <img
-                              src={EditIcon}
-                              alt="edit icon"
-                              // при клике на контракт, устанавливаем current project, затем current contract, и потом открываем модалку
-                              onClick={() => {
-                                setCurrentProject(row);
-                                setCurrentContract(contract);
-                                setToggleCurrentContractModal((prev) => !prev);
-                              }}
-                            />
-                          </div>
-                          <div>
-                            <img src={TrashIcon} alt="trash icon" />
-                          </div>
-                        </th>
-                      ) : null}
+
+                      <th className="row-modal">
+                        <div>
+                          <img
+                            src={PlusIcon}
+                            alt="plus icon"
+                            onClick={() => {
+                              setCurrentProject(row);
+                              setToggleNewContractModal((prev) => !prev);
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <img
+                            src={EditIcon}
+                            alt="edit icon"
+                            // при клике на контракт, устанавливаем current project, затем current contract, и потом открываем модалку
+                            onClick={() => {
+                              setCurrentProject(row);
+                              setCurrentContract(contract);
+                              setToggleCurrentContractModal((prev) => !prev);
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <img src={TrashIcon} alt="trash icon" />
+                        </div>
+                      </th>
                     </tr>
                   ))}
                 </React.Fragment>

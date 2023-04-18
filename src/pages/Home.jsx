@@ -8,7 +8,7 @@ import Holidays from "../tabs/Holidays/Holidays";
 import Projects from "../tabs/Projects/Projects";
 import Notes from "../tabs/Notes/Notes";
 import Contracts from "../tabs/Contracts/Contracts";
-import Calendar from "../tabs/Calendar/Calendar";
+import WorkDaysPerMonth from "../tabs/WorkDaysPerMonth/WorkDaysPerMonth";
 
 const Home = () => {
   return (
@@ -21,7 +21,7 @@ const Home = () => {
         <Route path="/projects" element={<Projects />} />
         <Route path="/notes" element={<Notes />} />
         <Route path="/contracts" element={<Contracts />} />
-        <Route path="/calendar" element={<Calendar />} />
+        <Route path="/work_days_per_month" element={<WorkDaysPerMonth />} />
         <Route path="/*" element={<Error />} />
       </Routes>
     </>

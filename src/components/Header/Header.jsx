@@ -49,7 +49,7 @@ const navBarData = [
   { title: "Dashboard", href: "/" },
   { title: "Zeiterfassung", href: "/projects" },
   { title: "Projekte", href: "/contracts" },
-  { title: "Leistungsnachweise", href: "/calendar" },
+  { title: "Leistungsnachweise", href: "/work_days_per_month" },
   { title: "Jahresübersicht", href: "/daysofwork" },
   { title: "Feiertage", href: "/holidays" },
   { title: "Anmerkungen", href: "/notes" },
