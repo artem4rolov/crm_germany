@@ -24,9 +24,35 @@ const Styles = styled.div`
 
   .contracts-label {
     font-weight: 500;
+    border: none;
+  }
+
+  .table-titles-wrapper {
+    position: absolute;
+    height: 51px;
+    width: 100%;
+    background-color: #fcfcfc;
+    border-top: 1px solid #e1e1e1;
   }
 
   .table {
+    position: relative;
+
+    border-collapse: separate;
+    border-spacing: 0 10px;
+
+    tr {
+      &.table-content {
+        &.row-project {
+          border: transparent;
+        }
+      }
+    }
+
+    thead {
+      border-color: #fcfcfc;
+    }
+
     .table-content {
       position: relative;
 
@@ -62,6 +88,7 @@ const Styles = styled.div`
       &:hover {
         cursor: pointer;
         background: white;
+        border: transparent;
 
         .row-modal {
           visibility: visible;
@@ -118,8 +145,7 @@ const Contracts = () => {
   // создание нового проекта
   const [toggleNewProjectModal, setToggleNewProjectModal] = useState(false);
   // изменение текущего проекта
-  const [toggleCurrentProjectModal, setToggleCurrentProjectModal] =
-    useState(false);
+  const [toggleEditProjectModal, setToggleEditProjectModal] = useState(false);
   // просмотр всех контрактов текущего проекта
   const [toggleProjectDataModal, setToggleProjectDataModal] = useState(false);
 
@@ -157,6 +183,7 @@ const Contracts = () => {
           columnTitle={columnTitle}
           search
         />
+        <div className="table-titles-wrapper"></div>
         <Container>
           <Table responsive>
             <thead className="table-titles">
@@ -204,8 +231,7 @@ const Contracts = () => {
                         disabled
                       />
                     </th>
-                    {/* модалка в углу строки при клике на проект */}
-
+                    {/* модалка в углу строки при наведении мыши на проект */}
                     <th className="row-modal project">
                       <div>
                         <img
@@ -222,7 +248,7 @@ const Contracts = () => {
                           alt="edit icon"
                           onClick={() => {
                             setCurrentProject(row);
-                            setToggleCurrentProjectModal((prev) => !prev);
+                            setToggleEditProjectModal((prev) => !prev);
                           }}
                         />
                       </div>
@@ -232,7 +258,7 @@ const Contracts = () => {
                     <th className="contracts-label">Verträge</th>
                   </tr>
                   {/* контракты к проекту */}
-                  {/* заранее задаем стили для каждой строки, поскольку контент везде разный */}
+                  {/* заранее задаем стили для каждой колонки, поскольку контент везде разный */}
                   {row.contracts.map((contract, index) => (
                     <tr key={contract[0] + index} className={`table-content`}>
                       <th>{contract[0]}</th>
@@ -259,8 +285,7 @@ const Contracts = () => {
                           onChange={() => {}}
                         />
                       </th>
-                      {/* модалка в углу строки при клике на контракт */}
-
+                      {/* модалка в углу строки при наведении мыши на контракт */}
                       <th className="row-modal">
                         <div>
                           <img
@@ -285,7 +310,15 @@ const Contracts = () => {
                           />
                         </div>
                         <div>
-                          <img src={TrashIcon} alt="trash icon" />
+                          <img
+                            src={TrashIcon}
+                            alt="trash icon"
+                            onClick={() => {
+                              setCurrentProject(row);
+                              setCurrentContract(contract);
+                              setToggleRemoveContractModal((prev) => !prev);
+                            }}
+                          />
                         </div>
                       </th>
                     </tr>
@@ -307,16 +340,16 @@ const Contracts = () => {
         />
       )}
       {/* редактирование CURRENT ПРОЕКТА */}
-      {toggleCurrentProjectModal && (
+      {toggleEditProjectModal && (
         <Modal
           important
           footer_delete
           current_project={currentProject}
           title={currentProject.project}
-          toggle={() => setToggleCurrentProjectModal(false)}
+          toggle={() => setToggleEditProjectModal(false)}
         />
       )}
-      {/* двойной клик по ПРОЕКТУ (список всех контрактов проекта) */}
+      {/* список всех контрактов проекта */}
       {toggleProjectDataModal && (
         <Modal
           important
@@ -345,6 +378,14 @@ const Contracts = () => {
           current_project_disabled={currentProject}
           title={currentContract[0]}
           toggle={() => setToggleCurrentContractModal(false)}
+        />
+      )}
+      {/* удаление CURRENT КОНТРАКТА */}
+      {toggleRemoveContractModal && (
+        <Modal
+          remove
+          remove_item={currentContract[0]}
+          toggle={() => setToggleRemoveContractModal(false)}
         />
       )}
     </Styles>

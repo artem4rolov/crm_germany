@@ -43,7 +43,9 @@ const Styles = styled.div`
   }
 `;
 
-const EditProject = () => {
+const EditProject = (props) => {
+  console.log(props);
+
   return (
     <Styles>
       <div className="current_project">

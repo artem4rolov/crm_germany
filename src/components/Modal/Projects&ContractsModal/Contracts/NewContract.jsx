@@ -127,6 +127,7 @@ const Styles = styled.div`
 `;
 
 const NewContract = (props) => {
+  console.log(props);
   return (
     <Styles>
       <div className="current_contract">

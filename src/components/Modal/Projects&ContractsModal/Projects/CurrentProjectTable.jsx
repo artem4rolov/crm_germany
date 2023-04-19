@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
 import styled from "styled-components";
 
@@ -7,21 +7,36 @@ const Styles = styled.div`
   /* current project table of contracts */
   .current_project_table {
     width: 100%;
+    position: relative;
+
+    .table-titles-wrapper {
+      position: absolute;
+      top: 0;
+      height: 60px;
+      background: #fcfcfc;
+      box-shadow: 0px 3px 4px rgba(166, 166, 166, 0.2);
+    }
 
     .table-responsive {
+      padding: 5px;
       .table {
         .table-titles {
-          width: 100%;
-          margin: 0 auto;
-          background-color: white;
+          position: -webkit-sticky;
+          position: sticky;
+          top: 0;
+          &:first-child {
+            border-color: transparent;
+          }
         }
-
         .table-content {
           &:hover {
             background: transparent;
           }
 
           tr {
+            border-style: solid;
+            border-color: #bbbbbb;
+
             &:hover {
               background-color: white;
             }
@@ -33,12 +48,14 @@ const Styles = styled.div`
 `;
 
 const CurrentProjectTable = (props) => {
+  console.log(props);
   return (
     <Styles>
       <div className="current_project_table">
+        <div className="table-titles-wrapper"></div>
         {/* current_project_data table-header */}
         <Table responsive>
-          <thead className="table-titles">
+          <thead className={`table-titles`}>
             {/* формируем столбцы */}
             <tr>
               <th className="col-2">Verträge</th>

@@ -26,7 +26,7 @@ const Styles = styled.div`
 
   .sidebar {
     width: 100%;
-    background: #fff;
+    background: #fcfcfc;
 
     .hidden {
       display: none;
@@ -65,7 +65,7 @@ const Styles = styled.div`
   }
 
   .sidebar-calendar {
-    max-width: 210px;
+    max-width: 220px;
     height: 40px;
     border: 1px solid #bebebe;
     border-radius: 4px;

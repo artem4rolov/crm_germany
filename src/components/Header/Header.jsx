@@ -1,4 +1,4 @@
-import { Button, Image } from "react-bootstrap";
+import { Image } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -71,8 +71,10 @@ function Header() {
     <Styles>
       <Navbar bg="header-bg" expand="lg">
         <Container>
+          {/* мобильное меню */}
           {/* <Navbar.Toggle aria-controls="basic-navbar-nav" /> */}
           {/* <Navbar.Collapse id="basic-navbar-nav"> */}
+          {/* пункты меню */}
           <Nav className="me-auto">
             {navBarData.map((obj, index) => {
               const { title, href } = obj;
@@ -90,6 +92,7 @@ function Header() {
             })}
           </Nav>
 
+          {/* кнопка авторизации */}
           <Link
             to="/login"
             className="nav-link d-flex justify-content-end align-items-center"

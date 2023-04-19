@@ -15,9 +15,27 @@ const Styles = styled.div`
     width: 100%;
     height: 100%;
     background: #f6f6f6;
+    position: relative;
+  }
+
+  .table-titles-wrapper {
+    position: absolute;
+    height: 51px;
+    width: 100%;
+    background-color: #fcfcfc;
+    border-top: 1px solid #e1e1e1;
   }
 
   table {
+    position: relative;
+
+    border-collapse: separate;
+    border-spacing: 0 10px;
+
+    thead {
+      border-color: #fcfcfc;
+    }
+
     .table-titles {
       font-weight: 700;
     }
@@ -52,6 +70,7 @@ const Styles = styled.div`
 
       &:hover {
         background-color: white;
+        border: white;
         cursor: pointer;
         .row-modal {
           visibility: visible;
@@ -82,9 +101,13 @@ const columnTitle = [
 ];
 
 const Projects = () => {
+  // тогглим модалки для разных функций (добавление, редактирование, удаление)
   const [toggleAddProjectToday, setToggleAddProjectToday] = useState(false);
-
-  console.log("render");
+  const [toggleEditProjectToday, setToggleEditProjectToday] = useState(false);
+  const [toggleRemoveProjectToday, setToggleRemoveProjectToday] =
+    useState(false);
+  //стейт для установки current project
+  const [currentProject, setCurrentProject] = useState(null);
 
   return (
     <Styles>
@@ -94,6 +117,7 @@ const Projects = () => {
           columnTitle={columnTitle}
           search
         />
+        <div className="table-titles-wrapper"></div>
         <Container>
           <Table responsive>
             <thead className="table-titles">
@@ -124,10 +148,24 @@ const Projects = () => {
                       />
                     </div>
                     <div>
-                      <img src={EditIcon} alt="edit icon" />
+                      <img
+                        src={EditIcon}
+                        alt="edit icon"
+                        onClick={() => {
+                          setCurrentProject(row);
+                          setToggleEditProjectToday((prev) => !prev);
+                        }}
+                      />
                     </div>
                     <div>
-                      <img src={TrashIcon} alt="trash icon" />
+                      <img
+                        src={TrashIcon}
+                        alt="trash icon"
+                        onClick={() => {
+                          setCurrentProject(row[2]);
+                          setToggleRemoveProjectToday((prev) => !prev);
+                        }}
+                      />
                     </div>
                   </th>
                 </tr>
@@ -135,12 +173,30 @@ const Projects = () => {
             </tbody>
           </Table>
         </Container>
+        {/* добавить новый проект */}
         {toggleAddProjectToday && (
           <Modal
             important
             add_project_today
             title="Projekt hinzufügen"
             toggle={setToggleAddProjectToday}
+          />
+        )}
+        {/* редактировать текущий проект */}
+        {toggleEditProjectToday && (
+          <Modal
+            important
+            edit_project_today={currentProject}
+            title={currentProject[2]}
+            toggle={setToggleEditProjectToday}
+          />
+        )}
+        {/* удалить текущий проект */}
+        {toggleRemoveProjectToday && (
+          <Modal
+            remove
+            remove_item={currentProject}
+            toggle={setToggleRemoveProjectToday}
           />
         )}
       </div>
