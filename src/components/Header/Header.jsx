@@ -16,11 +16,11 @@ const Styles = styled.div`
   }
 
   .navbar-expand-lg .navbar-nav .nav-link {
-    padding: 20px 0;
+    padding: 9px 0;
   }
 
   .navbar-expand-lg .navbar-nav {
-    gap: 20px;
+    gap: 32px;
   }
 
   a,

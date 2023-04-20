@@ -32,7 +32,7 @@ const Styles = styled.div`
 
   .modal-window-remove {
     z-index: 2;
-    width: 25%;
+    width: 23%;
     height: 300px;
     padding: 23px;
     background: #f6f6f6;
@@ -102,6 +102,15 @@ const Styles = styled.div`
       justify-content: space-between;
       background: #fcfcfc;
       border-top: 1px solid #e1e1e1;
+
+      .footer-desc {
+        font-family: "Inter";
+        font-style: italic;
+        font-weight: 300;
+        font-size: 14px;
+        line-height: 19px;
+        color: #8c8c8c;
+      }
 
       .footer-buttons {
         display: flex;

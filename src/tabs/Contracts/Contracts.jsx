@@ -23,7 +23,7 @@ const Styles = styled.div`
   }
 
   .contracts-label {
-    font-weight: 500;
+    font-weight: bold;
     border: none;
   }
 

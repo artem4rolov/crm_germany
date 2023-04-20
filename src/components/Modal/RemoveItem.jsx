@@ -8,8 +8,9 @@ const Styles = styled.div`
   .remove_project_today {
     display: flex;
     width: 100%;
+    height: 100%;
     flex-direction: column;
-    gap: 40px;
+    gap: 70px;
 
     .buttons {
       width: 100;
@@ -17,7 +18,7 @@ const Styles = styled.div`
       justify-content: space-between;
 
       .decline {
-        min-width: 190px;
+        min-width: 208px;
         border: 1px solid #9fc5eb;
         border-radius: 4px;
         padding: 12px;
@@ -30,7 +31,7 @@ const Styles = styled.div`
       }
 
       .remove {
-        min-width: 190px;
+        min-width: 208px;
         background: #e03333;
         border: 1px solid #e03333;
         border-radius: 4px;
@@ -52,12 +53,14 @@ const RemoveItem = (props) => {
   return (
     <Styles>
       <div className="remove_project_today">
-        {/* заголовок */}
-        <div className="title">
-          <h1>Ты уверен?</h1>
-        </div>
-        <div className="subtitle">
-          <span>После удаления данные нельзя будет восстановить.</span>
+        <div>
+          {/* заголовок и подзаголовок */}
+          <div className="title">
+            <h1>Ты уверен?</h1>
+          </div>
+          <div className="subtitle">
+            <span>После удаления данные нельзя будет восстановить.</span>
+          </div>
         </div>
         <div className="buttons">
           {/* кнопка сброса формы */}
