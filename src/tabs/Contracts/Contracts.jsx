@@ -155,15 +155,29 @@ const Contracts = () => {
   // редактирование выбранного контракта
   const [toggleCurrentContractModal, setToggleCurrentContractModal] =
     useState(false);
+  // просмотр выбранного контракта текущего проекта
+  const [toggleContractDataModal, setToggleContractDataModal] = useState(false);
   // удаление выбранного контракта
   const [toggleRemoveContractModal, setToggleRemoveContractModal] =
     useState(false);
 
   // открытие таблицы контрактов проекта
-  const openProjectDetails = (e, row) => {
+  const openProjectDetails = (e, project) => {
     if (!e.target.parentNode.parentNode.classList.contains("row-modal")) {
-      setCurrentProject(row);
+      setCurrentProject(project);
       setToggleProjectDataModal((prev) => !prev);
+      return;
+    }
+
+    return;
+  };
+
+  // открытие таблицы контрактов проекта
+  const openContractDetails = (e, contract, project) => {
+    if (!e.target.parentNode.parentNode.classList.contains("row-modal")) {
+      setCurrentProject(project);
+      setCurrentContract(contract);
+      setToggleContractDataModal((prev) => !prev);
       return;
     }
 
@@ -260,7 +274,11 @@ const Contracts = () => {
                   {/* контракты к проекту */}
                   {/* заранее задаем стили для каждой колонки, поскольку контент везде разный */}
                   {row.contracts.map((contract, index) => (
-                    <tr key={contract[0] + index} className={`table-content`}>
+                    <tr
+                      key={contract[0] + index}
+                      className={`table-content`}
+                      onClick={(e) => openContractDetails(e, contract, row)}
+                    >
                       <th>{contract[0]}</th>
                       <th>{contract[1]}</th>
                       <th>{contract[2]}</th>
@@ -386,6 +404,16 @@ const Contracts = () => {
           remove
           remove_item={currentContract[0]}
           toggle={() => setToggleRemoveContractModal(false)}
+        />
+      )}
+      {/* просмотреть отдельный контракт в таблице */}
+      {toggleContractDataModal && (
+        <Modal
+          important
+          footer_desc="Фильтр по дате не применен"
+          current_contract_table={currentContract}
+          title={currentProject.project}
+          toggle={() => setToggleContractDataModal(false)}
         />
       )}
     </Styles>

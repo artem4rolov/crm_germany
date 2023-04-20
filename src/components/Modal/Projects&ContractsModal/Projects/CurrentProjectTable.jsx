@@ -69,18 +69,47 @@ const CurrentProjectTable = (props) => {
             </tr>
           </thead>
           <tbody className="table-content">
-            {props.current_project_table.contracts.map((contract, index) => (
-              <tr key={contract[0]}>
-                <th>{contract[0]}</th>
-                <th>{contract[1]}</th>
-                <th>{contract[4]}</th>
-                <th>{contract[5]}</th>
-                <th>{contract[6]}</th>
-                <th className="text-center">{contract[7]}</th>
+            {props.current_project_table &&
+              props.current_project_table.contracts.map((contract, index) => (
+                <tr key={contract[0]}>
+                  <th>{contract[0]}</th>
+                  <th>{contract[1]}</th>
+                  <th>{contract[4]}</th>
+                  <th>{contract[5]}</th>
+                  <th>{contract[6]}</th>
+                  <th className="text-center">{contract[7]}</th>
+                  <th className="text-center">
+                    <input
+                      type="checkbox"
+                      checked={contract[8]}
+                      onChange={() => {}}
+                      disabled
+                    />
+                  </th>
+                  <th className="text-center">
+                    <input
+                      type="checkbox"
+                      checked={contract[9]}
+                      onChange={() => {}}
+                      disabled
+                    />
+                  </th>
+                </tr>
+              ))}
+            {props.current_contract_table && (
+              <tr key={props.current_contract_table[0]}>
+                <th>{props.current_contract_table[0]}</th>
+                <th>{props.current_contract_table[1]}</th>
+                <th>{props.current_contract_table[4]}</th>
+                <th>{props.current_contract_table[5]}</th>
+                <th>{props.current_contract_table[6]}</th>
+                <th className="text-center">
+                  {props.current_contract_table[7]}
+                </th>
                 <th className="text-center">
                   <input
                     type="checkbox"
-                    checked={contract[8]}
+                    checked={props.current_contract_table[8]}
                     onChange={() => {}}
                     disabled
                   />
@@ -88,13 +117,13 @@ const CurrentProjectTable = (props) => {
                 <th className="text-center">
                   <input
                     type="checkbox"
-                    checked={contract[9]}
+                    checked={props.current_contract_table[9]}
                     onChange={() => {}}
                     disabled
                   />
                 </th>
               </tr>
-            ))}
+            )}
           </tbody>
         </Table>
       </div>

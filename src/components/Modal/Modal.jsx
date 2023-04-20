@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
 import { Container } from "react-bootstrap";
 
@@ -32,7 +32,7 @@ const Styles = styled.div`
 
   .modal-window-remove {
     z-index: 2;
-    width: 23%;
+    width: 28%;
     height: 300px;
     padding: 23px;
     background: #f6f6f6;
@@ -179,6 +179,8 @@ const Styles = styled.div`
 `;
 
 const Modal = (props) => {
+  const [currentContent, setCurrentContent] = useState(null);
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
 
@@ -186,6 +188,11 @@ const Modal = (props) => {
       document.body.style.overflow = "";
     };
   });
+
+  const handleRemove = (e) => {
+    e.preventDefault();
+    setCurrentContent({ ...props });
+  };
 
   return (
     <Styles>
@@ -199,6 +206,10 @@ const Modal = (props) => {
         {props.remove ? (
           <form action="" className="modal-window-remove">
             {props.remove_item && <RemoveItem {...props} />}
+          </form>
+        ) : currentContent ? (
+          <form action="" className="modal-window-remove">
+            <RemoveItem {...currentContent} />
           </form>
         ) : (
           <Container>
@@ -227,7 +238,9 @@ const Modal = (props) => {
               {/* content модального окна */}
               <div
                 className={`modal-content ${
-                  props.current_project_table ? "full" : ""
+                  props.current_project_table || props.current_contract_table
+                    ? "full"
+                    : ""
                 }`}
               >
                 {/* страница Projecte (проекты с контрактами) */}
@@ -249,6 +262,10 @@ const Modal = (props) => {
                 {props.current_contract && props.current_project_disabled && (
                   <EditContract {...props} />
                 )}
+                {/* просмотр отдельного контракта в таблице модалки */}
+                {props.current_contract_table && (
+                  <CurrentProjectTable {...props} />
+                )}
 
                 {/* страница Zeiterfassung (Projects.jsx) */}
                 {/* добавить новый контракт */}
@@ -262,9 +279,12 @@ const Modal = (props) => {
                   {props.footer_desc ? props.footer_desc : ""}
                 </div>
                 <div className="footer-buttons">
-                  {/* кнопка удаления контента */}
+                  {/* кнопка удаления контракта\проекта\праздника и другого */}
                   {props.footer_delete ? (
-                    <button className="footer-delete">
+                    <button
+                      className="footer-delete"
+                      onClick={(e) => handleRemove(e)}
+                    >
                       <svg
                         width="22"
                         height="22"
