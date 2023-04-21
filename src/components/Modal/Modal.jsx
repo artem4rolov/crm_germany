@@ -12,6 +12,8 @@ import NewContract from "./Projects&ContractsModal/Contracts/NewContract";
 import EditContract from "./Projects&ContractsModal/Contracts/EditContract";
 import EditProjectToday from "./ProjectsModal/EditProjectToday";
 import RemoveItem from "./RemoveItem";
+import AddNote from "./Note/AddNote";
+import EditNote from "./Note/EditNote";
 
 const Styles = styled.div`
   .modal-wrapper {
@@ -282,6 +284,12 @@ const Modal = (props) => {
                 {props.add_project_today && <AddProjectTodayModal />}
                 {/* редактироватть текущий контракт */}
                 {props.edit_project_today && <EditProjectToday {...props} />}
+
+                {/* страница Note (Note.jsx) */}
+                {/* добавить новую заметку */}
+                {props.add_note && <AddNote />}
+                {/* редактироватть заметку */}
+                {props.edit_note && <EditNote {...props} />}
               </div>
               {/* footer модального окна */}
               <div className="modal-footer">

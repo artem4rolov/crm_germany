@@ -9,6 +9,7 @@ import ExportImage from "../../assets/icon_upload.svg";
 import styled from "styled-components";
 import { useState } from "react";
 import { useEffect } from "react";
+import PlusIconBlue from "../../assets/icon_added_blue.svg";
 
 const Styles = styled.div`
   tbody,
@@ -26,6 +27,32 @@ const Styles = styled.div`
     .table-titles {
       td {
         padding-left: 10px;
+      }
+
+      .add-item {
+        position: absolute;
+        top: 0;
+        right: 0;
+        cursor: pointer;
+        opacity: 0.7;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:hover {
+          opacity: 1;
+        }
+
+        img {
+          width: 22px;
+          height: 22px;
+        }
+
+        span {
+          color: #0854a0;
+          font-weight: 500;
+        }
       }
     }
   }
@@ -314,12 +341,19 @@ const SideBar = (props) => {
                         props.columnTitle.map((item, index) => (
                           <th className={item.classes} key={index}>
                             {item.title}
-                            {item.subtitles &&
-                              item.subtitles.map((subtitle, index) => (
-                                <th>{subtitle}</th>
-                              ))}
                           </th>
                         ))}
+                      {props.addNote && (
+                        <th
+                          className="add-item"
+                          onClick={() => {
+                            props.addNote();
+                          }}
+                        >
+                          <img src={PlusIconBlue} alt="" />
+                          <span>Anmerkung hinzufügen</span>
+                        </th>
+                      )}
                     </tr>
                   )}
                 </thead>

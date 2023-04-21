@@ -183,6 +183,7 @@ const Projects = () => {
         {toggleEditProjectToday && (
           <Modal
             important
+            footer_delete
             edit_project_today={currentProject}
             title={currentProject[2]}
             toggle={setToggleEditProjectToday}
