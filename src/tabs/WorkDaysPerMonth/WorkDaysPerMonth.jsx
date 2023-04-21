@@ -38,7 +38,8 @@ const Styles = styled.div`
 
   .workdayspermonth-wrapper {
     width: 100%;
-    height: 100vh;
+    height: 100%;
+    min-height: 100vh;
     background: #f6f6f6;
 
     .table {
@@ -102,6 +103,7 @@ const WorkDaysPerMonth = () => {
             { title: "Завершенные" },
           ]}
           columnTitle={columnTitle}
+          tableInTable
           search
         />
         <div className="table-titles-wrapper"></div>
@@ -144,7 +146,7 @@ const WorkDaysPerMonth = () => {
                   <td>{row[1]}</td>
                   <td>{row[2]}</td>
                   <td>{row[3]}</td>
-                  <td>{row[4]}</td>
+                  <td className="text-center">{row[4]}</td>
                   <td>
                     <Table>
                       {row[5].map((hours, index) => (

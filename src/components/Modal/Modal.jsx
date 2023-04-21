@@ -68,6 +68,10 @@ const Styles = styled.div`
       line-height: 28px;
       color: #32363a;
 
+      &.full {
+        border: none;
+      }
+
       .current_project_table_desc {
         font-size: 13px;
         line-height: 16px;
@@ -215,7 +219,13 @@ const Modal = (props) => {
           <Container>
             <form className="modal-window">
               {/* header модального окна */}
-              <div className="modal-header">
+              <div
+                className={`modal-header ${
+                  props.current_project_table || props.current_contract_table
+                    ? "full"
+                    : ""
+                }`}
+              >
                 <div>
                   <span className="header-title">{props.title}</span>
                   {/* по клику на проект, в шапке модального окна показываем дату начала работы */}

@@ -50,7 +50,7 @@ const navBarData = [
   { title: "Zeiterfassung", href: "/projects" },
   { title: "Projekte", href: "/contracts" },
   { title: "Leistungsnachweise", href: "/work_days_per_month" },
-  { title: "Jahresübersicht", href: "/daysofwork" },
+  { title: "Jahresübersicht", href: "/work_days_per_year" },
   { title: "Feiertage", href: "/holidays" },
   { title: "Anmerkungen", href: "/notes" },
 ];

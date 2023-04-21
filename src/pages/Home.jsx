@@ -2,7 +2,7 @@ import React from "react";
 import Header from "../components/Header/Header";
 import { Route, Routes } from "react-router";
 import Dashboard from "../tabs/Dashboard/Dashboard";
-import DaysOfWork from "../tabs/DaysOfWork/DaysOfWork";
+import WorkDaysPerYear from "../tabs/WorkDaysPerYear/WorkDaysPerYear";
 import Error from "./Error";
 import Holidays from "../tabs/Holidays/Holidays";
 import Projects from "../tabs/Projects/Projects";
@@ -16,7 +16,7 @@ const Home = () => {
       <Header />
       <Routes>
         <Route index path="/" element={<Dashboard />} />
-        <Route path="/daysofwork" element={<DaysOfWork />} />
+        <Route path="/work_days_per_year" element={<WorkDaysPerYear />} />
         <Route path="/holidays" element={<Holidays />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/notes" element={<Notes />} />

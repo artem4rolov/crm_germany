@@ -22,6 +22,12 @@ const Styles = styled.div`
 
   .table {
     margin-bottom: 0;
+
+    .table-titles {
+      td {
+        padding-left: 10px;
+      }
+    }
   }
 
   .sidebar {
@@ -284,18 +290,38 @@ const SideBar = (props) => {
             <Container>
               <Table responsive>
                 <thead>
-                  <tr className="table-titles">
-                    {props &&
-                      props.columnTitle.map((item, index) => (
-                        <th className={item.classes} key={index}>
+                  {/* если в столбцах есть таблица в таблице, рендерим сложную структуру, если нет - простую */}
+                  {props.tableInTable ? (
+                    <tr className="table-titles">
+                      {props.columnTitle.map((item, index) => (
+                        <td className={item.classes} key={index}>
                           {item.title}
-                          {item.subtitles &&
-                            item.subtitles.map((subtitle, index) => (
-                              <th>{subtitle}</th>
-                            ))}
-                        </th>
+                          {item.subtitles && (
+                            <Table className="title-month">
+                              {item.subtitles
+                                ? item.subtitles.map((month, idex) => (
+                                    <td key={month}>{month}</td>
+                                  ))
+                                : null}
+                            </Table>
+                          )}
+                        </td>
                       ))}
-                  </tr>
+                    </tr>
+                  ) : (
+                    <tr className="table-titles">
+                      {props &&
+                        props.columnTitle.map((item, index) => (
+                          <th className={item.classes} key={index}>
+                            {item.title}
+                            {item.subtitles &&
+                              item.subtitles.map((subtitle, index) => (
+                                <th>{subtitle}</th>
+                              ))}
+                          </th>
+                        ))}
+                    </tr>
+                  )}
                 </thead>
               </Table>
             </Container>

@@ -14,6 +14,7 @@ const Styles = styled.div`
   .projects-wrapper {
     width: 100%;
     height: 100%;
+    min-height: 100vh;
     background: #f6f6f6;
     position: relative;
   }

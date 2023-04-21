@@ -15,6 +15,7 @@ const Styles = styled.div`
       height: 60px;
       background: #fcfcfc;
       box-shadow: 0px 3px 4px rgba(166, 166, 166, 0.2);
+      border: none;
     }
 
     .table-responsive {
