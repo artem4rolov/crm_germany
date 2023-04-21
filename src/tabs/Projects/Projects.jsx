@@ -37,10 +37,6 @@ const Styles = styled.div`
       border-color: #fcfcfc;
     }
 
-    .table-titles {
-      font-weight: 700;
-    }
-
     .table-content {
       position: relative;
 

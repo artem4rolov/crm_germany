@@ -13,13 +13,23 @@ const Styles = styled.div`
       border-color: #fcfcfc;
     }
 
-    tr {
-      .workdaysperyear-label {
-        font-weight: 500;
-        font-size: 20px;
-        line-height: 28px;
-        color: #0854a0;
-        border: none;
+    tbody {
+      tr {
+        &.workdaysperyear-label {
+          font-weight: 500;
+          font-size: 20px;
+          line-height: 28px;
+          color: #0854a0;
+          border-color: transparent;
+        }
+
+        &.table-content {
+          &:hover {
+            background-color: white;
+            border: white;
+            cursor: pointer;
+          }
+        }
       }
     }
 
@@ -102,13 +112,11 @@ const WorkDaysPerYear = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th className="workdaysperyear-label">
-                  Fakturierbare Aufwände
-                </th>
+              <tr className="workdaysperyear-label">
+                <th>Fakturierbare Aufwände</th>
               </tr>
               {data.map((row, index) => (
-                <tr key={index}>
+                <tr className="table-content" key={index}>
                   {row.map((col, index) => (
                     <td
                       className={`${index === 0 ? "" : "text-center"}`}
