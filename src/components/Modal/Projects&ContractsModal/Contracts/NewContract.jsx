@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import CalendarIcon from "../../../../assets/icon_calendar.svg";
+import Select from "../../../Select/Select";
 
 const Styles = styled.div`
   width: 100%;
@@ -21,9 +23,7 @@ const Styles = styled.div`
       .vertag,
       .bezeichnung_vermittler,
       .bezeichnung_kunde,
-      .budget,
-      .start,
-      .ende {
+      .budget {
         display: flex;
         justify-content: start;
         flex-direction: column;
@@ -36,22 +36,66 @@ const Styles = styled.div`
           border-radius: 4px;
 
           &.vertag {
-            width: 300px;
+            width: 280px;
           }
           &.bezeichnung_vermittler {
-            width: 300px;
+            width: 280px;
           }
           &.bezeichnung_kunde {
-            width: 300px;
+            width: 280px;
           }
           &.budget {
             width: 60px;
           }
-          &.start {
-            width: 100px;
+        }
+      }
+
+      .start,
+      .ende {
+        display: flex;
+        justify-content: start;
+        flex-direction: column;
+        gap: 8px;
+
+        .start-block,
+        .ende-block {
+          display: flex;
+          justify-content: start;
+          align-items: center;
+          position: relative;
+
+          padding: 10px 5px;
+          background: #ffffff;
+          outline: none;
+          border: 1px solid #e1e1e1;
+          border-radius: 4px;
+
+          img {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+
+            &:hover {
+              background: #000;
+            }
           }
-          &.ende {
-            width: 100px;
+
+          input {
+            text-align: right;
+            position: relative;
+            outline: none;
+            border: none;
+            background: transparent;
+            padding-right: 5px;
+
+            ::-webkit-calendar-picker-indicator {
+              cursor: pointer;
+              position: absolute;
+              top: 0;
+              left: 0;
+              z-index: 10;
+              background: transparent;
+            }
           }
         }
       }
@@ -64,23 +108,27 @@ const Styles = styled.div`
       border-bottom: 1px solid #e1e1e1;
       padding-bottom: 40px;
 
-      .aktiv,
-      .fakturierbar,
       .excel_format {
         display: flex;
         justify-content: start;
         flex-direction: column;
         gap: 8px;
+      }
 
-        select {
+      .aktiv,
+      .fakturierbar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        justify-content: start;
+
+        input[type="checkbox"] {
+          width: 20px;
+          height: 20px;
           background: #ffffff;
-          border: 1px solid #e1e1e1;
-          border-radius: 4px;
-          padding: 10px;
-
-          .excel_format {
-            width: 106px;
-          }
+          border: 1.3px solid #8c8c8c;
+          border-radius: 3px;
         }
       }
     }
@@ -127,52 +175,146 @@ const Styles = styled.div`
 `;
 
 const NewContract = (props) => {
-  console.log(props);
+  const [state, setState] = useState(null);
+
+  useEffect(() => {
+    props.setData(state);
+  }, [state]);
+
+  console.log(state);
   return (
     <Styles>
-      <div className="current_contract">
+      <form className="current_contract">
         {/* current_contract header */}
         <div className="current_contract_header">
           <div className="vertag">
             <label htmlFor="">Vertag</label>
-            <input type="text" className="vertag" />
+            <input
+              type="text"
+              className="vertag"
+              name="vertag"
+              onInput={({ target: { value } }) => {
+                setState((state) => ({ ...state, vertag: value }));
+              }}
+            />
           </div>
           <div className="bezeichnung_vermittler">
             <label htmlFor="">Bezeichnung Vermittler</label>
-            <input type="text" className="bezeichnung_vermittler" />
+            <input
+              type="text"
+              className="bezeichnung_vermittler"
+              name="bezeichnung_vermittler"
+              onInput={({ target: { value } }) => {
+                setState((state) => ({
+                  ...state,
+                  bezeichnung_vermittler: value,
+                }));
+              }}
+            />
           </div>
           <div className="bezeichnung_kunde">
             <label htmlFor="">Bezeichnung Kunde</label>
-            <input type="text" className="bezeichnung_vermittler" />
+            <input
+              type="text"
+              className="bezeichnung_vermittler"
+              name="bezeichnung_kunde"
+              onInput={({ target: { value } }) => {
+                setState((state) => ({
+                  ...state,
+                  bezeichnung_kunde: value,
+                }));
+              }}
+            />
           </div>
           <div className="budget">
             <label htmlFor="">Budget</label>
-            <input type="text" className="budget" />
+            <input
+              type="text"
+              className="budget"
+              name="budget"
+              onInput={({ target: { value } }) => {
+                setState((state) => ({
+                  ...state,
+                  budget: value,
+                }));
+              }}
+            />
           </div>
           <div className="start">
-            <label htmlFor="">Start</label>
-            <input type="date" className="start" />
+            <span>Start</span>
+            <div className="start-block">
+              <img src={CalendarIcon} alt="calendar icon" />
+              <input
+                type="date"
+                className="start"
+                name="start"
+                onInput={({ target: { value } }) => {
+                  setState((state) => ({
+                    ...state,
+                    start: value,
+                  }));
+                }}
+              />
+            </div>
           </div>
           <div className="ende">
-            <label htmlFor="">Ende</label>
-            <input type="date" className="ende" />
+            <span>Ende</span>
+            <div className="ende-block">
+              <img src={CalendarIcon} alt="calendar icon" />
+              <input
+                type="date"
+                className="ende"
+                name="ende"
+                onInput={({ target: { value } }) => {
+                  setState((state) => ({
+                    ...state,
+                    ende: value,
+                  }));
+                }}
+              />
+            </div>
           </div>
         </div>
         {/* current_contract main */}
         <div className="current_contract_main">
           <div className="aktiv">
             <label htmlFor="">Aktiv</label>
-            <input type="checkbox" className="vertag" />
+            <input
+              type="checkbox"
+              className="aktiv-check"
+              name="aktiv"
+              onInput={({ target: { checked } }) => {
+                setState((state) => ({
+                  ...state,
+                  aktiv: checked,
+                }));
+              }}
+            />
           </div>
           <div className="fakturierbar">
             <label htmlFor="">Fakturierbar</label>
-            <input type="checkbox" className="vertag" />
+            <input
+              type="checkbox"
+              className="fakturierbar-check"
+              name="fakturierbar"
+              onInput={({ target: { checked } }) => {
+                setState((state) => ({
+                  ...state,
+                  fakturierbar: checked,
+                }));
+              }}
+            />
           </div>
-          <div className="excel_format">
-            <label htmlFor="">Excel-Format</label>
-            <select type="checkbox" className="vertag" />
+          <div className="excel_format ">
+            <label htmlFor="">Excel</label>
+            <Select
+              handleSelect={(value) => {
+                setState((state) => ({ ...state, excel: value }));
+              }}
+            />
           </div>
         </div>
+
         {/* current_contract footer */}
         <div className="current_contract_footer">
           <div className="projekt_name">
@@ -207,7 +349,7 @@ const NewContract = (props) => {
             />
           </div>
         </div>
-      </div>
+      </form>
     </Styles>
   );
 };

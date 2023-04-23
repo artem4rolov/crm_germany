@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { createRef, forwardRef, useRef, useState } from "react";
 import { useEffect } from "react";
 import { Container } from "react-bootstrap";
 
@@ -7,7 +7,7 @@ import styled from "styled-components";
 import AddProjectTodayModal from "./ProjectsModal/AddProjectToday";
 import NewProject from "./Projects&ContractsModal/Projects/NewProject";
 import EditProject from "./Projects&ContractsModal/Projects/EditProject";
-import CurrentProjectTable from "./Projects&ContractsModal/Projects/CurrentProjectTable";
+import CurrentProjectTable from "./CurrentProjectTable";
 import NewContract from "./Projects&ContractsModal/Contracts/NewContract";
 import EditContract from "./Projects&ContractsModal/Contracts/EditContract";
 import EditProjectToday from "./ProjectsModal/EditProjectToday";
@@ -35,6 +35,7 @@ const Styles = styled.div`
   .modal-window-remove {
     z-index: 2;
     width: 28%;
+    min-width: 480px;
     height: 300px;
     padding: 23px;
     background: #f6f6f6;
@@ -185,7 +186,10 @@ const Styles = styled.div`
 `;
 
 const Modal = (props) => {
+  // определяем, какое модальное окно сейчас вывести (на удаление, или изменение и добавление)
   const [currentContent, setCurrentContent] = useState(null);
+  // достаем данные из каждой отдельной модалки
+  const [currentModalData, setCurrentModalData] = useState(null);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -198,6 +202,11 @@ const Modal = (props) => {
   const handleRemove = (e) => {
     e.preventDefault();
     setCurrentContent({ ...props });
+  };
+
+  const handleSubmit = () => {
+    // e.preventDefault();
+    console.log(currentModalData);
   };
 
   return (
@@ -219,7 +228,7 @@ const Modal = (props) => {
           </form>
         ) : (
           <Container>
-            <form className="modal-window">
+            <div className="modal-window">
               {/* header модального окна */}
               <div
                 className={`modal-header ${
@@ -268,7 +277,7 @@ const Modal = (props) => {
                 {/* модалки Контрактов */}
                 {/* создание нового контракта в current проекте */}
                 {props.current_project_for_new_contract && (
-                  <NewContract {...props} />
+                  <NewContract {...props} setData={setCurrentModalData} />
                 )}
                 {/* редактирование current контракта */}
                 {props.current_contract && props.current_project_disabled && (
@@ -346,11 +355,12 @@ const Modal = (props) => {
                     className="footer-confirm"
                     value="Erstellen"
                     onChange={() => {}}
+                    onClick={handleSubmit}
                     type="submit"
                   />
                 </div>
               </div>
-            </form>
+            </div>
           </Container>
         )}
       </div>

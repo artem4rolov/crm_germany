@@ -1,5 +1,5 @@
 import React from "react";
-
+import CalendarIcon from "../../../../assets/icon_calendar.svg";
 import styled from "styled-components";
 
 const Styles = styled.div`
@@ -22,9 +22,7 @@ const Styles = styled.div`
       .vertag,
       .bezeichnung_vermittler,
       .bezeichnung_kunde,
-      .budget,
-      .start,
-      .ende {
+      .budget {
         display: flex;
         justify-content: start;
         flex-direction: column;
@@ -35,24 +33,69 @@ const Styles = styled.div`
           background: #ffffff;
           border: 1px solid #e1e1e1;
           border-radius: 4px;
+          outline: none;
 
           &.vertag {
-            width: 300px;
+            width: 280px;
           }
           &.bezeichnung_vermittler {
-            width: 300px;
+            width: 280px;
           }
           &.bezeichnung_kunde {
-            width: 300px;
+            width: 280px;
           }
           &.budget {
             width: 60px;
           }
-          &.start {
-            width: 100px;
+        }
+      }
+
+      .start,
+      .ende {
+        display: flex;
+        justify-content: start;
+        flex-direction: column;
+        gap: 8px;
+
+        .start-block,
+        .ende-block {
+          display: flex;
+          justify-content: start;
+          align-items: center;
+          position: relative;
+
+          padding: 10px 5px;
+          background: #ffffff;
+          outline: none;
+          border: 1px solid #e1e1e1;
+          border-radius: 4px;
+
+          img {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+
+            &:hover {
+              background: #000;
+            }
           }
-          &.ende {
-            width: 100px;
+
+          input {
+            text-align: right;
+            position: relative;
+            outline: none;
+            border: none;
+            background: transparent;
+            padding-right: 5px;
+
+            ::-webkit-calendar-picker-indicator {
+              cursor: pointer;
+              position: absolute;
+              top: 0;
+              left: 0;
+              z-index: 10;
+              background: transparent;
+            }
           }
         }
       }
@@ -65,8 +108,6 @@ const Styles = styled.div`
       border-bottom: 1px solid #e1e1e1;
       padding-bottom: 40px;
 
-      .aktiv,
-      .fakturierbar,
       .excel_format {
         display: flex;
         justify-content: start;
@@ -82,6 +123,23 @@ const Styles = styled.div`
           .excel_format {
             width: 106px;
           }
+        }
+      }
+
+      .aktiv,
+      .fakturierbar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        justify-content: start;
+
+        input[type="checkbox"] {
+          width: 20px;
+          height: 20px;
+          background: #ffffff;
+          border: 1.3px solid #8c8c8c;
+          border-radius: 3px;
         }
       }
     }
@@ -151,23 +209,29 @@ const EditContract = (props) => {
             <input type="text" className="budget" />
           </div>
           <div className="start">
-            <label htmlFor="">Start</label>
-            <input type="date" className="start" />
+            <span>Start</span>
+            <div className="start-block">
+              <img src={CalendarIcon} alt="calendar icon" />
+              <input type="date" className="start" />
+            </div>
           </div>
           <div className="ende">
-            <label htmlFor="">Ende</label>
-            <input type="date" className="ende" />
+            <span>Ende</span>
+            <div className="ende-block">
+              <img src={CalendarIcon} alt="calendar icon" />
+              <input type="date" className="ende" />
+            </div>
           </div>
         </div>
         {/* current_contract main */}
         <div className="current_contract_main">
           <div className="aktiv">
             <label htmlFor="">Aktiv</label>
-            <input type="checkbox" className="vertag" />
+            <input type="checkbox" className="aktiv-check" />
           </div>
           <div className="fakturierbar">
             <label htmlFor="">Fakturierbar</label>
-            <input type="checkbox" className="vertag" />
+            <input type="checkbox" className="fakturierbar-check" />
           </div>
           <div className="excel_format">
             <label htmlFor="">Excel-Format</label>

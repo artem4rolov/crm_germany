@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import CalendarIcon from "../../../../assets/icon_calendar.svg";
 
 const Styles = styled.div`
   width: 100%;
@@ -9,11 +10,11 @@ const Styles = styled.div`
     .current_project_header {
       display: flex;
       justify-content: space-between;
+      width: 100%;
+      gap: 16px;
 
       .projekt_name,
-      .kurze_beschreibung,
-      .start,
-      .ende {
+      .kurze_beschreibung {
         display: flex;
         justify-content: start;
         flex-direction: column;
@@ -29,13 +30,63 @@ const Styles = styled.div`
             width: 300px;
           }
           &.kurze_beschreibung {
-            width: 700px;
+            width: 600px;
           }
           &.start {
             width: 100px;
           }
           &.ende {
             width: 100px;
+          }
+        }
+      }
+
+      .start,
+      .ende {
+        display: flex;
+        justify-content: start;
+        flex-direction: column;
+        gap: 8px;
+
+        .start-block,
+        .ende-block {
+          display: flex;
+          justify-content: start;
+          align-items: center;
+          position: relative;
+
+          padding: 10px 5px;
+          background: #ffffff;
+          outline: none;
+          border: 1px solid #e1e1e1;
+          border-radius: 4px;
+
+          img {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+
+            &:hover {
+              background: #000;
+            }
+          }
+
+          input {
+            text-align: right;
+            position: relative;
+            outline: none;
+            border: none;
+            background: transparent;
+            padding-right: 5px;
+
+            ::-webkit-calendar-picker-indicator {
+              cursor: pointer;
+              position: absolute;
+              top: 0;
+              left: 0;
+              z-index: 10;
+              background: transparent;
+            }
           }
         }
       }
@@ -60,12 +111,18 @@ const EditProject = (props) => {
             <input type="text" className="kurze_beschreibung" />
           </div>
           <div className="start">
-            <label htmlFor="">Start</label>
-            <input type="date" className="start" />
+            <span>Start</span>
+            <div className="start-block">
+              <img src={CalendarIcon} alt="calendar icon" />
+              <input type="date" className="start" />
+            </div>
           </div>
           <div className="ende">
-            <label htmlFor="">Ende</label>
-            <input type="date" className="ende" />
+            <span>Ende</span>
+            <div className="ende-block">
+              <img src={CalendarIcon} alt="calendar icon" />
+              <input type="date" className="ende" />
+            </div>
           </div>
         </div>
       </div>
