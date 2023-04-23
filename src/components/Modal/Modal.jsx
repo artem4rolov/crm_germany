@@ -267,7 +267,9 @@ const Modal = (props) => {
                 {/* страница Projecte (проекты с контрактами) */}
                 {/* модалки Проектов */}
                 {/* создание нового проекта */}
-                {props.new_project && <NewProject />}
+                {props.new_project && (
+                  <NewProject setData={setCurrentModalData} />
+                )}
                 {/* редактирование current проекта */}
                 {props.current_project && <EditProject {...props} />}
                 {/* просмотр контрактов current проекта */}

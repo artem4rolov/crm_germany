@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import CalendarIcon from "../../../../assets/icon_calendar.svg";
+import Select from "../../../Select/Select";
 
 const Styles = styled.div`
   width: 100%;
@@ -201,13 +202,6 @@ const Styles = styled.div`
         justify-content: start;
         flex-direction: column;
         gap: 8px;
-
-        select {
-          background: #ffffff;
-          border: 1px solid #e1e1e1;
-          border-radius: 4px;
-          padding: 10px;
-        }
       }
 
       .aktiv,
@@ -231,7 +225,14 @@ const Styles = styled.div`
   /* ***************************************** */
 `;
 
-const NewProject = () => {
+const NewProject = (props) => {
+  const [state, setState] = useState(null);
+
+  // следим за изменением стейта, и при малейшем изменении - передаем данные в компонент Modal, для дальнейшей отправки на сервер
+  useEffect(() => {
+    props.setData(state);
+  }, [state]);
+
   return (
     <Styles>
       <div className="new_project">
@@ -239,24 +240,48 @@ const NewProject = () => {
         <div className="new_project-header">
           <div className="project_name">
             <span htmlFor="">Project</span>
-            <input type="text" className="project_name" />
+            <input
+              type="text"
+              className="project_name"
+              onInput={({ target: { value } }) => {
+                setState((state) => ({ ...state, project_name: value }));
+              }}
+            />
           </div>
           <div className="kurze_beschreibung">
             <span htmlFor="">Kurze beschreibung</span>
-            <input type="text" className="kurze_beschreibung" />
+            <input
+              type="text"
+              className="kurze_beschreibung"
+              onInput={({ target: { value } }) => {
+                setState((state) => ({ ...state, kurze_beschreibung: value }));
+              }}
+            />
           </div>
           <div className="start">
             <span>Start</span>
             <div className="start-block">
               <img src={CalendarIcon} alt="calendar icon" />
-              <input type="date" className="start" />
+              <input
+                type="date"
+                className="start"
+                onInput={({ target: { value } }) => {
+                  setState((state) => ({ ...state, start: value }));
+                }}
+              />
             </div>
           </div>
           <div className="ende">
             <span>Ende</span>
             <div className="ende-block">
               <img src={CalendarIcon} alt="calendar icon" />
-              <input type="date" className="ende" />
+              <input
+                type="date"
+                className="ende"
+                onInput={({ target: { value } }) => {
+                  setState((state) => ({ ...state, ende: value }));
+                }}
+              />
             </div>
           </div>
         </div>
@@ -264,32 +289,83 @@ const NewProject = () => {
         <div className="new_project_main">
           <div className="vertag">
             <label htmlFor="">Vertag</label>
-            <input type="text" className="vertag" />
+            <input
+              type="text"
+              className="vertag"
+              onInput={({ target: { value } }) => {
+                setState((state) => ({ ...state, vertag: value }));
+              }}
+            />
           </div>
           <div className="bezeichnung_vermittler">
             <label htmlFor="">Bezeichnung Vermittler</label>
-            <input type="text" className="bezeichnung_vermittler" />
+            <input
+              type="text"
+              className="bezeichnung_vermittler"
+              onInput={({ target: { value } }) => {
+                setState((state) => ({
+                  ...state,
+                  bezeichnung_vermittler: value,
+                }));
+              }}
+            />
           </div>
           <div className="bezeichnung_kunde">
             <label htmlFor="">Bezeichnung Kunde</label>
-            <input type="text" className="bezeichnung_vermittler" />
+            <input
+              type="text"
+              className="bezeichnung_vermittler"
+              onInput={({ target: { value } }) => {
+                setState((state) => ({
+                  ...state,
+                  bezeichnung_kunde: value,
+                }));
+              }}
+            />
           </div>
           <div className="budget">
             <label htmlFor="">Budget</label>
-            <input type="text" className="budget" />
+            <input
+              type="text"
+              className="budget"
+              onInput={({ target: { value } }) => {
+                setState((state) => ({
+                  ...state,
+                  budget: value,
+                }));
+              }}
+            />
           </div>
           <div className="start">
             <span>Start</span>
             <div className="start-block">
               <img src={CalendarIcon} alt="calendar icon" />
-              <input type="date" className="start" />
+              <input
+                type="date"
+                className="start"
+                onInput={({ target: { value } }) => {
+                  setState((state) => ({
+                    ...state,
+                    startVertag: value,
+                  }));
+                }}
+              />
             </div>
           </div>
           <div className="ende">
             <span>Ende</span>
             <div className="ende-block">
               <img src={CalendarIcon} alt="calendar icon" />
-              <input type="date" className="ende" />
+              <input
+                type="date"
+                className="ende"
+                onInput={({ target: { value } }) => {
+                  setState((state) => ({
+                    ...state,
+                    endeVertag: value,
+                  }));
+                }}
+              />
             </div>
           </div>
         </div>
@@ -297,17 +373,37 @@ const NewProject = () => {
         <div className="new_project_footer">
           <div className="aktiv">
             <label htmlFor="">Aktiv</label>
-            <input type="checkbox" className="aktiv-check" />
+            <input
+              type="checkbox"
+              className="aktiv-check"
+              onInput={({ target: { checked } }) => {
+                setState((state) => ({
+                  ...state,
+                  aktiv: checked,
+                }));
+              }}
+            />
           </div>
           <div className="fakturierbar">
             <label htmlFor="">Fakturierbar</label>
-            <input type="checkbox" className="fakturierbar-check" />
+            <input
+              type="checkbox"
+              className="fakturierbar-check"
+              onInput={({ target: { checked } }) => {
+                setState((state) => ({
+                  ...state,
+                  fakturierbar: checked,
+                }));
+              }}
+            />
           </div>
-          <div className="excel_format">
-            <label htmlFor="">Excel-Format</label>
-            <select type="checkbox" className="vertag">
-              <option value=".xlsx"></option>
-            </select>
+          <div className="excel_format ">
+            <label htmlFor="">Excel</label>
+            <Select
+              handleSelect={(value) => {
+                setState((state) => ({ ...state, excel: value }));
+              }}
+            />
           </div>
         </div>
       </div>

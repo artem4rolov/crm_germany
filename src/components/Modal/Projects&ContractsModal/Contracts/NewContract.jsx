@@ -177,6 +177,7 @@ const Styles = styled.div`
 const NewContract = (props) => {
   const [state, setState] = useState(null);
 
+  // следим за изменением стейта, и при малейшем изменении - передаем данные в компонент Modal, для дальнейшей отправки на сервер
   useEffect(() => {
     props.setData(state);
   }, [state]);
@@ -184,7 +185,7 @@ const NewContract = (props) => {
   console.log(state);
   return (
     <Styles>
-      <form className="current_contract">
+      <div className="current_contract">
         {/* current_contract header */}
         <div className="current_contract_header">
           <div className="vertag">
@@ -349,7 +350,7 @@ const NewContract = (props) => {
             />
           </div>
         </div>
-      </form>
+      </div>
     </Styles>
   );
 };
