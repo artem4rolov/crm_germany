@@ -1,19 +1,22 @@
-import React, { createRef, forwardRef, useRef, useState } from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
 import { Container } from "react-bootstrap";
 
 import styled from "styled-components";
 
-import AddProjectTodayModal from "./ProjectsModal/AddProjectToday";
+import AddProjectTodayModal from "./TimeSheetsModal/AddProjectToday";
 import NewProject from "./Projects&ContractsModal/Projects/NewProject";
 import EditProject from "./Projects&ContractsModal/Projects/EditProject";
 import CurrentProjectTable from "./CurrentProjectTable";
 import NewContract from "./Projects&ContractsModal/Contracts/NewContract";
 import EditContract from "./Projects&ContractsModal/Contracts/EditContract";
-import EditProjectToday from "./ProjectsModal/EditProjectToday";
+import EditProjectToday from "./TimeSheetsModal/EditProjectToday";
 import RemoveItem from "./RemoveItem";
 import AddNote from "./Note/AddNote";
 import EditNote from "./Note/EditNote";
+import RemoveProjectToday from "./TimeSheetsModal/RemoveProject";
+import RemoveContract from "./Projects&ContractsModal/Contracts/RemoveContract";
+import RemoveNote from "./Note/RemoveNote";
 
 const Styles = styled.div`
   .modal-wrapper {
@@ -201,7 +204,8 @@ const Modal = (props) => {
 
   const handleRemove = (e) => {
     e.preventDefault();
-    setCurrentContent({ ...props });
+    // setCurrentContent({ ...props });
+    console.log("удаление", props);
   };
 
   const handleSubmit = () => {
@@ -221,10 +225,6 @@ const Modal = (props) => {
         {props.remove ? (
           <form action="" className="modal-window-remove">
             {props.remove_item && <RemoveItem {...props} />}
-          </form>
-        ) : currentContent ? (
-          <form action="" className="modal-window-remove">
-            <RemoveItem {...currentContent} />
           </form>
         ) : (
           <Container>
@@ -257,6 +257,7 @@ const Modal = (props) => {
                 )}
               </div>
               {/* content модального окна */}
+              {/* если смотрим контракты проекта на странице Projecte.jsx, убираем padding у контента модального окна */}
               <div
                 className={`modal-content ${
                   props.current_project_table || props.current_contract_table
@@ -264,7 +265,18 @@ const Modal = (props) => {
                     : ""
                 }`}
               >
-                {/* страница Projecte (проекты с контрактами) */}
+                {/* страница Zeiterfassung (Timesheet.jsx - список недель в году) */}
+                {/* добавить новый проект */}
+                {props.add_project_today && <AddProjectTodayModal />}
+                {/* редактироватть текущий контракт */}
+                {props.edit_project_today && <EditProjectToday {...props} />}
+                {/* удалить текущий проект */}
+                {/* передаем родителю (Modal.jsx) данные о проекте, который хотим удалить (он есть в пропсах) */}
+                {props.remove_project_today && (
+                  <RemoveProjectToday {...props} />
+                )}
+
+                {/* страница Projecte (Projects.jsx - проекты с контрактами) */}
                 {/* модалки Проектов */}
                 {/* создание нового проекта */}
                 {props.new_project && (
@@ -285,22 +297,20 @@ const Modal = (props) => {
                 {props.current_contract && props.current_project_disabled && (
                   <EditContract {...props} />
                 )}
+                {/* удаление current контракта */}
+                {props.remove_current_contract && <RemoveContract {...props} />}
                 {/* просмотр отдельного контракта в таблице модалки */}
                 {props.current_contract_table && (
                   <CurrentProjectTable {...props} />
                 )}
-
-                {/* страница Zeiterfassung (Projects.jsx) */}
-                {/* добавить новый контракт */}
-                {props.add_project_today && <AddProjectTodayModal />}
-                {/* редактироватть текущий контракт */}
-                {props.edit_project_today && <EditProjectToday {...props} />}
 
                 {/* страница Note (Note.jsx) */}
                 {/* добавить новую заметку */}
                 {props.add_note && <AddNote />}
                 {/* редактироватть заметку */}
                 {props.edit_note && <EditNote {...props} />}
+                {/* удалить заметку */}
+                {props.remove_note && <RemoveNote {...props} />}
               </div>
               {/* footer модального окна */}
               <div className="modal-footer">
@@ -359,6 +369,11 @@ const Modal = (props) => {
                     onChange={() => {}}
                     onClick={handleSubmit}
                     type="submit"
+                    disabled={
+                      props.remove_item ||
+                      props.remove_project_today ||
+                      props.remove_contract
+                    }
                   />
                 </div>
               </div>

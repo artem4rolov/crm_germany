@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import CalendarIcon from "../../../../assets/icon_calendar.svg";
 import styled from "styled-components";
-import Select from "../../../Select/Select";
 
 const Styles = styled.div`
   width: 100%;
@@ -9,6 +8,7 @@ const Styles = styled.div`
   /* страница Projecte */
   /* new contract */
   /* edit contract */
+  /* remove contract */
   .current_contract {
     display: flex;
     flex-direction: column;
@@ -47,6 +47,10 @@ const Styles = styled.div`
           }
           &.budget {
             width: 60px;
+          }
+
+          &:disabled {
+            background-color: #f2f3f4;
           }
         }
       }
@@ -97,6 +101,10 @@ const Styles = styled.div`
               z-index: 10;
               background: transparent;
             }
+
+            &:disabled {
+              background-color: #f2f3f4;
+            }
           }
         }
       }
@@ -124,6 +132,10 @@ const Styles = styled.div`
           .excel_format {
             width: 106px;
           }
+
+          &:disabled {
+            background-color: #f2f3f4;
+          }
         }
       }
 
@@ -141,6 +153,10 @@ const Styles = styled.div`
           background: #ffffff;
           border: 1.3px solid #8c8c8c;
           border-radius: 3px;
+        }
+
+        &:disabled {
+          background-color: #f2f3f4;
         }
       }
     }
@@ -178,7 +194,7 @@ const Styles = styled.div`
           }
 
           &:disabled {
-            background: #f2f3f4;
+            background-color: #f2f3f4;
           }
         }
       }
@@ -186,16 +202,8 @@ const Styles = styled.div`
   }
 `;
 
-const EditContract = (props) => {
-  const [state, setState] = useState(null);
-
-  // следим за изменением стейта, и при малейшем изменении - передаем данные в компонент Modal, для дальнейшей отправки на сервер
-  useEffect(() => {
-    // props.setData(state);
-  }, [state]);
-
-  console.log(state);
-
+const RemoveContract = (props) => {
+  console.log(props);
   return (
     <Styles>
       <div className="current_contract">
@@ -203,32 +211,32 @@ const EditContract = (props) => {
         <div className="current_contract_header">
           <div className="vertag">
             <label htmlFor="">Vertag</label>
-            <input type="text" className="vertag" />
+            <input type="text" disabled className="vertag" />
           </div>
           <div className="bezeichnung_vermittler">
             <label htmlFor="">Bezeichnung Vermittler</label>
-            <input type="text" className="bezeichnung_vermittler" />
+            <input type="text" disabled className="bezeichnung_vermittler" />
           </div>
           <div className="bezeichnung_kunde">
             <label htmlFor="">Bezeichnung Kunde</label>
-            <input type="text" className="bezeichnung_vermittler" />
+            <input type="text" disabled className="bezeichnung_vermittler" />
           </div>
           <div className="budget">
             <label htmlFor="">Budget</label>
-            <input type="text" className="budget" />
+            <input type="text" disabled className="budget" />
           </div>
           <div className="start">
             <span>Start</span>
             <div className="start-block">
               <img src={CalendarIcon} alt="calendar icon" />
-              <input type="date" className="start" />
+              <input type="date" disabled className="start" />
             </div>
           </div>
           <div className="ende">
             <span>Ende</span>
             <div className="ende-block">
               <img src={CalendarIcon} alt="calendar icon" />
-              <input type="date" className="ende" />
+              <input type="date" disabled className="ende" />
             </div>
           </div>
         </div>
@@ -236,19 +244,15 @@ const EditContract = (props) => {
         <div className="current_contract_main">
           <div className="aktiv">
             <label htmlFor="">Aktiv</label>
-            <input type="checkbox" className="aktiv-check" />
+            <input type="checkbox" disabled className="aktiv-check" />
           </div>
           <div className="fakturierbar">
             <label htmlFor="">Fakturierbar</label>
-            <input type="checkbox" className="fakturierbar-check" />
+            <input type="checkbox" disabled className="fakturierbar-check" />
           </div>
-          <div className="excel_format ">
-            <label htmlFor="">Excel</label>
-            <Select
-              handleSelect={(value) => {
-                setState((state) => ({ ...state, excel: value }));
-              }}
-            />
+          <div className="excel_format">
+            <label htmlFor="">Excel-Format</label>
+            <select type="checkbox" disabled className="vertag" />
           </div>
         </div>
         {/* current_contract footer */}
@@ -258,7 +262,7 @@ const EditContract = (props) => {
             <input
               disabled
               type="text"
-              value={props.current_project_disabled.project}
+              value={props.remove_current_contract.project}
               className="projekt_name"
             />
           </div>
@@ -270,7 +274,7 @@ const EditContract = (props) => {
             <label htmlFor="">Start</label>
             <input
               disabled
-              value={props.current_project_disabled.start}
+              value={props.remove_current_contract.start}
               type="text"
               className="start"
             />
@@ -279,7 +283,7 @@ const EditContract = (props) => {
             <label htmlFor="">Ende</label>
             <input
               disabled
-              value={props.current_project_disabled.end}
+              value={props.remove_current_contract.end}
               type="text"
               className="ende"
             />
@@ -290,4 +294,4 @@ const EditContract = (props) => {
   );
 };
 
-export default EditContract;
+export default RemoveContract;

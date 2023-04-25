@@ -7,6 +7,10 @@ const Styles = styled.div`
     margin: 0 auto;
     position: relative;
 
+    &.titles {
+      width: 218px;
+    }
+
     &__header {
       cursor: pointer;
       display: flex;
@@ -88,23 +92,25 @@ const Styles = styled.div`
 
 const files = [".xlsx", ".xlsm", ".xls", ".xltm", ".xltx", ".xlsb"];
 
-const Select = ({ handleSelect }) => {
+const Select = (props) => {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
 
   const onSelect = (index) => {
     setActive(index);
-    handleSelect(files[index]);
+    // props.handleSelect(props.titles[index] || files[index]);
   };
 
   return (
     <Styles>
-      <div className="select">
+      <div className={`select ${props.titles ? "titles" : ""}`}>
         <div
           className={`select__header`}
           onClick={() => setOpen((prev) => !prev)}
         >
-          <span className="select__current">{files[active]}</span>
+          <span className="select__current">
+            {props.titles ? props.titles[active] : files[active]}
+          </span>
           <div
             className={`select__icon ${open ? "active" : ""}`}
             onClick={() => setOpen((prev) => !prev)}
@@ -113,20 +119,35 @@ const Select = ({ handleSelect }) => {
 
         {open ? (
           <div className="select__body">
-            {files.map((name, index) => (
-              <div
-                key={index}
-                className="select__item"
-                onClick={() => onSelect(index)}
-              >
-                <input
-                  type="radio"
-                  checked={active === index}
-                  onChange={() => {}}
-                />
-                <span>{name}</span>
-              </div>
-            ))}
+            {props.titles
+              ? props.titles.map((name, index) => (
+                  <div
+                    key={index}
+                    className="select__item"
+                    onClick={() => onSelect(index)}
+                  >
+                    <input
+                      type="radio"
+                      checked={active === index}
+                      onChange={() => {}}
+                    />
+                    <span>{name}</span>
+                  </div>
+                ))
+              : files.map((name, index) => (
+                  <div
+                    key={index}
+                    className="select__item"
+                    onClick={() => onSelect(index)}
+                  >
+                    <input
+                      type="radio"
+                      checked={active === index}
+                      onChange={() => {}}
+                    />
+                    <span>{name}</span>
+                  </div>
+                ))}
           </div>
         ) : null}
       </div>

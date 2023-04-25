@@ -47,12 +47,12 @@ const Styles = styled.div`
 
 const navBarData = [
   { title: "Dashboard", href: "/" },
-  { title: "Zeiterfassung", href: "/projects" },
-  { title: "Projekte", href: "/contracts" },
-  { title: "Leistungsnachweise", href: "/work_days_per_month" },
-  { title: "Jahresübersicht", href: "/work_days_per_year" },
+  { title: "Zeiterfassung", href: "/timesheet" },
+  { title: "Projekte", href: "/projects" },
+  { title: "Leistungsnachweise", href: "/reports/excel" },
+  { title: "Jahresübersicht", href: "/reports/year-summary" },
   { title: "Feiertage", href: "/holidays" },
-  { title: "Anmerkungen", href: "/notes" },
+  { title: "Notizen", href: "/notes" },
 ];
 
 function Header() {

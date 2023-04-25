@@ -1,8 +1,8 @@
 import React from "react";
 import { Container, Table } from "react-bootstrap";
 import styled from "styled-components";
-import SideBar from "../../components/SideBar/SideBar";
-import data from "../../mock/work-days-per-year.json";
+import SideBar from "../../../components/SideBar/SideBar";
+import data from "../../../mock/work-days-per-year.json";
 
 const Styles = styled.div`
   table {
@@ -15,7 +15,7 @@ const Styles = styled.div`
 
     tbody {
       tr {
-        &.workdaysperyear-label {
+        &.yearsummary-label {
           font-weight: 500;
           font-size: 20px;
           line-height: 28px;
@@ -42,7 +42,7 @@ const Styles = styled.div`
     }
   }
 
-  .workdaysperyear-wrapper {
+  .yearsummary-wrapper {
     width: 100%;
     height: 100%;
     min-height: 100vh;
@@ -88,10 +88,10 @@ const columnTitle = [
   { title: "Summe", classes: "col text-center sum" },
 ];
 
-const WorkDaysPerYear = () => {
+const YearSummary = () => {
   return (
     <Styles>
-      <div className="workdaysperyear-wrapper">
+      <div className="yearsummary-wrapper">
         <SideBar
           calendar
           filters={[{ title: "Важные" }]}
@@ -112,7 +112,7 @@ const WorkDaysPerYear = () => {
               </tr>
             </thead>
             <tbody>
-              <tr className="workdaysperyear-label">
+              <tr className="yearsummary-label">
                 <th>Fakturierbare Aufwände</th>
               </tr>
               {data.map((row, index) => (
@@ -140,4 +140,4 @@ const WorkDaysPerYear = () => {
   );
 };
 
-export default WorkDaysPerYear;
+export default YearSummary;

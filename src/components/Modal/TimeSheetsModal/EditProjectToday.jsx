@@ -1,8 +1,9 @@
 import React from "react";
 
-import CalendarImage from "../../../assets/icon_calendar.svg";
+import CalendarIcon from "../../../assets/icon_calendar.svg";
 import ClockImage from "../../../assets/icon_time.svg";
 import styled from "styled-components";
+import Select from "../../Select/Select";
 
 const Styles = styled.div`
   width: 100%;
@@ -104,7 +105,6 @@ const Styles = styled.div`
         line-height: 21px;
         color: #32363a;
 
-        .datum__content,
         .von__content,
         .bis__content,
         .pause__content,
@@ -119,6 +119,47 @@ const Styles = styled.div`
             border: none;
             outline: none;
             width: 100%;
+          }
+        }
+
+        .datum__content {
+          display: flex;
+          justify-content: start;
+          align-items: center;
+          position: relative;
+
+          padding: 10px 5px;
+          background: #ffffff;
+          outline: none;
+          border: 1px solid #e1e1e1;
+          border-radius: 4px;
+
+          img {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+
+            &:hover {
+              background: #000;
+            }
+          }
+
+          input {
+            text-align: right;
+            position: relative;
+            outline: none;
+            border: none;
+            background: transparent;
+            padding-right: 5px;
+
+            ::-webkit-calendar-picker-indicator {
+              cursor: pointer;
+              position: absolute;
+              top: 0;
+              left: 0;
+              z-index: 10;
+              background: transparent;
+            }
           }
         }
       }
@@ -141,7 +182,15 @@ const EditProjectToday = (props) => {
           </div>
           <div className="project-select">
             <label className="mb-2">.</label>
-            <select name="" id=""></select>
+            <Select
+              titles={[
+                "Abrechnung mit 0.00 PT",
+                "Abrechnung mit 0.25 PT",
+                "Abrechnung mit 0.50 PT",
+                "Abrechnung mit 0.75 PT",
+                "Abrechnung mit 1.00 PT",
+              ]}
+            />
           </div>
         </div>
         {/* поля текста textarea */}
@@ -160,10 +209,14 @@ const EditProjectToday = (props) => {
           <div className="datum">
             <label>Datum</label>
             <div className="datum__content">
-              <label htmlFor="date">
-                <img src={CalendarImage} alt="calendar icon" />
-              </label>
-              <input type="date" id="date" />
+              <img src={CalendarIcon} alt="calendar icon" />
+              <input
+                type="date"
+                className="start"
+                onInput={({ target: { value } }) => {
+                  // setState((state) => ({ ...state, start: value }));
+                }}
+              />
             </div>
           </div>
           <div className="von">

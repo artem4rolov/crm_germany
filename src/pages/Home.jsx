@@ -2,13 +2,13 @@ import React from "react";
 import Header from "../components/Header/Header";
 import { Route, Routes } from "react-router";
 import Dashboard from "../tabs/Dashboard/Dashboard";
-import WorkDaysPerYear from "../tabs/WorkDaysPerYear/WorkDaysPerYear";
+import YearSummary from "../tabs/Reports/Excel/Excel";
 import Error from "./Error";
 import Holidays from "../tabs/Holidays/Holidays";
-import Projects from "../tabs/Projects/Projects";
+import Timesheet from "../tabs/Timesheet/Timesheet";
 import Notes from "../tabs/Notes/Notes";
-import Contracts from "../tabs/Contracts/Contracts";
-import WorkDaysPerMonth from "../tabs/WorkDaysPerMonth/WorkDaysPerMonth";
+import Projects from "../tabs/Projects/Projects";
+import Excel from "../tabs/Reports/YearSummary/YearSummary";
 
 const Home = () => {
   return (
@@ -16,12 +16,12 @@ const Home = () => {
       <Header />
       <Routes>
         <Route index path="/" element={<Dashboard />} />
-        <Route path="/work_days_per_year" element={<WorkDaysPerYear />} />
-        <Route path="/holidays" element={<Holidays />} />
+        <Route path="/timesheet" element={<Timesheet />} />
         <Route path="/projects" element={<Projects />} />
+        <Route path="/reports/excel" element={<Excel />} />
+        <Route path="/reports/year-summary" element={<YearSummary />} />
+        <Route path="/holidays" element={<Holidays />} />
         <Route path="/notes" element={<Notes />} />
-        <Route path="/contracts" element={<Contracts />} />
-        <Route path="/work_days_per_month" element={<WorkDaysPerMonth />} />
         <Route path="/*" element={<Error />} />
       </Routes>
     </>

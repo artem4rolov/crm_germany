@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import SideBar from "../../components/SideBar/SideBar";
+import SideBar from "../../../components/SideBar/SideBar";
 import { Container, Table } from "react-bootstrap";
-import data from "../../mock/work-days-per-month.json";
+import data from "../../../mock/work-days-per-month.json";
 
 const Styles = styled.div`
   table {
@@ -36,7 +36,7 @@ const Styles = styled.div`
     }
   }
 
-  .workdayspermonth-wrapper {
+  .excel-wrapper {
     width: 100%;
     height: 100%;
     min-height: 100vh;
@@ -91,10 +91,10 @@ const columnTitle = [
   },
 ];
 
-const WorkDaysPerMonth = () => {
+const Excel = () => {
   return (
     <Styles>
-      <div className="workdayspermonth-wrapper">
+      <div className="excel-wrapper">
         <SideBar
           calendar
           filters={[
@@ -166,4 +166,4 @@ const WorkDaysPerMonth = () => {
   );
 };
 
-export default WorkDaysPerMonth;
+export default Excel;

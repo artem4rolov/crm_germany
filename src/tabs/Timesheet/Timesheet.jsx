@@ -1,20 +1,22 @@
 import React, { useState } from "react";
+import { Container, Table } from "react-bootstrap";
+
 import styled from "styled-components";
 import SideBar from "../../components/SideBar/SideBar";
-import { Container, Table } from "react-bootstrap";
 import Modal from "../../components/Modal/Modal";
-import PlusIconBlue from "../../assets/icon_added_blue.svg";
+import PlusIcon from "../../assets/icon_added.svg";
 import EditIcon from "../../assets/icon_edit.svg";
 import TrashIcon from "../../assets/icon_trash-can.svg";
 
-import data from "../../mock/notes.json";
+import data from "../../mock/table-projects.json";
 
 const Styles = styled.div`
-  .notes-wrapper {
+  .timesheet-wrapper {
     width: 100%;
     height: 100%;
     min-height: 100vh;
     background: #f6f6f6;
+    position: relative;
   }
 
   .table-titles-wrapper {
@@ -35,36 +37,6 @@ const Styles = styled.div`
       border-color: #fcfcfc;
     }
 
-    .table-titles {
-      position: relative;
-
-      .add-item {
-        position: absolute;
-        top: 0;
-        right: 0;
-        cursor: pointer;
-        opacity: 0.7;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        &:hover {
-          opacity: 1;
-        }
-
-        img {
-          width: 22px;
-          height: 22px;
-        }
-
-        span {
-          color: #0854a0;
-          font-weight: 500;
-        }
-      }
-    }
-
     .table-content {
       position: relative;
 
@@ -79,7 +51,7 @@ const Styles = styled.div`
         gap: 12px;
 
         background: #0854a0;
-        width: 100px;
+        width: 138px;
         padding: 8px;
         box-shadow: 0px 6px 30px rgba(147, 147, 147, 0.18);
         border-radius: 4px;
@@ -114,27 +86,32 @@ const Styles = styled.div`
 `;
 
 const columnTitle = [
-  { title: "Datum", classes: "col-2" },
-  { title: "Thema", classes: "col-3" },
-  { title: "Inhalt", classes: "col-8" },
+  { title: "KW", classes: "col" },
+  { title: "Datum", classes: "col-1" },
+  { title: "Projekt", classes: "col-3" },
+  { title: "Von", classes: "col" },
+  { title: "Bis", classes: "col" },
+  { title: "Pause", classes: "col" },
+  { title: "Zeit", classes: "col" },
+  { title: "PT", classes: "col" },
+  { title: "Tätigkeiten", classes: "col-4" },
 ];
 
-const Notes = () => {
+const Timesheet = () => {
   // тогглим модалки для разных функций (добавление, редактирование, удаление)
-  const [toggleAddNote, setToggleAddNote] = useState(false);
-  const [toggleEditNote, setToggleEditNote] = useState(false);
-  const [toggleRemoveNote, setToggleRemoveNote] = useState(false);
+  const [toggleAddProjectToday, setToggleAddProjectToday] = useState(false);
+  const [toggleEditProjectToday, setToggleEditProjectToday] = useState(false);
+  const [toggleRemoveProjectToday, setToggleRemoveProjectToday] =
+    useState(false);
   //стейт для установки current project
-  const [currentNote, setCurrentNote] = useState(null);
+  const [currentProject, setCurrentProject] = useState(null);
 
   return (
     <Styles>
-      <div className="notes-wrapper">
+      <div className="timesheet-wrapper">
         <SideBar
-          calendar
+          filters={[{ title: "Важные" }, { title: "Очистить пустые" }]}
           columnTitle={columnTitle}
-          filters={[{ title: "Важные" }]}
-          addNote={() => setToggleAddNote((prev) => !prev)}
           search
         />
         <div className="table-titles-wrapper"></div>
@@ -148,15 +125,6 @@ const Notes = () => {
                     {item.title}
                   </th>
                 ))}
-                <th
-                  className="add-item"
-                  onClick={() => {
-                    setToggleAddNote((prev) => !prev);
-                  }}
-                >
-                  <img src={PlusIconBlue} alt="" />
-                  <span>Anmerkung hinzufügen</span>
-                </th>
               </tr>
             </thead>
             <tbody>
@@ -169,11 +137,20 @@ const Notes = () => {
                   <th className="row-modal">
                     <div>
                       <img
+                        src={PlusIcon}
+                        alt="plus icon"
+                        onClick={() =>
+                          setToggleAddProjectToday((prev) => !prev)
+                        }
+                      />
+                    </div>
+                    <div>
+                      <img
                         src={EditIcon}
                         alt="edit icon"
                         onClick={() => {
-                          setCurrentNote(row);
-                          setToggleEditNote((prev) => !prev);
+                          setCurrentProject(row);
+                          setToggleEditProjectToday((prev) => !prev);
                         }}
                       />
                     </div>
@@ -182,8 +159,8 @@ const Notes = () => {
                         src={TrashIcon}
                         alt="trash icon"
                         onClick={() => {
-                          setCurrentNote(row);
-                          setToggleRemoveNote((prev) => !prev);
+                          setCurrentProject(row[2]);
+                          setToggleRemoveProjectToday((prev) => !prev);
                         }}
                       />
                     </div>
@@ -193,32 +170,32 @@ const Notes = () => {
             </tbody>
           </Table>
         </Container>
-        {/* добавить новую заметку*/}
-        {toggleAddNote && (
+        {/* добавить новый проект */}
+        {toggleAddProjectToday && (
           <Modal
             important
-            add_note
-            title="Neue Notiz erstellen"
-            toggle={setToggleAddNote}
+            add_project_today
+            title="Projekt hinzufügen"
+            toggle={setToggleAddProjectToday}
           />
         )}
-        {/* редактировать текущую заметку */}
-        {toggleEditNote && (
+        {/* редактировать текущий проект */}
+        {toggleEditProjectToday && (
           <Modal
             important
-            edit_note={currentNote}
-            title={currentNote[1]}
-            toggle={setToggleEditNote}
+            edit_project_today={currentProject}
+            title={currentProject[2]}
+            toggle={setToggleEditProjectToday}
           />
         )}
-        {/* удалить текущую заметку */}
-        {toggleRemoveNote && (
+        {/* удалить текущий проект */}
+        {toggleRemoveProjectToday && (
           <Modal
             important
             footer_delete
-            remove_note={currentNote}
-            title={"REMOVE " + currentNote[1]}
-            toggle={setToggleRemoveNote}
+            remove_project_today={currentProject}
+            title={"REMOVE " + currentProject[2]}
+            toggle={setToggleRemoveProjectToday}
           />
         )}
       </div>
@@ -226,4 +203,4 @@ const Notes = () => {
   );
 };
 
-export default Notes;
+export default Timesheet;

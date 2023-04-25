@@ -7,14 +7,14 @@ const Styles = styled.div`
   width: 100%;
   /* страница Notes */
   /* edit Note */
-  .edit_note {
+  .remove_note {
     display: flex;
     width: 100%;
     flex-direction: column;
     gap: 40px;
     padding: 40px;
 
-    .edit_note_header {
+    .remove_note_header {
       display: flex;
       justify-content: start;
       align-items: center;
@@ -60,6 +60,10 @@ const Styles = styled.div`
             background: transparent;
             padding-right: 5px;
 
+            &:disabled {
+              background-color: #f2f3f4;
+            }
+
             ::-webkit-calendar-picker-indicator {
               cursor: pointer;
               position: absolute;
@@ -91,11 +95,15 @@ const Styles = styled.div`
           padding: 8px;
           outline: none;
           width: 100%;
+
+          &:disabled {
+            background-color: #f2f3f4;
+          }
         }
       }
     }
 
-    .edit_note_main {
+    .remove_note_main {
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -115,24 +123,29 @@ const Styles = styled.div`
         font-size: 15px;
         line-height: 21px;
         color: #32363a;
+
+        &:disabled {
+          background-color: #f2f3f4;
+        }
       }
     }
   }
   /* *********************************** */
 `;
 
-const EditNote = () => {
+const RemoveNote = () => {
   return (
     <Styles>
-      <div className="edit_note">
+      <div className="remove_note">
         {/* время вверху */}
-        <div className="edit_note_header">
+        <div className="remove_note_header">
           {/* календарь */}
           <div className="datum">
             <label>Datum</label>
             <div className="datum__content">
               <img src={CalendarIcon} alt="calendar icon" />
               <input
+                disabled
                 type="date"
                 className="start"
                 name="start"
@@ -148,17 +161,17 @@ const EditNote = () => {
           {/* инпут */}
           <div className="thema">
             <label htmlFor="">Thema</label>
-            <input type="text" />
+            <input type="text" disabled />
           </div>
         </div>
         {/* текстовое поле */}
-        <div className="edit_note_main">
+        <div className="remove_note_main">
           <label htmlFor="">Inhalt</label>
-          <textarea type="text" />
+          <textarea type="text" disabled />
         </div>
       </div>
     </Styles>
   );
 };
 
-export default EditNote;
+export default RemoveNote;
