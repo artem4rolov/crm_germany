@@ -91,6 +91,7 @@ const columnTitle = [
   { title: "Standort", classes: "col-2" },
   { title: "Kommentar", classes: "col-6" },
 ];
+const regions = ["Alle", "BW", "HE", "RP", "RU"];
 
 const Holidays = () => {
   //стейт для установки current project
@@ -102,7 +103,12 @@ const Holidays = () => {
   return (
     <Styles>
       <div className="holidays-wrapper">
-        <SideBar calendar download columnTitle={columnTitle} />
+        <SideBar
+          calendar
+          download
+          columnTitle={columnTitle}
+          regions={regions}
+        />
         <div className="table-titles-wrapper"></div>
         <Container>
           <Table responsive>

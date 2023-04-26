@@ -46,10 +46,6 @@ const Styles = styled.div`
             position: absolute;
             width: 24px;
             height: 24px;
-
-            &:hover {
-              background: #000;
-            }
           }
 
           input {

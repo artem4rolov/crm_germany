@@ -175,6 +175,37 @@ const Styles = styled.div`
     }
   }
 
+  .sidebar-regions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+
+    .region {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #bebebe;
+      border-radius: 4px;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+
+      color: #4b4e51;
+      cursor: pointer;
+
+      &:hover {
+        border: 1px solid #0854a0;
+      }
+
+      &.active {
+        background: #0854a0;
+        color: #fff;
+      }
+    }
+  }
+
   .sidebar-download {
     display: flex;
     align-items: center;
@@ -229,6 +260,9 @@ const SideBar = (props) => {
   // стейт для закрепления сайд-бара наверху
   const [stickyClass, setStickyClass] = useState("relative");
 
+  // стейт для выбора региона
+  const [activeRegion, setActiveRegion] = useState(0);
+
   // функция для закрпеления сайдбара наверху
   const stickNavbar = () => {
     if (window !== undefined) {
@@ -282,6 +316,22 @@ const SideBar = (props) => {
                       </div>
                     );
                   })}
+                </div>
+              )}
+
+              {props.regions && (
+                <div className="sidebar-regions">
+                  {props.regions.map((region, index) => (
+                    <div
+                      key={index}
+                      className={`region ${
+                        activeRegion === index ? "active" : ""
+                      }`}
+                      onClick={() => setActiveRegion(index)}
+                    >
+                      {region}
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
