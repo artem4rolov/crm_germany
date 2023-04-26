@@ -1,26 +1,24 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-// бэкенд по адресу
-const backendURL = "https://sandbox.w-hoffmann.com";
-// const backendURL = "https://nice-pink-lapel.cyclic.app";
+import apiClient from "../../../services/api";
 
 // вход
 export const userLogin = createAsyncThunk(
   "auth/login",
   async ({ email, password }) => {
     try {
-      // указываем тип отправляемых данных пользоваетелем на сервер
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const { data } = await axios.post(
-        `${backendURL}/login`,
-        { email, password },
-        config
-      );
+      const data = await apiClient
+        .get("/sanctum/csrf-cookie")
+        .then(async (response) => {
+          console.log(response);
+          await apiClient
+            .post("/login", {
+              email: email,
+              password: password,
+            })
+            .then((response) => {
+              console.log(response);
+            });
+        });
       // заносим токен авторизации в localStorage
       // localStorage.setItem("userToken", data.token);
       return data;

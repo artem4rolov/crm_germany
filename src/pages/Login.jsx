@@ -140,10 +140,10 @@ const Login = () => {
   };
 
   React.useEffect(() => {
-    if (user !== null) {
+    if (user && !loading && !error) {
       navigate("/");
     }
-  }, [user]);
+  }, [user, loading, error, navigate]);
 
   return (
     <Styles>
