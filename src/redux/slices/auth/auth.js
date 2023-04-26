@@ -12,12 +12,11 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    // logout: (state) => {
-    //   localStorage.removeItem("userToken"); // deletes token from storage
-    //   state.loading = false;
-    //   state.user = null;
-    //
-    // },
+    logout: (state) => {
+      // localStorage.removeItem("userToken"); // deletes token from storage
+      state.loading = false;
+      state.user = null;
+    },
     // обновляем каждые 15 минут (в Header.jsx) данные о пользователе, чтобы не сбрасывать аутентификацию
     // setCredentials: (state, { payload }) => {
     //   state.loading = false;
@@ -44,5 +43,5 @@ const authSlice = createSlice({
   },
 });
 
-// export const { logout, setCredentials } = authSlice.actions;
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;

@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "../components/Header/Header";
-import { Route, Routes } from "react-router";
+import { useNavigate, Route, Routes } from "react-router";
 import Dashboard from "../tabs/Dashboard/Dashboard";
 import YearSummary from "../tabs/Reports/Excel/Excel";
 import Error from "./Error";
@@ -9,8 +9,18 @@ import Timesheet from "../tabs/Timesheet/Timesheet";
 import Notes from "../tabs/Notes/Notes";
 import Projects from "../tabs/Projects/Projects";
 import Excel from "../tabs/Reports/YearSummary/YearSummary";
+import { useSelector } from "react-redux";
 
 const Home = () => {
+  const { loading, user, error } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (user == null) {
+      navigate("/login");
+    }
+  }, [user]);
+
   return (
     <>
       <Header />

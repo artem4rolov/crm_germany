@@ -7,6 +7,8 @@ import LogoDoor from "../../assets/icon_door-open.svg";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/slices/auth/auth";
 
 const Styles = styled.div`
   .navbar {
@@ -58,6 +60,8 @@ const navBarData = [
 function Header() {
   const [active, setActive] = useState(null);
 
+  const dispatch = useDispatch();
+
   const handleActive = (index) => {
     setActive(index);
     localStorage.setItem("activeTab", index);
@@ -94,7 +98,8 @@ function Header() {
 
           {/* кнопка авторизации */}
           <Link
-            to="/login"
+            // to="/login"
+            onClick={() => dispatch(logout())}
             className="nav-link d-flex justify-content-end align-items-center"
           >
             <Image className="mx-1" src={LogoDoor} alt="logout" />

@@ -139,6 +139,12 @@ const Login = () => {
     dispatch(userLogin({ email: username, password: password }));
   };
 
+  React.useEffect(() => {
+    if (user !== null) {
+      navigate("/");
+    }
+  }, [user]);
+
   return (
     <Styles>
       <form>
