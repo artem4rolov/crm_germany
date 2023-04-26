@@ -180,6 +180,7 @@ const Styles = styled.div`
     justify-content: center;
     align-items: center;
     gap: 8px;
+    margin-left: 30px;
 
     .region {
       width: 40px;

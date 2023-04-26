@@ -5,7 +5,9 @@ import LoginImage2 from "../assets/login-image-2.svg";
 import LoginModal from "../assets/login-modal-image.svg";
 import styled from "styled-components";
 import { Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { userLogin } from "../redux/slices/auth/authActions";
 
 const Styles = styled.div`
   .home__button {
@@ -122,12 +124,19 @@ const Styles = styled.div`
 `;
 
 const Login = () => {
+  // достаем переменные из redux
+  const { loading, user, error } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(username, password);
+    // отправляем на бэк объект со свойствами email и password и с соответствующими ключами
+    dispatch(userLogin({ email: username, password: password }));
   };
 
   return (
