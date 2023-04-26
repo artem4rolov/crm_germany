@@ -4,7 +4,7 @@ import { userLogin } from "./authActions";
 
 const initialState = {
   loading: false, // отображение загрузки
-  user: null, // пользователь
+  userStatus: null, // пользователь
   error: null, // значение ошибки
 };
 
@@ -30,15 +30,15 @@ const authSlice = createSlice({
       // авторизация
       .addCase(userLogin.pending, (state) => {
         state.loading = true;
-        state.user = null;
+        state.userStatus = null;
       })
       .addCase(userLogin.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.userStatus = action.payload;
       })
       .addCase(userLogin.rejected, (state, action) => {
         state.loading = false;
-        state.user = null;
+        state.userStatus = null;
         state.error = action.payload;
       });
   },

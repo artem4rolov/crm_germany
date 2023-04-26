@@ -6,24 +6,23 @@ export const userLogin = createAsyncThunk(
   "auth/login",
   async ({ email, password }) => {
     try {
-      return await apiClient.get("/sanctum/csrf-cookie").then((response) => {
-        // console.log(response);
-        if (response.status === 204) {
-          apiClient
-            .post("/login", {
-              email: email,
-              password: password,
-            })
-            .then((response) => {
-              return response;
-            });
-        }
-        return response.status;
-      });
+      // делаем запрос за куками
+      const tokenStatus = await apiClient.get("/sanctum/csrf-cookie");
+
+      if (tokenStatus.status === 204) {
+        const user = await apiClient
+          .post("/login", {
+            email: email,
+            password: password,
+          })
+          .then((response) => {
+            return response;
+          });
+        return user.status;
+      }
 
       // заносим токен авторизации в localStorage
       // localStorage.setItem("userToken", data.token);
-      // console.log(response);
     } catch (error) {
       console.log(error);
     }

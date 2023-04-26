@@ -125,7 +125,7 @@ const Styles = styled.div`
 
 const Login = () => {
   // достаем переменные из redux
-  const { loading, user, error } = useSelector((state) => state.auth);
+  const { loading, userStatus, error } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -139,11 +139,12 @@ const Login = () => {
     dispatch(userLogin({ email: username, password: password }));
   };
 
+  // если статус авторизации 200 и нет загрузки и ошибок - редиректим на главную страницу
   React.useEffect(() => {
-    if (user && !loading && !error) {
+    if (userStatus === 200 && !loading && !error) {
       navigate("/");
     }
-  }, [user, loading, error, navigate]);
+  }, [userStatus, loading, error, navigate]);
 
   return (
     <Styles>
