@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 // функция авторизации
-import { userLogin } from "./authActions";
+import { getToken } from "./authActions";
 
 const initialState = {
   loading: false, // отображение загрузки
-  user: null, // пользователь
+  scrfTokenStatus: null, // пользователь
   error: null, // значение ошибки
 };
 
@@ -15,7 +15,8 @@ const authSlice = createSlice({
     logout: (state) => {
       // localStorage.removeItem("userToken"); // deletes token from storage
       state.loading = false;
-      state.user = null;
+      state.scrfTokenStatus = null;
+      state.error = null;
     },
     // обновляем каждые 15 минут (в Header.jsx) данные о пользователе, чтобы не сбрасывать аутентификацию
     // setCredentials: (state, { payload }) => {
@@ -27,17 +28,17 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // авторизация
-      .addCase(userLogin.pending, (state) => {
+      .addCase(getToken.pending, (state) => {
         state.loading = true;
-        state.user = null;
+        state.scrfTokenStatus = null;
       })
-      .addCase(userLogin.fulfilled, (state, action) => {
+      .addCase(getToken.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.scrfTokenStatus = action.payload;
       })
-      .addCase(userLogin.rejected, (state, action) => {
+      .addCase(getToken.rejected, (state, action) => {
         state.loading = false;
-        state.user = null;
+        state.scrfTokenStatus = null;
         state.error = action.payload;
       });
   },
