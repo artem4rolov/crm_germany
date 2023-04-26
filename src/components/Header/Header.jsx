@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { logout } from "../../redux/slices/auth/auth";
+import { userLogout } from "../../redux/slices/auth/authActions";
 
 const Styles = styled.div`
   .navbar {
@@ -99,7 +100,7 @@ function Header() {
           {/* кнопка авторизации */}
           <Link
             // to="/login"
-            onClick={() => dispatch(logout())}
+            onClick={() => dispatch(userLogout())}
             className="nav-link d-flex justify-content-end align-items-center"
           >
             <Image className="mx-1" src={LogoDoor} alt="logout" />

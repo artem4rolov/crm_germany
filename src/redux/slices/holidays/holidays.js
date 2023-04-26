@@ -4,12 +4,13 @@ import { userLogin, userLogout } from "./authActions";
 
 const initialState = {
   loading: false, // отображение загрузки
-  userStatus: null, // пользователь
+  holidays: null, // пользователь
   error: null, // значение ошибки
+  filter: null,
 };
 
-const authSlice = createSlice({
-  name: "auth",
+const holidaySlice = createSlice({
+  name: "holidays",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -45,4 +46,4 @@ const authSlice = createSlice({
   },
 });
 
-export default authSlice.reducer;
+export default holidaySlice.reducer;
