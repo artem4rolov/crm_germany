@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getToken } from "../redux/slices/auth/authActions";
+import { userLogin } from "../redux/slices/auth/authActions";
 
 const Styles = styled.div`
   .home__button {
@@ -125,9 +125,7 @@ const Styles = styled.div`
 
 const Login = () => {
   // достаем переменные из redux
-  const { loading, scrfTokenStatus, error } = useSelector(
-    (state) => state.auth
-  );
+  const { loading, user, error } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -138,14 +136,14 @@ const Login = () => {
     e.preventDefault();
     console.log(username, password);
     // отправляем на бэк объект со свойствами email и password и с соответствующими ключами
-    dispatch(getToken({ email: username, password: password }));
+    dispatch(userLogin({ email: username, password: password }));
   };
 
   React.useEffect(() => {
-    if (scrfTokenStatus === 204) {
+    if (user && !loading && !error) {
       navigate("/");
     }
-  }, [scrfTokenStatus]);
+  }, [user, loading, error, navigate]);
 
   return (
     <Styles>

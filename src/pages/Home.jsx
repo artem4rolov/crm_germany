@@ -12,16 +12,14 @@ import Excel from "../tabs/Reports/YearSummary/YearSummary";
 import { useSelector } from "react-redux";
 
 const Home = () => {
-  const { loading, scrfTokenStatus, error } = useSelector(
-    (state) => state.auth
-  );
+  const { loading, user, error } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    if (scrfTokenStatus !== 204) {
+    if (user == null) {
       navigate("/login");
     }
-  }, [scrfTokenStatus]);
+  }, [user]);
 
   return (
     <>
