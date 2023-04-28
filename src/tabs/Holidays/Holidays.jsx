@@ -5,7 +5,10 @@ import SideBar from "../../components/SideBar/SideBar";
 import TrashIcon from "../../assets/icon_trash-can.svg";
 import Modal from "../../components/Modal/Modal";
 import { useDispatch, useSelector } from "react-redux";
-import { getHolidaysNowYear } from "../../redux/slices/holidays/holidaysActions";
+import {
+  getHolidaysByFilter,
+  getHolidaysNowYear,
+} from "../../redux/slices/holidays/holidaysActions";
 
 const Styles = styled.div`
   .holidays-wrapper {
@@ -99,6 +102,10 @@ const Holidays = () => {
   const { loading, holidays, error, filter } = useSelector(
     (state) => state.holidays
   );
+  // достаем переменные из стейта для фильтра праздников
+  const { loadingHolidays, filterDate, filterRegion } = useSelector(
+    (state) => state.holidays
+  );
   const dispatch = useDispatch();
 
   //стейт для установки current project
@@ -108,8 +115,13 @@ const Holidays = () => {
   const [toggleRemoveHoliday, setToggleRemoveHoliday] = useState(false);
 
   React.useEffect(() => {
-    dispatch(getHolidaysNowYear());
-  }, []);
+    dispatch(
+      getHolidaysByFilter({
+        date: filterDate,
+        region: filterRegion,
+      })
+    );
+  }, [filterDate, filterRegion, dispatch]);
 
   console.log(holidays);
 

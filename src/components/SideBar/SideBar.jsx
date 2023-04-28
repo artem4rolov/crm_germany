@@ -1,7 +1,6 @@
 import React from "react";
 import { Container, Table } from "react-bootstrap";
 
-import CalendarImage from "../../assets/icon_calendar.svg";
 import SettingsImage from "../../assets/icon_setting.svg";
 import SearchImage from "../../assets/icon_search.svg";
 import ImportImage from "../../assets/icon_download.svg";
@@ -13,6 +12,9 @@ import PlusIconBlue from "../../assets/icon_added_blue.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { setFilterRegion } from "../../redux/slices/holidays/holidays";
 import { getHolidaysByFilter } from "../../redux/slices/holidays/holidaysActions";
+
+import Regions from "./Regions/Regions";
+import CalendarComponent from "./CalendarComponent/CalendarComponent";
 
 const Styles = styled.div`
   tbody,
@@ -100,37 +102,6 @@ const Styles = styled.div`
     }
   }
 
-  .sidebar-calendar {
-    max-width: 220px;
-    height: 40px;
-    border: 1px solid #bebebe;
-    border-radius: 4px;
-    padding: 2px 10px;
-    cursor: pointer;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-
-    &:hover {
-      border: 1px solid #354a5f;
-    }
-
-    &:actvie {
-      border: 1px solid #351a50;
-    }
-
-    .start-date {
-      border-right: 1px solid gray;
-      padding-right: 10px;
-    }
-
-    .finish-date {
-      margin-left: 5px;
-    }
-  }
-
   .sidebar-settings {
     width: 40px;
     height: 40px;
@@ -174,38 +145,6 @@ const Styles = styled.div`
         font-size: 14px;
         line-height: 19px;
         color: #4b4e51;
-      }
-    }
-  }
-
-  .sidebar-regions {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    margin-left: 30px;
-
-    .region {
-      width: 40px;
-      height: 40px;
-      border: 1px solid #bebebe;
-      border-radius: 4px;
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-
-      color: #4b4e51;
-      cursor: pointer;
-
-      &:hover {
-        border: 1px solid #0854a0;
-      }
-
-      &.active {
-        background: #0854a0;
-        color: #fff;
       }
     }
   }
@@ -262,20 +201,13 @@ const Styles = styled.div`
 
 const SideBar = (props) => {
   // достаем переменные из redux
-  const { loading, filterRegion } = useSelector((state) => state.holidays);
+  const { loading, filterRegion, filterDate } = useSelector(
+    (state) => state.holidays
+  );
   const dispatch = useDispatch();
 
   // стейт для закрепления сайд-бара наверху
   const [stickyClass, setStickyClass] = useState("relative");
-
-  // стейт для выбора региона
-  const [regionActvie, setRegionActive] = useState({
-    Alle: true,
-    BW: false,
-    HE: false,
-    RP: false,
-    RU: false,
-  });
 
   // функция для закрпеления сайдбара наверху
   const stickNavbar = () => {
@@ -284,35 +216,6 @@ const SideBar = (props) => {
       windowHeight > 60 ? setStickyClass("sticky-nav") : setStickyClass("");
     }
   };
-
-  // скидываем все фильтры регионов при нажатии на "Alle"
-  const toggleAll = () => {
-    setRegionActive((prev) => ({
-      ...prev,
-      Alle: true,
-      BW: false,
-      HE: false,
-      RP: false,
-      RU: false,
-    }));
-  };
-
-  useEffect(() => {
-    const arr = [];
-    Object.keys(regionActvie).map((key, index) => {
-      if (regionActvie[key] === true) {
-        arr.push(key);
-      }
-    });
-    dispatch(setFilterRegion(arr));
-    console.log(arr);
-    dispatch(
-      getHolidaysByFilter({
-        date: "01.01.2020-31.12.2020",
-        region: arr,
-      })
-    );
-  }, [regionActvie]);
 
   // следим за скроллом
   useEffect(() => {
@@ -329,11 +232,7 @@ const SideBar = (props) => {
         <Container>
           <div className="sidebar-top">
             <div className="sidebar-left">
-              <div className="sidebar-calendar">
-                <img src={CalendarImage} alt="" />
-                <div className="start-date">Feb 2022</div>
-                <div className="finish-date">Mai 2023</div>
-              </div>
+              <CalendarComponent />
 
               {/* если переданы настройки - рендерим их */}
               {props.settings && (
@@ -363,64 +262,7 @@ const SideBar = (props) => {
               )}
 
               {/* если переданы фильтры (регионы) - рендерим их */}
-              {props.regions && (
-                <div className="sidebar-regions">
-                  <div
-                    className={`region ${regionActvie.Alle ? "active" : ""}`}
-                    onClick={() => toggleAll()}
-                  >
-                    Alle
-                  </div>
-                  <div
-                    className={`region ${regionActvie.BW ? "active" : ""}`}
-                    onClick={() =>
-                      setRegionActive((prev) => ({
-                        ...prev,
-                        BW: !prev.BW,
-                        Alle: false,
-                      }))
-                    }
-                  >
-                    BW
-                  </div>
-                  <div
-                    className={`region ${regionActvie.HE ? "active" : ""}`}
-                    onClick={() =>
-                      setRegionActive((prev) => ({
-                        ...prev,
-                        HE: !prev.HE,
-                        Alle: false,
-                      }))
-                    }
-                  >
-                    HE
-                  </div>
-                  <div
-                    className={`region ${regionActvie.RP ? "active" : ""}`}
-                    onClick={() =>
-                      setRegionActive((prev) => ({
-                        ...prev,
-                        RP: !prev.RP,
-                        Alle: false,
-                      }))
-                    }
-                  >
-                    RP
-                  </div>
-                  <div
-                    className={`region ${regionActvie.RU ? "active" : ""}`}
-                    onClick={() =>
-                      setRegionActive((prev) => ({
-                        ...prev,
-                        RU: !prev.RU,
-                        Alle: false,
-                      }))
-                    }
-                  >
-                    RU
-                  </div>
-                </div>
-              )}
+              {props.regions && <Regions />}
             </div>
             {/* если переданы кнопки загрузки и выгрузки - рендерим их */}
             {props.download && (

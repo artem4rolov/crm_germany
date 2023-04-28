@@ -8,7 +8,7 @@ export const getHolidaysNowYear = createAsyncThunk(
   async () => {
     try {
       // получаем текущий год
-      const nowYear = new Date().getFullYear();
+      // const nowYear = new Date().getFullYear();
 
       const { data } = await apiClient
         .get(`/api/holidays/01.01.2020-31.12.2020`)
@@ -27,22 +27,26 @@ export const getHolidaysByFilter = createAsyncThunk(
   "auth/getHolidaysByFilter",
   async ({ date, region }) => {
     try {
-      // если выбран фильтр "Alle" - показываем все праздники в выбранном диапазоне дат
-      if (region == "Alle" || region == null) {
+      // если фильтр региона не выбран - оставляем только дату
+      if (region == null) {
+        // получаем текущий год
+        // const nowYear = new Date().getFullYear();
+
         const { data } = await apiClient
           .get(`/api/holidays/${date}`)
           .then((response) => {
             return response;
           });
         return data;
-      } else {
-        const { data } = await apiClient
-          .get(`/api/holidays/${date}/${region}`)
-          .then((response) => {
-            return response;
-          });
-        return data;
       }
+
+      // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
+      const { data } = await apiClient
+        .get(`/api/holidays/${date}/${region}`)
+        .then((response) => {
+          return response;
+        });
+      return data;
     } catch (error) {
       console.log(error);
     }
