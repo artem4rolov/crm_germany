@@ -9,10 +9,10 @@ function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  React.useEffect(() => {
-    // отправляем на бэк объект со свойствами email и password и с соответствующими ключами
-    dispatch(testAuth());
-  }, []);
+  // React.useEffect(() => {
+  //   // отправляем на бэк объект со свойствами email и password и с соответствующими ключами
+  //   dispatch(testAuth());
+  // }, []);
 
   return (
     <Routes>

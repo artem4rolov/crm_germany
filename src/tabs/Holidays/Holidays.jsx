@@ -4,7 +4,8 @@ import styled from "styled-components";
 import SideBar from "../../components/SideBar/SideBar";
 import TrashIcon from "../../assets/icon_trash-can.svg";
 import Modal from "../../components/Modal/Modal";
-import data from "../../mock/holidays.json";
+import { useDispatch, useSelector } from "react-redux";
+import { getHolidaysNowYear } from "../../redux/slices/holidays/holidaysActions";
 
 const Styles = styled.div`
   .holidays-wrapper {
@@ -94,11 +95,23 @@ const columnTitle = [
 const regions = ["Alle", "BW", "HE", "RP", "RU"];
 
 const Holidays = () => {
+  // достаем переменные из redux
+  const { loading, holidays, error, filter } = useSelector(
+    (state) => state.holidays
+  );
+  const dispatch = useDispatch();
+
   //стейт для установки current project
   const [currentHoliday, setCurrentHoliday] = useState(null);
 
   // вызов модального окна
   const [toggleRemoveHoliday, setToggleRemoveHoliday] = useState(false);
+
+  React.useEffect(() => {
+    dispatch(getHolidaysNowYear());
+  }, []);
+
+  console.log(holidays);
 
   return (
     <Styles>
@@ -123,25 +136,34 @@ const Holidays = () => {
               </tr>
             </thead>
             <tbody>
-              {data.map((row, index) => (
-                <tr key={index} className={`table-content`}>
-                  {row.map((col, index) => (
-                    <th key={index}>{col}</th>
-                  ))}
-                  <th className="row-modal">
-                    <div>
-                      <img
-                        src={TrashIcon}
-                        alt="trash icon"
-                        onClick={() => {
-                          setCurrentHoliday(row);
-                          setToggleRemoveHoliday((prev) => !prev);
-                        }}
-                      />
-                    </div>
-                  </th>
-                </tr>
-              ))}
+              {holidays &&
+                holidays.map((row, index) => (
+                  <tr key={row.summary} className={`table-content`}>
+                    <th>{`${index + 1}.`}</th>
+                    <th>
+                      {new Date(row.date).toLocaleString("ru", {
+                        year: "numeric",
+                        month: "numeric",
+                        day: "numeric",
+                      })}
+                    </th>
+                    <th>{row.summary}</th>
+                    <th>{row.region_aggregated.replace(/,/g, ", ")}</th>
+                    <th>{row.notes_aggregated}</th>
+                    <th className="row-modal">
+                      <div>
+                        <img
+                          src={TrashIcon}
+                          alt="trash icon"
+                          onClick={() => {
+                            setCurrentHoliday(row);
+                            setToggleRemoveHoliday((prev) => !prev);
+                          }}
+                        />
+                      </div>
+                    </th>
+                  </tr>
+                ))}
             </tbody>
           </Table>
         </Container>

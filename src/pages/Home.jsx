@@ -15,11 +15,11 @@ const Home = () => {
   const { loading, userStatus, error } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
-  React.useEffect(() => {
-    if (userStatus !== 200 || error) {
-      navigate("/login");
-    }
-  }, [userStatus]);
+  // React.useEffect(() => {
+  //   if (userStatus !== 200 || error) {
+  //     navigate("/login");
+  //   }
+  // }, [userStatus]);
 
   return (
     <>

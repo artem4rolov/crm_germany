@@ -10,6 +10,9 @@ import styled from "styled-components";
 import { useState } from "react";
 import { useEffect } from "react";
 import PlusIconBlue from "../../assets/icon_added_blue.svg";
+import { useDispatch, useSelector } from "react-redux";
+import { setFilterRegion } from "../../redux/slices/holidays/holidays";
+import { getHolidaysByFilter } from "../../redux/slices/holidays/holidaysActions";
 
 const Styles = styled.div`
   tbody,
@@ -258,11 +261,21 @@ const Styles = styled.div`
 `;
 
 const SideBar = (props) => {
+  // достаем переменные из redux
+  const { loading, filterRegion } = useSelector((state) => state.holidays);
+  const dispatch = useDispatch();
+
   // стейт для закрепления сайд-бара наверху
   const [stickyClass, setStickyClass] = useState("relative");
 
   // стейт для выбора региона
-  const [activeRegion, setActiveRegion] = useState(0);
+  const [regionActvie, setRegionActive] = useState({
+    Alle: true,
+    BW: false,
+    HE: false,
+    RP: false,
+    RU: false,
+  });
 
   // функция для закрпеления сайдбара наверху
   const stickNavbar = () => {
@@ -271,6 +284,35 @@ const SideBar = (props) => {
       windowHeight > 60 ? setStickyClass("sticky-nav") : setStickyClass("");
     }
   };
+
+  // скидываем все фильтры регионов при нажатии на "Alle"
+  const toggleAll = () => {
+    setRegionActive((prev) => ({
+      ...prev,
+      Alle: true,
+      BW: false,
+      HE: false,
+      RP: false,
+      RU: false,
+    }));
+  };
+
+  useEffect(() => {
+    const arr = [];
+    Object.keys(regionActvie).map((key, index) => {
+      if (regionActvie[key] === true) {
+        arr.push(key);
+      }
+    });
+    dispatch(setFilterRegion(arr));
+    console.log(arr);
+    dispatch(
+      getHolidaysByFilter({
+        date: "01.01.2020-31.12.2020",
+        region: arr,
+      })
+    );
+  }, [regionActvie]);
 
   // следим за скроллом
   useEffect(() => {
@@ -300,7 +342,7 @@ const SideBar = (props) => {
                 </div>
               )}
 
-              {/* если переданы фильтры - рендерим их */}
+              {/* если переданы фильтры (чекбоксы) - рендерим их */}
               {props.filters && (
                 <div className="sidebar-filters">
                   {props.filters.map((filter, index) => {
@@ -320,19 +362,63 @@ const SideBar = (props) => {
                 </div>
               )}
 
+              {/* если переданы фильтры (регионы) - рендерим их */}
               {props.regions && (
                 <div className="sidebar-regions">
-                  {props.regions.map((region, index) => (
-                    <div
-                      key={index}
-                      className={`region ${
-                        activeRegion === index ? "active" : ""
-                      }`}
-                      onClick={() => setActiveRegion(index)}
-                    >
-                      {region}
-                    </div>
-                  ))}
+                  <div
+                    className={`region ${regionActvie.Alle ? "active" : ""}`}
+                    onClick={() => toggleAll()}
+                  >
+                    Alle
+                  </div>
+                  <div
+                    className={`region ${regionActvie.BW ? "active" : ""}`}
+                    onClick={() =>
+                      setRegionActive((prev) => ({
+                        ...prev,
+                        BW: !prev.BW,
+                        Alle: false,
+                      }))
+                    }
+                  >
+                    BW
+                  </div>
+                  <div
+                    className={`region ${regionActvie.HE ? "active" : ""}`}
+                    onClick={() =>
+                      setRegionActive((prev) => ({
+                        ...prev,
+                        HE: !prev.HE,
+                        Alle: false,
+                      }))
+                    }
+                  >
+                    HE
+                  </div>
+                  <div
+                    className={`region ${regionActvie.RP ? "active" : ""}`}
+                    onClick={() =>
+                      setRegionActive((prev) => ({
+                        ...prev,
+                        RP: !prev.RP,
+                        Alle: false,
+                      }))
+                    }
+                  >
+                    RP
+                  </div>
+                  <div
+                    className={`region ${regionActvie.RU ? "active" : ""}`}
+                    onClick={() =>
+                      setRegionActive((prev) => ({
+                        ...prev,
+                        RU: !prev.RU,
+                        Alle: false,
+                      }))
+                    }
+                  >
+                    RU
+                  </div>
                 </div>
               )}
             </div>
