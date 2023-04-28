@@ -129,8 +129,8 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [username, setUserName] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUserName] = useState("development@test.com");
+  const [password, setPassword] = useState("T4JLGBvvS2ZuUP7V");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -141,7 +141,7 @@ const Login = () => {
 
   // если статус авторизации 200 и нет загрузки и ошибок - редиректим на главную страницу
   React.useEffect(() => {
-    if (userStatus === 200 && !loading && !error) {
+    if (userStatus === 200 && !error) {
       navigate("/");
     }
   }, [userStatus, loading, error, navigate]);
@@ -162,6 +162,7 @@ const Login = () => {
                 <label>E-Mail</label>
                 <input
                   type="email"
+                  value={username}
                   onChange={(e) => setUserName(e.target.value)}
                 />
               </div>
@@ -170,6 +171,7 @@ const Login = () => {
                 <label>Password</label>
                 <input
                   type="password"
+                  value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>

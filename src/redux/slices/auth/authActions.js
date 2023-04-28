@@ -6,10 +6,10 @@ export const userLogin = createAsyncThunk(
   "auth/login",
   async ({ email, password }) => {
     try {
-      // ожидаем ответ от сервера на запрос о cookies
+      // делаем запрос за куками
       const tokenStatus = await apiClient.get("/sanctum/csrf-cookie");
 
-      // если статус ответа 204 (токен в наличии), разрешаем авторизацию
+      // если статус токена 204, разрешаем авторизацию
       if (tokenStatus.status === 204) {
         const user = await apiClient
           .post("/login", {
@@ -30,7 +30,19 @@ export const userLogin = createAsyncThunk(
 // выход
 export const userLogout = createAsyncThunk("auth/logout", async () => {
   try {
-    return await apiClient.post("/logout");
+    await apiClient.get("/user/confirmed-password-status");
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// вход
+export const testAuth = createAsyncThunk("auth/testAuth", async () => {
+  try {
+    const testAuthValue = await apiClient.get(
+      "/user/confirmed-password-status"
+    );
+    console.log(testAuthValue);
   } catch (error) {
     console.log(error);
   }

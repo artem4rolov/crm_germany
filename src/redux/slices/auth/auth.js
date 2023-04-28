@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 // функция авторизации
-import { userLogin, userLogout } from "./authActions";
+import { testAuth, userLogin, userLogout } from "./authActions";
 
 const initialState = {
   loading: false, // отображение загрузки
   userStatus: null, // пользователь
   error: null, // значение ошибки
+  testAuthValue: null, // проверка действия сессии на сервере
 };
 
 const authSlice = createSlice({
@@ -40,6 +41,20 @@ const authSlice = createSlice({
       .addCase(userLogout.rejected, (state, action) => {
         state.loading = false;
         state.userStatus = null;
+        state.error = action.payload;
+      })
+      // проверка действительности сессии
+      .addCase(testAuth.pending, (state) => {
+        state.loading = true;
+        state.testAuthValue = null;
+      })
+      .addCase(testAuth.fulfilled, (state, action) => {
+        state.loading = false;
+        state.testAuthValue = action.payload;
+      })
+      .addCase(testAuth.rejected, (state, action) => {
+        state.loading = false;
+        state.testAuthValue = null;
         state.error = action.payload;
       });
   },
