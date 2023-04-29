@@ -1,15 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import apiClient from "../../services/api";
-import axios from "axios";
 
 // получаем праздники текущего года с 1 января по 31 декабря сразу при загрузке страницы Holidays.jsx
 export const getHolidaysNowYear = createAsyncThunk(
   "auth/getHolidaysNowYear",
   async () => {
     try {
-      // получаем текущий год
-      // const nowYear = new Date().getFullYear();
-
       const { data } = await apiClient
         .get(`/api/holidays/01.01.2020-31.12.2020`)
         .then((response) => {
@@ -27,11 +23,8 @@ export const getHolidaysByFilter = createAsyncThunk(
   "auth/getHolidaysByFilter",
   async ({ date, region }) => {
     try {
-      // если фильтр региона не выбран - оставляем только дату
+      // если фильтр региона не выбран - оставляем только дату для запроса
       if (region == null) {
-        // получаем текущий год
-        // const nowYear = new Date().getFullYear();
-
         const { data } = await apiClient
           .get(`/api/holidays/${date}`)
           .then((response) => {
@@ -52,3 +45,18 @@ export const getHolidaysByFilter = createAsyncThunk(
     }
   }
 );
+
+// получаем праздники текущего года с 1 января по 31 декабря
+export const getRegions = createAsyncThunk("auth/getRegions", async () => {
+  try {
+    // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
+    const { data } = await apiClient
+      .get(`/api/holidays/regions`)
+      .then((response) => {
+        return response;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+});

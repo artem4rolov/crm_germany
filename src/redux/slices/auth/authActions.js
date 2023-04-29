@@ -36,12 +36,12 @@ export const userLogout = createAsyncThunk("auth/logout", async () => {
   }
 });
 
-// вход
+// проверка действительности сессии на сервере (при перезагрузке страницы, чтобы не логиниться)
 export const testAuth = createAsyncThunk("auth/testAuth", async () => {
   try {
     const data = await apiClient.get("/user/confirmed-password-status");
-    return data;
+    return data.status;
   } catch (error) {
-    return error;
+    return error.message;
   }
 });

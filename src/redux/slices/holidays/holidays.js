@@ -1,12 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 // функция авторизации
-import { getHolidaysByFilter, getHolidaysNowYear } from "./holidaysActions";
+import {
+  getHolidaysByFilter,
+  getHolidaysNowYear,
+  getRegions,
+} from "./holidaysActions";
 
 const initialState = {
   loadingHolidays: false, // отображение загрузки
   holidays: null, // пользователь
   error: null, // значение ошибки
-  filterRegion: null, // фильтр регионов
+  regions: [],
+  filterRegion: null, // ВЫБРАННЫЙ фильтр регионов
   filterDate: "01.01.2020-31.12.2020", // фильтр дат
 };
 
@@ -15,6 +20,7 @@ const holidaySlice = createSlice({
   initialState,
   reducers: {
     setFilterRegion: (state, { payload }) => {
+      // если выбран Alle - делаем запрос без фильтров по регионам
       if (payload == ["Alle"]) {
         return (state.filterRegion = null);
       }
@@ -52,6 +58,20 @@ const holidaySlice = createSlice({
       .addCase(getHolidaysByFilter.rejected, (state, action) => {
         state.loadingHolidays = false;
         state.holidays = null;
+        state.error = action.payload;
+      })
+      // получить все регионы
+      .addCase(getRegions.pending, (state) => {
+        state.loadingHolidays = true;
+        state.regions = null;
+      })
+      .addCase(getRegions.fulfilled, (state, action) => {
+        state.loadingHolidays = false;
+        state.regions = action.payload?.data;
+      })
+      .addCase(getRegions.rejected, (state, action) => {
+        state.loadingHolidays = false;
+        state.regions = null;
         state.error = action.payload;
       });
   },

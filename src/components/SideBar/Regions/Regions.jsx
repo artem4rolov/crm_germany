@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { setFilterRegion } from "../../../redux/slices/holidays/holidays";
-import { getHolidaysByFilter } from "../../../redux/slices/holidays/holidaysActions";
+import { getRegions } from "../../../redux/slices/holidays/holidaysActions";
 
 const Styles = styled.div`
   .sidebar-regions {
@@ -39,107 +39,86 @@ const Styles = styled.div`
 `;
 
 const Regions = () => {
+  // достаем переменные из стейта для фильтра праздников
+  const { regions } = useSelector((state) => state.holidays);
   // стейт для выбора региона
-  const [regionActvie, setRegionActive] = useState({
-    Alle: true,
-    BW: false,
-    HE: false,
-    RP: false,
-    RU: false,
-  });
+  const [regionActvie, setRegionActive] = useState(["Alle"]);
 
   const dispatch = useDispatch();
 
   // скидываем все фильтры регионов при нажатии на "Alle"
   const toggleAll = () => {
-    setRegionActive((prev) => ({
-      ...prev,
-      Alle: true,
-      BW: false,
-      HE: false,
-      RP: false,
-      RU: false,
-    }));
+    const arr = [];
+    arr.push("Alle");
+    setRegionActive(arr);
   };
+
+  // тогглим значения регионов
+  const toggleActiveRegion = (region) => {
+    // сначала клонируем то, что в стейте (чтобы сделать мульти-фильтр значений для запроса)
+    const arr = [...regionActvie];
+    // проверяем, есть ли такое значение (region) в нашем массиве регионов
+    const indexRegion = arr.indexOf(region);
+    if (indexRegion > -1) {
+      // если есть - удаляем
+      arr.splice(indexRegion, 1);
+    }
+    // если нет - добавляем в массив
+    else arr.push(region);
+    // проверяем, есть ли значение "Alle" в нашем массиве регионов
+    const indexAlle = arr.indexOf("Alle");
+    // если есть - удаляем его (можно выбрать либо несколько регионов, либо только Alle)
+    if (indexAlle > -1) {
+      arr.splice(indexAlle, 1);
+    }
+
+    // записываем в стейт выбранные фильтры
+    setRegionActive(arr);
+  };
+
+  // сначала получаем все регионы с сервера
+  useEffect(() => {
+    dispatch(getRegions());
+  }, []);
 
   // При изменении региона - меняем значения в Redux Store
   useEffect(() => {
-    const arr = [];
-    Object.keys(regionActvie).map((key, index) => {
-      if (regionActvie[key] === true && index !== 0) {
-        arr.push(key);
-      }
-    });
-    dispatch(setFilterRegion(arr));
-
-    return () => {};
-  }, [regionActvie, dispatch]);
-
-  // Если регион === Alle (все), оставляем в Redux Store null
-  useEffect(() => {
-    if (regionActvie.Alle === true) {
+    // если выбран фильтр "Alle" (все регионы), передаем в запрос null (чтобы выевести весь список регионов без фильтра)
+    if (regionActvie.indexOf("Alle") > -1) {
       dispatch(setFilterRegion(null));
+      return;
     }
-    return;
+    dispatch(setFilterRegion(regionActvie));
+    return () => {};
   }, [regionActvie]);
 
   return (
     <Styles>
       <div className="sidebar-regions">
         <div
-          className={`region ${regionActvie.Alle ? "active" : ""}`}
+          className={`region ${
+            regionActvie.find((region) => region === "Alle") ? "active" : ""
+          }`}
           onClick={() => toggleAll()}
         >
           Alle
         </div>
-        <div
-          className={`region ${regionActvie.BW ? "active" : ""}`}
-          onClick={() =>
-            setRegionActive((prev) => ({
-              ...prev,
-              BW: !prev.BW,
-              Alle: false,
-            }))
-          }
-        >
-          BW
-        </div>
-        <div
-          className={`region ${regionActvie.HE ? "active" : ""}`}
-          onClick={() =>
-            setRegionActive((prev) => ({
-              ...prev,
-              HE: !prev.HE,
-              Alle: false,
-            }))
-          }
-        >
-          HE
-        </div>
-        <div
-          className={`region ${regionActvie.RP ? "active" : ""}`}
-          onClick={() =>
-            setRegionActive((prev) => ({
-              ...prev,
-              RP: !prev.RP,
-              Alle: false,
-            }))
-          }
-        >
-          RP
-        </div>
-        <div
-          className={`region ${regionActvie.RU ? "active" : ""}`}
-          onClick={() =>
-            setRegionActive((prev) => ({
-              ...prev,
-              RU: !prev.RU,
-              Alle: false,
-            }))
-          }
-        >
-          RU
-        </div>
+        {regions &&
+          regions.map((region, index) => {
+            return (
+              <div
+                key={Object.values(region)[0]}
+                className={`region ${
+                  regionActvie.indexOf(Object.values(region)[1]) > -1
+                    ? "active"
+                    : ""
+                }`}
+                onClick={() => toggleActiveRegion(Object.values(region)[1])}
+              >
+                {Object.values(region)[1]}
+              </div>
+            );
+          })}
       </div>
     </Styles>
   );
