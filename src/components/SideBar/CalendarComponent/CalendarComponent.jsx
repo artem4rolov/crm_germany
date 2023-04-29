@@ -4,6 +4,10 @@ import Calendar from "react-calendar";
 import styled from "styled-components";
 import CalendarImage from "../../../assets/icon_calendar.svg";
 import { setFilterDate } from "../../../redux/slices/holidays/holidays";
+import NextImage1 from "../../../assets/calendar_next_1.svg";
+import NextImage2 from "../../../assets/calendar_next_2.svg";
+import PrevImage1 from "../../../assets/calendar_prev_1.svg";
+import PrevImage2 from "../../../assets/calendar_prev_2.svg";
 import { useDispatch } from "react-redux";
 
 const Styles = styled.div`
@@ -11,7 +15,7 @@ const Styles = styled.div`
     position: relative;
 
     .sidebar-calendar {
-      max-width: 240px;
+      max-width: 260px;
       height: 40px;
       border: 1px solid #bebebe;
       border-radius: 4px;
@@ -49,16 +53,21 @@ const Styles = styled.div`
 
       .react-calendar {
         width: 600px;
-        /* max-width: 800px; */
+        height: 100%;
         background-color: #fff;
-        color: #222;
-        border-radius: 8px;
+        border: 1px solid rgb(190, 190, 190);
+        border-radius: 4px;
         box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
         font-family: Arial, Helvetica, sans-serif;
         line-height: 1.125em;
+        padding: 10px;
+
+        &__viewContainer {
+          gap: 20px;
+        }
       }
       .react-calendar__navigation button {
-        color: #6f48eb;
+        color: #4b4e51;
         min-width: 44px;
         background: none;
         font-size: 16px;
@@ -71,30 +80,31 @@ const Styles = styled.div`
       .react-calendar__navigation button[disabled] {
         background-color: #f0f0f0;
       }
+
       abbr[title] {
         text-decoration: none;
       }
       /* .react-calendar__month-view__days__day--weekend {
- color: #d10000;
-} */
+        color: #d10000;
+      } */
       .react-calendar__tile:enabled:hover,
       .react-calendar__tile:enabled:focus {
-        background: #f8f8fa;
-        color: #6f48eb;
+        background: #6f48eb33;
+        color: #fff;
         border-radius: 6px;
       }
       .react-calendar__tile--now {
         background: #6f48eb33;
         border-radius: 6px;
         font-weight: bold;
-        color: #6f48eb;
+        color: #fff;
       }
       .react-calendar__tile--now:enabled:hover,
       .react-calendar__tile--now:enabled:focus {
         background: #6f48eb33;
         border-radius: 6px;
         font-weight: bold;
-        color: #6f48eb;
+        color: #fff;
       }
       .react-calendar__tile--hasActive:enabled:hover,
       .react-calendar__tile--hasActive:enabled:focus {
@@ -108,15 +118,15 @@ const Styles = styled.div`
       }
       .react-calendar__tile--active:enabled:hover,
       .react-calendar__tile--active:enabled:focus {
-        background: #6f48eb;
+        background: #354a5f;
         color: white;
       }
       .react-calendar--selectRange .react-calendar__tile--hover {
         background-color: #f8f8fa;
       }
       .react-calendar__tile--range {
-        background: #f8f8fa;
-        color: #6f48eb;
+        background: #f2f3f4;
+        color: #4b4e51;
         border-radius: 0;
       }
       .react-calendar__tile--rangeStart {
@@ -124,7 +134,7 @@ const Styles = styled.div`
         border-bottom-right-radius: 0;
         border-top-left-radius: 6px;
         border-bottom-left-radius: 6px;
-        background: #6f48eb;
+        background: #354a5f;
         color: white;
       }
       .react-calendar__tile--rangeEnd {
@@ -132,7 +142,7 @@ const Styles = styled.div`
         border-bottom-left-radius: 0;
         border-top-right-radius: 6px;
         border-bottom-right-radius: 6px;
-        background: #6f48eb;
+        background: #354a5f;
         color: white;
       }
     }
@@ -168,10 +178,10 @@ const CalendarComponent = () => {
         >
           <img src={CalendarImage} alt="" />
           <div className="start-date">
-            {date ? date[0].toLocaleDateString() : "start"}
+            {date ? date[0].toLocaleDateString() : "Start date"}
           </div>
           <div className="finish-date">
-            {date ? date[1].toLocaleDateString() : "end"}
+            {date ? date[1].toLocaleDateString() : "End date"}
           </div>
         </div>
         {showCalendar && (
@@ -183,7 +193,15 @@ const CalendarComponent = () => {
               showDoubleView
               maxDetail={"month"}
               minDetail={"year"}
-              // showNeighboringMonth={true}
+              locale="en"
+              nextLabel={<img src={NextImage1} alt="" />}
+              next2Label={
+                <img src={NextImage2} alt="" style={{ width: "25px" }} />
+              }
+              prevLabel={<img src={PrevImage1} alt="" />}
+              prev2Label={
+                <img src={PrevImage2} alt="" style={{ width: "25px" }} />
+              }
             />
           </div>
         )}
