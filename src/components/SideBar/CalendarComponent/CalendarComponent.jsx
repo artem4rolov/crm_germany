@@ -31,8 +31,9 @@ const Styles = styled.div`
         border: 1px solid #354a5f;
       }
 
-      &:actvie {
-        border: 1px solid #351a50;
+      &.active {
+        background: rgb(8, 84, 160);
+        color: rgb(255, 255, 255);
       }
 
       .start-date {
@@ -173,7 +174,7 @@ const CalendarComponent = () => {
     <Styles>
       <div className="calendar-container">
         <div
-          className="sidebar-calendar"
+          className={`sidebar-calendar ${showCalendar ? "active" : ""}`}
           onClick={() => setShowCalendar((prev) => !prev)}
         >
           <img src={CalendarImage} alt="" />
