@@ -91,14 +91,14 @@ const Styles = styled.div`
       .react-calendar__tile:enabled:hover,
       .react-calendar__tile:enabled:focus {
         background: #6f48eb33;
-        color: #fff;
+        color: #626262;
         border-radius: 6px;
       }
       .react-calendar__tile--now {
         background: #6f48eb33;
         border-radius: 6px;
         font-weight: bold;
-        color: #fff;
+        color: #626262;
       }
       .react-calendar__tile--now:enabled:hover,
       .react-calendar__tile--now:enabled:focus {

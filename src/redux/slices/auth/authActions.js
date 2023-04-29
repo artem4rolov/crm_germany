@@ -30,7 +30,7 @@ export const userLogin = createAsyncThunk(
 // выход
 export const userLogout = createAsyncThunk("auth/logout", async () => {
   try {
-    await apiClient.get("/user/confirmed-password-status");
+    await apiClient.post("/logout");
   } catch (error) {
     console.log(error);
   }
@@ -39,11 +39,9 @@ export const userLogout = createAsyncThunk("auth/logout", async () => {
 // вход
 export const testAuth = createAsyncThunk("auth/testAuth", async () => {
   try {
-    const testAuthValue = await apiClient.get(
-      "/user/confirmed-password-status"
-    );
-    console.log(testAuthValue);
+    const data = await apiClient.get("/user/confirmed-password-status");
+    return data;
   } catch (error) {
-    console.log(error);
+    return error;
   }
 });

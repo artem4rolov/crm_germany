@@ -140,11 +140,11 @@ const Login = () => {
   };
 
   // если статус авторизации 200 и нет загрузки и ошибок - редиректим на главную страницу
-  // React.useEffect(() => {
-  //   if (userStatus === 200 && !error) {
-  //     navigate("/");
-  //   }
-  // }, [userStatus, loading, error, navigate]);
+  React.useEffect(() => {
+    if (userStatus === 200 && !error) {
+      navigate("/");
+    }
+  }, [userStatus, loading, error, navigate]);
 
   return (
     <Styles>
