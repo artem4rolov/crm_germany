@@ -9,6 +9,7 @@ import {
   getHolidaysByFilter,
   getHolidaysNowYear,
 } from "../../redux/slices/holidays/holidaysActions";
+import Loader from "../../components/Loader/Loader";
 
 const Styles = styled.div`
   .holidays-wrapper {
@@ -98,12 +99,8 @@ const columnTitle = [
 const regions = ["Alle", "BW", "HE", "RP", "RU"];
 
 const Holidays = () => {
-  // достаем переменные из redux
-  const { loading, holidays, error, filter } = useSelector(
-    (state) => state.holidays
-  );
   // достаем переменные из стейта для фильтра праздников
-  const { loadingHolidays, filterDate, filterRegion } = useSelector(
+  const { loadingHolidays, holidays, filterDate, filterRegion } = useSelector(
     (state) => state.holidays
   );
   const dispatch = useDispatch();
@@ -136,48 +133,52 @@ const Holidays = () => {
         />
         <div className="table-titles-wrapper"></div>
         <Container>
-          <Table responsive>
-            <thead className="table-titles">
-              {/* формируем столбцы */}
-              <tr>
-                {columnTitle.map((item, index) => (
-                  <th className={item.classes} key={index}>
-                    {item.title}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {holidays &&
-                holidays.map((row, index) => (
-                  <tr key={row.summary} className={`table-content`}>
-                    <th>{`${index + 1}.`}</th>
-                    <th>
-                      {new Date(row.date).toLocaleString("ru", {
-                        year: "numeric",
-                        month: "numeric",
-                        day: "numeric",
-                      })}
+          {!loadingHolidays ? (
+            <Table responsive>
+              <thead className="table-titles">
+                {/* формируем столбцы */}
+                <tr>
+                  {columnTitle.map((item, index) => (
+                    <th className={item.classes} key={index}>
+                      {item.title}
                     </th>
-                    <th>{row.summary}</th>
-                    <th>{row.region_aggregated.replace(/,/g, ", ")}</th>
-                    <th>{row.notes_aggregated}</th>
-                    <th className="row-modal">
-                      <div>
-                        <img
-                          src={TrashIcon}
-                          alt="trash icon"
-                          onClick={() => {
-                            setCurrentHoliday(row);
-                            setToggleRemoveHoliday((prev) => !prev);
-                          }}
-                        />
-                      </div>
-                    </th>
-                  </tr>
-                ))}
-            </tbody>
-          </Table>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {holidays &&
+                  holidays.map((row, index) => (
+                    <tr key={row.summary} className={`table-content`}>
+                      <th>{`${index + 1}.`}</th>
+                      <th>
+                        {new Date(row.date).toLocaleString("ru", {
+                          year: "numeric",
+                          month: "numeric",
+                          day: "numeric",
+                        })}
+                      </th>
+                      <th>{row.summary}</th>
+                      <th>{row.region_aggregated.replace(/,/g, ", ")}</th>
+                      <th>{row.notes_aggregated}</th>
+                      <th className="row-modal">
+                        <div>
+                          <img
+                            src={TrashIcon}
+                            alt="trash icon"
+                            onClick={() => {
+                              setCurrentHoliday(row);
+                              setToggleRemoveHoliday((prev) => !prev);
+                            }}
+                          />
+                        </div>
+                      </th>
+                    </tr>
+                  ))}
+              </tbody>
+            </Table>
+          ) : (
+            <Loader />
+          )}
         </Container>
         {/* удалить текущий проект */}
         {toggleRemoveHoliday && (
