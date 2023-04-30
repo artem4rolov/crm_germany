@@ -8,7 +8,7 @@ import NextImage1 from "../../../assets/calendar_next_1.svg";
 import NextImage2 from "../../../assets/calendar_next_2.svg";
 import PrevImage1 from "../../../assets/calendar_prev_1.svg";
 import PrevImage2 from "../../../assets/calendar_prev_2.svg";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Styles = styled.div`
   .calendar-container {
@@ -155,6 +155,8 @@ const CalendarComponent = () => {
   const [date, setDate] = useState();
   // тогглим показ окна с календарем
   const [showCalendar, setShowCalendar] = useState(false);
+  // достаем переменные из стейта для фильтра праздников
+  const { filterDate } = useSelector((state) => state.holidays);
 
   const dispatch = useDispatch();
 
@@ -179,10 +181,10 @@ const CalendarComponent = () => {
         >
           <img src={CalendarImage} alt="" />
           <div className="start-date">
-            {date ? date[0].toLocaleDateString() : "Start date"}
+            {date ? date[0].toLocaleDateString() : filterDate.split("-")[0]}
           </div>
           <div className="finish-date">
-            {date ? date[1].toLocaleDateString() : "End date"}
+            {date ? date[1].toLocaleDateString() : filterDate.split("-")[1]}
           </div>
         </div>
         {showCalendar && (

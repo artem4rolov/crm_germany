@@ -5,10 +5,7 @@ import SideBar from "../../components/SideBar/SideBar";
 import TrashIcon from "../../assets/icon_trash-can.svg";
 import Modal from "../../components/Modal/Modal";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getHolidaysByFilter,
-  getHolidaysNowYear,
-} from "../../redux/slices/holidays/holidaysActions";
+import { getHolidaysByFilter } from "../../redux/slices/holidays/holidaysActions";
 import Loader from "../../components/Loader/Loader";
 
 const Styles = styled.div`
@@ -96,13 +93,16 @@ const columnTitle = [
   { title: "Standort", classes: "col-2" },
   { title: "Kommentar", classes: "col-6" },
 ];
-const regions = ["Alle", "BW", "HE", "RP", "RU"];
 
 const Holidays = () => {
   // достаем переменные из стейта для фильтра праздников
-  const { loadingHolidays, holidays, filterDate, filterRegion } = useSelector(
-    (state) => state.holidays
-  );
+  const {
+    loadingHolidays,
+    holidays,
+    filterDate,
+    filterRegion,
+    needRefreshData,
+  } = useSelector((state) => state.holidays);
   const dispatch = useDispatch();
 
   //стейт для установки current project
@@ -118,19 +118,14 @@ const Holidays = () => {
         region: filterRegion,
       })
     );
-  }, [filterDate, filterRegion, dispatch]);
+  }, [filterDate, filterRegion, dispatch, needRefreshData]);
 
   console.log(holidays);
 
   return (
     <Styles>
       <div className="holidays-wrapper">
-        <SideBar
-          calendar
-          download
-          columnTitle={columnTitle}
-          regions={regions}
-        />
+        <SideBar calendar download columnTitle={columnTitle} regions />
         <div className="table-titles-wrapper"></div>
         <Container>
           {!loadingHolidays ? (
@@ -138,11 +133,14 @@ const Holidays = () => {
               <thead className="table-titles">
                 {/* формируем столбцы */}
                 <tr>
-                  {columnTitle.map((item, index) => (
-                    <th className={item.classes} key={index}>
-                      {item.title}
-                    </th>
-                  ))}
+                  {holidays
+                    ? columnTitle.map((item, index) => (
+                        <th className={item.classes} key={index}>
+                          {item.title}
+                        </th>
+                      ))
+                    : !holidays &&
+                      "В указанном диапазоне праздники отсутствуют"}
                 </tr>
               </thead>
               <tbody>

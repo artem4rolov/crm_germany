@@ -4,9 +4,11 @@ import {
   getHolidaysByFilter,
   getHolidaysNowYear,
   getRegions,
+  removeHolidayById,
 } from "./holidaysActions";
 
 const initialState = {
+  needRefreshData: false, // после удаления необходимо заново по установленным фильтрам запросить актуальные данные
   loadingHolidays: false, // отображение загрузки
   holidays: null, // пользователь
   error: null, // значение ошибки
@@ -50,15 +52,17 @@ const holidaySlice = createSlice({
       .addCase(getHolidaysByFilter.pending, (state) => {
         state.loadingHolidays = true;
         state.holidays = null;
+        state.error = null;
       })
       .addCase(getHolidaysByFilter.fulfilled, (state, action) => {
         state.loadingHolidays = false;
         state.holidays = action.payload?.data;
+        state.error = action.payload.status;
       })
       .addCase(getHolidaysByFilter.rejected, (state, action) => {
         state.loadingHolidays = false;
         state.holidays = null;
-        state.error = action.payload;
+        state.error = action.payload.response.status;
       })
       // получить все регионы
       .addCase(getRegions.pending, (state) => {
@@ -72,6 +76,20 @@ const holidaySlice = createSlice({
       .addCase(getRegions.rejected, (state, action) => {
         state.loadingHolidays = false;
         state.regions = null;
+        state.error = action.payload;
+      })
+      // удалить праздник по id
+      .addCase(removeHolidayById.pending, (state) => {
+        state.loadingHolidays = true;
+        state.needRefreshData = false;
+      })
+      .addCase(removeHolidayById.fulfilled, (state, action) => {
+        state.loadingHolidays = false;
+        state.needRefreshData = true;
+      })
+      .addCase(removeHolidayById.rejected, (state, action) => {
+        state.loadingHolidays = false;
+        state.needRefreshData = false;
         state.error = action.payload;
       });
   },

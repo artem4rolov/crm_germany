@@ -1,6 +1,20 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import apiClient from "../../services/api";
 
+import axios from "axios";
+import createAuthRefreshInterceptor from "axios-auth-refresh";
+
+// Function that will be called to refresh authorization
+// const refreshAuthLogic = (failedRequest) =>
+//   axios
+//     .get("/user/confirmed-password-status", { withCredentials: true })
+//     .then((tokenRefreshResponse) => {
+//       return Promise.resolve();
+//     });
+
+// // Instantiate the interceptor
+// createAuthRefreshInterceptor(apiClient, refreshAuthLogic);
+
 // получаем праздники текущего года с 1 января по 31 декабря сразу при загрузке страницы Holidays.jsx
 export const getHolidaysNowYear = createAsyncThunk(
   "auth/getHolidaysNowYear",
@@ -13,7 +27,7 @@ export const getHolidaysNowYear = createAsyncThunk(
         });
       return data;
     } catch (error) {
-      console.log(error);
+      return error;
     }
   }
 );
@@ -41,7 +55,7 @@ export const getHolidaysByFilter = createAsyncThunk(
         });
       return data;
     } catch (error) {
-      console.log(error);
+      return error;
     }
   }
 );
@@ -57,6 +71,21 @@ export const getRegions = createAsyncThunk("auth/getRegions", async () => {
       });
     return data;
   } catch (error) {
-    console.log(error);
+    return error;
   }
 });
+
+// удаляем праздник
+export const removeHolidayById = createAsyncThunk(
+  "auth/removeHolidayById",
+  async ({ id }) => {
+    try {
+      // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
+      const { data } = await apiClient.delete(`/api/holidays/${id}`);
+
+      console.log(data);
+    } catch (error) {
+      return error;
+    }
+  }
+);

@@ -1,5 +1,7 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { removeHolidayById } from "../../redux/slices/holidays/holidaysActions";
 
 const Styles = styled.div`
   width: 100%;
@@ -48,7 +50,18 @@ const Styles = styled.div`
 `;
 
 const RemoveItem = (props) => {
-  console.log(props);
+  const dispatch = useDispatch();
+  console.log(props.remove_item.id_aggregated);
+
+  const handleRemove = (e) => {
+    e.preventDefault();
+    dispatch(
+      removeHolidayById({
+        id: props && props.remove_item.id_aggregated,
+      })
+    );
+    props.toggle();
+  };
 
   return (
     <Styles>
@@ -64,20 +77,13 @@ const RemoveItem = (props) => {
         </div>
         <div className="buttons">
           {/* кнопка сброса формы */}
-          <input
-            type="reset"
-            className="decline"
-            value="Abbrechen"
-            onChange={() => {}}
-            onClick={() => props.toggle()}
-          />
-          {/* кнопка отправки данных */}
-          <input
-            className="remove"
-            value="Löschen"
-            onChange={() => {}}
-            type="submit"
-          />
+          <button className="decline" onClick={() => props.toggle()}>
+            Abbrechen
+          </button>
+          {/* кнопка отправки данных для удаления праздника по id (количество id меняется в зависимости от выбранных фильтров) */}
+          <button className="remove" onClick={(e) => handleRemove(e)}>
+            Löschen
+          </button>
         </div>
       </div>
     </Styles>

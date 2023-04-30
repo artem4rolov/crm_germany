@@ -11,7 +11,12 @@ const initialState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    redirectToLogin: (state) => {
+      // меняем статус пользователя и редиректим на страницу логина
+      state.userStatus = 419;
+    },
+  },
   extraReducers: (builder) => {
     builder
       // авторизация
