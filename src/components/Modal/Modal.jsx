@@ -17,6 +17,7 @@ import EditNote from "./Note/EditNote";
 import RemoveProjectToday from "./TimeSheetsModal/RemoveProject";
 import RemoveContract from "./Projects&ContractsModal/Contracts/RemoveContract";
 import RemoveNote from "./Note/RemoveNote";
+import ChooseFile from "./Holidays/ChooseFile";
 
 const Styles = styled.div`
   .modal-wrapper {
@@ -311,6 +312,15 @@ const Modal = (props) => {
                 {props.edit_note && <EditNote {...props} />}
                 {/* удалить заметку */}
                 {props.remove_note && <RemoveNote {...props} />}
+
+                {/* страница Holidays (Feiertage.jsx) */}
+                {/* модальное окно на удаление праздника называется RemoveItem */}
+
+                {/* выбрать excel файл с компьютера и загрузить на сервер */}
+                {props.upload_excel && (
+                  <ChooseFile {...props} setData={setCurrentModalData} />
+                )}
+                {/* скачать excel файл с сервера (обновить праздники) в файле Sidebar.jsx */}
               </div>
               {/* footer модального окна */}
               <div className="modal-footer">

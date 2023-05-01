@@ -10,11 +10,10 @@ import { useState } from "react";
 import { useEffect } from "react";
 import PlusIconBlue from "../../assets/icon_added_blue.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { setFilterRegion } from "../../redux/slices/holidays/holidays";
-import { getHolidaysByFilter } from "../../redux/slices/holidays/holidaysActions";
 
 import Regions from "./Regions/Regions";
 import CalendarComponent from "./CalendarComponent/CalendarComponent";
+import UploadDownload from "./UploadDownload/UploadDownload";
 
 const Styles = styled.div`
   tbody,
@@ -149,30 +148,6 @@ const Styles = styled.div`
     }
   }
 
-  .sidebar-download {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-
-    .import,
-    .export {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-
-      font-weight: 400;
-      font-size: 14px;
-      line-height: 19px;
-      color: #676767;
-
-      &:hover {
-        border-bottom: 1px solid #354a5f;
-      }
-    }
-  }
-
   .sidebar-search {
     border: 1px solid #bebebe;
     border-radius: 4px;
@@ -264,19 +239,10 @@ const SideBar = (props) => {
               {/* если переданы фильтры (регионы) - рендерим их */}
               {props.regions && <Regions />}
             </div>
+
             {/* если переданы кнопки загрузки и выгрузки - рендерим их */}
-            {props.download && (
-              <div className="sidebar-download">
-                <div className="import">
-                  <img src={ImportImage} alt="import icon" />
-                  <span>Загрузить</span>
-                </div>
-                <div className="export">
-                  <img src={ExportImage} alt="export icon" />
-                  <span>Выгрузить</span>
-                </div>
-              </div>
-            )}
+            {props.download && <UploadDownload />}
+
             {/* если передан поиск - рендерим его */}
             {props.search && (
               <div className="sidebar-search">
