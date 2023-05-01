@@ -4,16 +4,27 @@ import apiClient from "../../services/api";
 import axios from "axios";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
 
-// Function that will be called to refresh authorization
-// const refreshAuthLogic = (failedRequest) =>
-//   axios
-//     .get("/user/confirmed-password-status", { withCredentials: true })
-//     .then((tokenRefreshResponse) => {
-//       return Promise.resolve();
-//     });
+// Отлавливаем ошибки при запросах с помощью axios interceptors
+const refreshAuthLogic = async (failedRequest) => {
+  // если статус ошибки 419 (устаревший токен)
+  if (failedRequest.response.status === 419) {
+    // получаем новый токен от сервера
+    await axios.get("/sanctum/csrf-cookie");
 
-// // Instantiate the interceptor
-// createAuthRefreshInterceptor(apiClient, refreshAuthLogic);
+    // повторяем запрос, который ранее был с ошибкой устаревшего токена, только на этот раз меняем его config (новый токен от сервера)
+    return axios(failedRequest.response.config);
+  }
+
+  // если статус ошибки 401 (сессия авторищации истекла)
+  if (failedRequest.response.status === 401) {
+    return failedRequest;
+  }
+
+  return Promise.reject();
+};
+
+// Instantiate the interceptor
+createAuthRefreshInterceptor(apiClient, refreshAuthLogic);
 
 // получаем праздники текущего года с 1 января по 31 декабря сразу при загрузке страницы Holidays.jsx
 export const getHolidaysNowYear = createAsyncThunk(
