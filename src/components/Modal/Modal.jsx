@@ -18,6 +18,8 @@ import RemoveProjectToday from "./TimeSheetsModal/RemoveProject";
 import RemoveContract from "./Projects&ContractsModal/Contracts/RemoveContract";
 import RemoveNote from "./Note/RemoveNote";
 import ChooseFile from "./Holidays/ChooseFile";
+import { useDispatch } from "react-redux";
+import { uploadExcel } from "../../redux/slices/holidays/holidaysActions";
 
 const Styles = styled.div`
   .modal-wrapper {
@@ -61,6 +63,14 @@ const Styles = styled.div`
     flex-direction: column;
     gap: 0;
     justify-content: space-between;
+
+    &.modal-small {
+      z-index: 2;
+      width: 60%;
+      height: 400px;
+      margin: 0 auto;
+      justify-content: center;
+    }
 
     /* MODAL HEADER */
     .modal-header {
@@ -190,8 +200,8 @@ const Styles = styled.div`
 `;
 
 const Modal = (props) => {
-  // определяем, какое модальное окно сейчас вывести (на удаление, или изменение и добавление)
-  const [currentContent, setCurrentContent] = useState(null);
+  const dispatch = useDispatch();
+
   // достаем данные из каждой отдельной модалки
   const [currentModalData, setCurrentModalData] = useState(null);
 
@@ -212,6 +222,7 @@ const Modal = (props) => {
   const handleSubmit = () => {
     // e.preventDefault();
     console.log(currentModalData);
+    dispatch(uploadExcel(currentModalData));
   };
 
   return (
@@ -229,7 +240,11 @@ const Modal = (props) => {
           </form>
         ) : (
           <Container>
-            <div className="modal-window">
+            <div
+              className={`modal-window ${
+                props.upload_excel ? "modal-small" : ""
+              }`}
+            >
               {/* header модального окна */}
               <div
                 className={`modal-header ${

@@ -175,12 +175,6 @@ const Styles = styled.div`
 `;
 
 const SideBar = (props) => {
-  // достаем переменные из redux
-  const { loading, filterRegion, filterDate } = useSelector(
-    (state) => state.holidays
-  );
-  const dispatch = useDispatch();
-
   // стейт для закрепления сайд-бара наверху
   const [stickyClass, setStickyClass] = useState("relative");
 

@@ -14,7 +14,7 @@ const initialState = {
   error: null, // значение ошибки
   regions: [],
   filterRegion: null, // ВЫБРАННЫЙ фильтр регионов
-  filterDate: "01.01.2020-31.12.2020", // фильтр дат
+  filterDate: "01.05.2023-31.05.2023", // фильтр дат
 };
 
 const holidaySlice = createSlice({

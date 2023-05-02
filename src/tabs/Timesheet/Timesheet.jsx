@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Table } from "react-bootstrap";
 
 import styled from "styled-components";
@@ -9,6 +9,8 @@ import EditIcon from "../../assets/icon_edit.svg";
 import TrashIcon from "../../assets/icon_trash-can.svg";
 
 import data from "../../mock/table-projects.json";
+import { useSelector } from "react-redux";
+import moment from "moment/moment";
 
 const Styles = styled.div`
   .timesheet-wrapper {
@@ -98,6 +100,11 @@ const columnTitle = [
 ];
 
 const Timesheet = () => {
+  // достаем переменные из стейта для фильтра праздников
+  const { filterDate } = useSelector((state) => state.holidays);
+
+  const [tableDays, setTableDays] = useState(null);
+
   // тогглим модалки для разных функций (добавление, редактирование, удаление)
   const [toggleAddProjectToday, setToggleAddProjectToday] = useState(false);
   const [toggleEditProjectToday, setToggleEditProjectToday] = useState(false);
@@ -106,6 +113,35 @@ const Timesheet = () => {
   //стейт для установки current project
   const [currentProject, setCurrentProject] = useState(null);
 
+  function getRangeArray() {
+    const startDay = moment(
+      filterDate.split("-")[0].split(".").reverse().join("-")
+    );
+    const endDay = moment(
+      filterDate.split("-")[1].split(".").reverse().join("-")
+    );
+
+    const calendar = [];
+
+    const day = startDay.clone();
+
+    while (!day.isAfter(endDay)) {
+      calendar.push(day.clone());
+      day.add(1, "day");
+    }
+
+    data.map((project) => {});
+
+    setTableDays(calendar);
+  }
+
+  console.log(tableDays);
+  console.log(data);
+
+  useEffect(() => {
+    getRangeArray();
+  }, [filterDate]);
+
   return (
     <Styles>
       <div className="timesheet-wrapper">
@@ -113,6 +149,7 @@ const Timesheet = () => {
           filters={[{ title: "Важные" }, { title: "Очистить пустые" }]}
           columnTitle={columnTitle}
           search
+          calendar
         />
         <div className="table-titles-wrapper"></div>
         <Container>

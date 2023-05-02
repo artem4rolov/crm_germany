@@ -120,8 +120,6 @@ const Holidays = () => {
     );
   }, [filterDate, filterRegion, dispatch, needRefreshData]);
 
-  console.log(holidays);
-
   return (
     <Styles>
       <div className="holidays-wrapper">

@@ -61,13 +61,28 @@ export const getRegions = createAsyncThunk("auth/getRegions", async () => {
   }
 });
 
-// удаляем праздник
+// удаление праздника (по id региона)
 export const removeHolidayById = createAsyncThunk(
   "auth/removeHolidayById",
   async ({ id }) => {
     try {
       // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
-      const { data } = await apiClient.delete(`/api/holidays/${id}`);
+      await apiClient.delete(`/api/holidays/${id}`);
+    } catch (error) {
+      return error;
+    }
+  }
+);
+
+// загрузка excel-файла на сервер
+export const uploadExcel = createAsyncThunk(
+  "auth/uploadExcel",
+  async (formData) => {
+    try {
+      // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
+      const { data } = await apiClient.post(`/api/holidays/excel`, {
+        formData,
+      });
 
       console.log(data);
     } catch (error) {

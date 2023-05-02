@@ -1,9 +1,6 @@
 import axios from "axios";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
 
-// получаем источник, с которого будем делать запросы
-const result = window.location.origin;
-
 // настройка для запроса от бэка scrf токена ПЕРЕД каждым запросе на клиенте
 const apiClient = axios.create({
   withCredentials: true,

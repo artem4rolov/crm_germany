@@ -9,8 +9,8 @@ const Styles = styled.div`
   align-items: center;
 
   #form-file-upload {
-    height: 16rem;
-    width: 28rem;
+    height: 8rem;
+    width: 20rem;
     max-width: 100%;
     text-align: center;
     position: relative;
@@ -77,9 +77,14 @@ const ChooseFile = (props) => {
 
   function handleFile(files) {
     // console.log(files);
+    // сначала создаем объект formData для отправки на сервер
+    const formData = new FormData();
+    // добавляем файл, который нужно передать в объект formData
+    formData.append("file", files[0]);
     // задаем имя выбранного файла, чтобы отобразить его
     setFileName(files[0].name);
-    props.setData(files);
+    // отдаем нашу formData в родительский компонент Modal при нажатии кнопки "отправить данные"
+    props.setData(formData);
   }
 
   // прослушиваем drag and drop
