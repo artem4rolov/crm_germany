@@ -2,7 +2,7 @@ import { Route, Routes, useNavigate } from "react-router";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { testAuth } from "./redux/slices/auth/authActions";
 
 function App() {
