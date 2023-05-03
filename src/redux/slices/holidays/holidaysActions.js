@@ -1,6 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import apiClient from "../../services/api";
-import axios from "axios";
 
 // получаем праздники текущего года с 1 января по 31 декабря сразу при загрузке страницы Holidays.jsx
 export const getHolidaysNowYear = createAsyncThunk(
@@ -88,6 +87,30 @@ export const uploadExcel = createAsyncThunk(
       };
       // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
       await apiClient.post(`/api/holidays/excel`, formData, config);
+    } catch (error) {
+      return error;
+    }
+  }
+);
+
+// скачивание excel-файла c сервера
+export const downloadExcel = createAsyncThunk(
+  "auth/downloadExcel",
+  async () => {
+    try {
+      const config = {
+        responseType: "blob",
+        "Accept-Encoding": "gzip, deflate, br",
+      };
+      // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
+      await apiClient.get(`/api/holidays/excel`, config).then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "file.xlsx");
+        document.body.appendChild(link);
+        link.click();
+      });
     } catch (error) {
       return error;
     }

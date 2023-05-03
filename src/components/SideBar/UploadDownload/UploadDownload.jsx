@@ -4,6 +4,7 @@ import ExportImage from "../../../assets/icon_upload.svg";
 import { useDispatch } from "react-redux";
 import Modal from "../../Modal/Modal";
 import styled from "styled-components";
+import { downloadExcel } from "../../../redux/slices/holidays/holidaysActions";
 
 const Styles = styled.div`
   .sidebar-download {
@@ -46,7 +47,12 @@ const UploadDownload = () => {
           <img src={ImportImage} alt="import icon" />
           <span>Загрузить</span>
         </div>
-        <div className="export">
+        <div
+          className="export"
+          onClick={() => {
+            dispatch(downloadExcel());
+          }}
+        >
           <img src={ExportImage} alt="export icon" />
           <span>Выгрузить</span>
         </div>
