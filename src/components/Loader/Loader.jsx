@@ -3,6 +3,20 @@ import LoaderImg from "../../assets/Loader.svg";
 import styled from "styled-components";
 
 const Styles = styled.div`
+  .loader-wrapper-small {
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      z-index: 10;
+      width: 50px;
+      height: 50px;
+    }
+  }
+
   .loader-wrapper {
     margin: 0 auto;
 
@@ -22,12 +36,19 @@ const Styles = styled.div`
   }
 `;
 
-const Loader = () => {
+const Loader = (props) => {
   return (
     <Styles>
-      <div className="loader-wrapper">
-        <img src={LoaderImg} alt="loader animation" />
-      </div>
+      {props.big && (
+        <div className="loader-wrapper">
+          <img src={LoaderImg} alt="loader animation" />
+        </div>
+      )}
+      {props.small && (
+        <div className="loader-wrapper-small">
+          <img src={LoaderImg} alt="loader animation" />
+        </div>
+      )}
     </Styles>
   );
 };

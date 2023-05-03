@@ -20,6 +20,7 @@ const refreshAuthLogic = async (failedRequest) => {
   // если статус ошибки 401 (сессия авторизации истекла)
   if (failedRequest.response.status === 401) {
     // нужен редирект на страницу логина
+    // но здесь необходимо поменять state.userStatus, поскольку он остается 200 (успешно), поэтому просто редирект не будет работать
     return Promise.reject();
     // console.log("Это статус 401, необходимо авторизоваться");
   }

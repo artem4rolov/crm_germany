@@ -173,7 +173,7 @@ const Holidays = () => {
               </tbody>
             </Table>
           ) : (
-            <Loader />
+            <Loader big />
           )}
         </Container>
         {/* удалить текущий проект */}

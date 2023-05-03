@@ -4,10 +4,10 @@ import LoginImage1 from "../assets/login-image-1.svg";
 import LoginImage2 from "../assets/login-image-2.svg";
 import LoginModal from "../assets/login-modal-image.svg";
 import styled from "styled-components";
-import { Button } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, unstable_HistoryRouter, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userLogin } from "../redux/slices/auth/authActions";
+import Loader from "../components/Loader/Loader";
 
 const Styles = styled.div`
   .home__button {
@@ -76,6 +76,10 @@ const Styles = styled.div`
       font-weight: 400;
       font-size: 14px;
       line-height: 19px;
+
+      &:disabled {
+        background-color: #a5a5a5;
+      }
     }
 
     label {
@@ -90,10 +94,23 @@ const Styles = styled.div`
       border-radius: 4px;
       padding: 13px;
       color: #ffffff;
+      border: none;
 
       &:hover {
         background: #1944a9;
       }
+
+      &:disabled {
+        padding: 0;
+        background-color: #a5a5a5;
+      }
+    }
+
+    .error-message {
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+      color: #b80000;
     }
   }
 
@@ -124,6 +141,8 @@ const Styles = styled.div`
 `;
 
 const Login = () => {
+  const activeTab = localStorage.getItem("activeTab");
+
   // достаем переменные из redux
   const { loading, userStatus, error } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -139,12 +158,23 @@ const Login = () => {
     dispatch(userLogin({ email: username, password: password }));
   };
 
-  // если статус авторизации 200 и нет загрузки и ошибок - редиректим на главную страницу
+  // если статус авторизации 200 и нет загрузки и ошибок - редиректим на главную страницу или ранее открытую страницу
   React.useEffect(() => {
     if (userStatus === 200 && !error) {
-      navigate("/");
+      if (activeTab) {
+        navigate(`${activeTab}`);
+        return;
+      }
+      navigate(`/`);
     }
   }, [userStatus, loading, error, navigate]);
+
+  const handleError = () => {
+    if (userStatus === 422) {
+      return "Неверный логин или пароль";
+    }
+    return;
+  };
 
   return (
     <Styles>
@@ -164,6 +194,7 @@ const Login = () => {
                   type="email"
                   value={username}
                   onChange={(e) => setUserName(e.target.value)}
+                  disabled={loading}
                 />
               </div>
               {/* поле ввода пароля */}
@@ -173,6 +204,7 @@ const Login = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  disabled={loading}
                 />
               </div>
               {/* галочка запомнить меня */}
@@ -187,14 +219,15 @@ const Login = () => {
                 </label>
               </div>
               {/* кнопка подтверждения */}
-              <button type="submit" onClick={handleSubmit}>
-                Anmelden
+              <button type="submit" onClick={handleSubmit} disabled={loading}>
+                {!loading ? "Anmelden" : <Loader small />}
               </button>
+              {/* сообщения об ошибках */}
+              {userStatus === 422 && (
+                <span className="error-message">Неверный логин или пароль</span>
+              )}
             </div>
           </div>
-          <Link to="/" replace>
-            <span className="home__button">Временная кнопка "ДОМОЙ"</span>
-          </Link>
         </div>
       </form>
     </Styles>

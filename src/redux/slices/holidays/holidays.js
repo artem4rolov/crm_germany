@@ -42,7 +42,7 @@ const holidaySlice = createSlice({
       })
       .addCase(getHolidaysNowYear.fulfilled, (state, action) => {
         state.loadingHolidays = false;
-        state.holidays = action.payload.data;
+        state.holidays = action.payload;
       })
       .addCase(getHolidaysNowYear.rejected, (state, action) => {
         state.loadingHolidays = false;
@@ -57,13 +57,12 @@ const holidaySlice = createSlice({
       })
       .addCase(getHolidaysByFilter.fulfilled, (state, action) => {
         state.loadingHolidays = false;
-        state.holidays = action.payload?.data;
-        state.error = action.payload.status;
+        state.holidays = action.payload;
       })
       .addCase(getHolidaysByFilter.rejected, (state, action) => {
         state.loadingHolidays = false;
         state.holidays = null;
-        state.error = action.payload.response.status;
+        state.error = action.payload;
       })
       // получить все регионы
       .addCase(getRegions.pending, (state) => {
@@ -72,7 +71,7 @@ const holidaySlice = createSlice({
       })
       .addCase(getRegions.fulfilled, (state, action) => {
         state.loadingHolidays = false;
-        state.regions = action.payload?.data;
+        state.regions = action.payload;
       })
       .addCase(getRegions.rejected, (state, action) => {
         state.loadingHolidays = false;

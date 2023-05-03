@@ -11,9 +11,9 @@ export const getHolidaysNowYear = createAsyncThunk(
         .then((response) => {
           return response;
         });
-      return data;
+      return data.data;
     } catch (error) {
-      return error;
+      return error.status;
     }
   }
 );
@@ -25,23 +25,16 @@ export const getHolidaysByFilter = createAsyncThunk(
     try {
       // если фильтр региона не выбран - оставляем только дату для запроса
       if (region == null) {
-        const { data } = await apiClient
-          .get(`/api/holidays/${date}`)
-          .then((response) => {
-            return response;
-          });
-        return data;
+        const { data } = await apiClient.get(`/api/holidays/${date}`);
+        return data.data;
       }
 
       // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
-      const { data } = await apiClient
-        .get(`/api/holidays/${date}/${region}`)
-        .then((response) => {
-          return response;
-        });
-      return data;
+      const { data } = await apiClient.get(`/api/holidays/${date}/${region}`);
+
+      return data.data;
     } catch (error) {
-      return error;
+      return error.status;
     }
   }
 );
@@ -55,9 +48,9 @@ export const getRegions = createAsyncThunk("auth/getRegions", async () => {
       .then((response) => {
         return response;
       });
-    return data;
+    return data.data;
   } catch (error) {
-    return error;
+    return error.status;
   }
 });
 
@@ -69,7 +62,7 @@ export const removeHolidayById = createAsyncThunk(
       // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
       await apiClient.delete(`/api/holidays/${id}`);
     } catch (error) {
-      return error;
+      return error.response.status;
     }
   }
 );
@@ -88,7 +81,7 @@ export const uploadExcel = createAsyncThunk(
       // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
       await apiClient.post(`/api/holidays/excel`, formData, config);
     } catch (error) {
-      return error;
+      return error.response.status;
     }
   }
 );
@@ -112,7 +105,7 @@ export const downloadExcel = createAsyncThunk(
         link.click();
       });
     } catch (error) {
-      return error;
+      return error.response.status;
     }
   }
 );

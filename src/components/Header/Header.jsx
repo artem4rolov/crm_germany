@@ -8,7 +8,6 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { logout } from "../../redux/slices/auth/auth";
 import { userLogout } from "../../redux/slices/auth/authActions";
 
 const Styles = styled.div`
@@ -60,17 +59,29 @@ const navBarData = [
 
 function Header() {
   const [active, setActive] = useState(null);
+  // проверяем активную вкладку в хранилище localStorage
+  const activeTab = localStorage.getItem("activeTab");
 
   const dispatch = useDispatch();
 
-  const handleActive = (index) => {
+  const handleActive = (index, link) => {
     setActive(index);
-    localStorage.setItem("activeTab", index);
+    localStorage.setItem("activeTab", link);
   };
 
   React.useEffect(() => {
     setActive(parseInt(localStorage.getItem("activeTab")));
   }, []);
+
+  React.useEffect(() => {
+    if (activeTab) {
+      navBarData.map((item, index) => {
+        if (item.href === activeTab) {
+          setActive(index);
+        }
+      });
+    }
+  }, [activeTab]);
 
   return (
     <Styles>
@@ -86,7 +97,7 @@ function Header() {
 
               return (
                 <Link
-                  onClick={() => handleActive(index)}
+                  onClick={() => handleActive(index, href)}
                   key={index}
                   to={href}
                   className={`nav-link ${active === index ? "active" : ""}`}

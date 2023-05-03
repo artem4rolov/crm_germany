@@ -5,9 +5,18 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { testAuth } from "./redux/slices/auth/authActions";
 
+const navBarData = [
+  { title: "Dashboard", href: "/" },
+  { title: "Zeiterfassung", href: "/timesheet" },
+  { title: "Projekte", href: "/projects" },
+  { title: "Leistungsnachweise", href: "/reports/excel" },
+  { title: "Jahresübersicht", href: "/reports/year-summary" },
+  { title: "Feiertage", href: "/holidays" },
+  { title: "Notizen", href: "/notes" },
+];
+
 function App() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   React.useEffect(() => {
     // отправляем на бэк объект со свойствами email и password и с соответствующими ключами

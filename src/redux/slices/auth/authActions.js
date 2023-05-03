@@ -13,7 +13,7 @@ export const userLogin = createAsyncThunk(
 
       return user.status;
     } catch (error) {
-      return error.status;
+      return error.response.status;
     }
   }
 );
