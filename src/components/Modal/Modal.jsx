@@ -18,8 +18,6 @@ import RemoveProjectToday from "./TimeSheetsModal/RemoveProject";
 import RemoveContract from "./Projects&ContractsModal/Contracts/RemoveContract";
 import RemoveNote from "./Note/RemoveNote";
 import ChooseFile from "./Holidays/ChooseFile";
-import { useDispatch } from "react-redux";
-import { uploadExcel } from "../../redux/slices/holidays/holidaysActions";
 
 const Styles = styled.div`
   .modal-wrapper {
@@ -200,10 +198,8 @@ const Styles = styled.div`
 `;
 
 const Modal = (props) => {
-  const dispatch = useDispatch();
-
-  // достаем данные из каждой отдельной модалки
-  const [currentModalData, setCurrentModalData] = useState(null);
+  // определяем, произошла отправка формы или нет
+  const [isSubmit, setIsSubmit] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -213,17 +209,17 @@ const Modal = (props) => {
     };
   });
 
+  // кнопка удаления
   const handleRemove = (e) => {
     e.preventDefault();
     // setCurrentContent({ ...props });
     console.log("удаление", props);
   };
 
+  // кнопка отправки данных
   const handleSubmit = () => {
-    // e.preventDefault();
-    console.log(currentModalData);
-    dispatch(uploadExcel(currentModalData));
-    props.toggle();
+    // обозначаем клик на кнопку "отправить" для дочерних компонентов
+    setIsSubmit((prev) => !prev);
   };
 
   return (
@@ -296,9 +292,7 @@ const Modal = (props) => {
                 {/* страница Projecte (Projects.jsx - проекты с контрактами) */}
                 {/* модалки Проектов */}
                 {/* создание нового проекта */}
-                {props.new_project && (
-                  <NewProject setData={setCurrentModalData} />
-                )}
+                {props.new_project && <NewProject />}
                 {/* редактирование current проекта */}
                 {props.current_project && <EditProject {...props} />}
                 {/* просмотр контрактов current проекта */}
@@ -308,7 +302,7 @@ const Modal = (props) => {
                 {/* модалки Контрактов */}
                 {/* создание нового контракта в current проекте */}
                 {props.current_project_for_new_contract && (
-                  <NewContract {...props} setData={setCurrentModalData} />
+                  <NewContract {...props} />
                 )}
                 {/* редактирование current контракта */}
                 {props.current_contract && props.current_project_disabled && (
@@ -334,7 +328,7 @@ const Modal = (props) => {
 
                 {/* выбрать excel файл с компьютера и загрузить на сервер */}
                 {props.upload_excel && (
-                  <ChooseFile {...props} setData={setCurrentModalData} />
+                  <ChooseFile {...props} isSubmit={isSubmit} />
                 )}
                 {/* скачать excel файл с сервера (обновить праздники) в файле Sidebar.jsx */}
               </div>
@@ -381,26 +375,24 @@ const Modal = (props) => {
                     </button>
                   ) : null}
                   {/* кнопка сброса формы */}
-                  <input
-                    type="reset"
+                  <button
                     className="footer-decline"
-                    value="Abbrechen"
-                    onChange={() => {}}
                     onClick={() => props.toggle()}
-                  />
+                  >
+                    Abbrechen
+                  </button>
                   {/* кнопка отправки данных */}
-                  <input
+                  <button
                     className="footer-confirm"
-                    value="Erstellen"
-                    onChange={() => {}}
                     onClick={handleSubmit}
-                    type="submit"
                     disabled={
                       props.remove_item ||
                       props.remove_project_today ||
                       props.remove_contract
                     }
-                  />
+                  >
+                    Erstellen
+                  </button>
                 </div>
               </div>
             </div>

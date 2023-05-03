@@ -11,7 +11,6 @@ const Styles = styled.div`
     align-items: center;
 
     img {
-      z-index: 10;
       width: 50px;
       height: 50px;
     }
@@ -28,7 +27,6 @@ const Styles = styled.div`
     align-items: center;
 
     img {
-      z-index: 10;
       padding-top: 5px;
       width: 70px;
       height: 70px;

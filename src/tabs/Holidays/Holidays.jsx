@@ -131,14 +131,13 @@ const Holidays = () => {
               <thead className="table-titles">
                 {/* формируем столбцы */}
                 <tr>
-                  {holidays
+                  {holidays && holidays.length > 0
                     ? columnTitle.map((item, index) => (
                         <th className={item.classes} key={index}>
                           {item.title}
                         </th>
                       ))
-                    : !holidays &&
-                      "В указанном диапазоне праздники отсутствуют"}
+                    : "В указанном диапазоне праздники отсутствуют"}
                 </tr>
               </thead>
               <tbody>

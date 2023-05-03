@@ -1,5 +1,7 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { uploadExcel } from "../../../redux/slices/holidays/holidaysActions";
 
 const Styles = styled.div`
   width: 100%;
@@ -71,7 +73,12 @@ const Styles = styled.div`
 const ChooseFile = (props) => {
   // стейт на drag and drop
   const [dragActive, setDragActive] = React.useState(false);
+  // стейт для имени файла
   const [fileName, setFileName] = React.useState(null);
+  // стейт для formData
+  const [file, setFile] = React.useState(null);
+
+  const dispatch = useDispatch();
   // ref
   const inputRef = React.useRef(null);
 
@@ -82,15 +89,21 @@ const ChooseFile = (props) => {
     // добавляем файл, который нужно передать в объект formData
     formData.append("file", files[0], files[0].name);
 
-    const file = {
-      file: files[0],
-    };
-
     // задаем имя выбранного файла, чтобы отобразить его
     setFileName(files[0].name);
-    // отдаем нашу formData в родительский компонент Modal при нажатии кнопки "отправить данные"
-    props.setData(formData);
+    // пихаем formData в стейт, для последующей отправки (при клике в родительской модалке кнопки "отправить")
+    setFile(formData);
   }
+
+  // следим за стейтом родительской модалки (если там будет клик по кнопке "отправить" - отправляем данные на сервер)
+  React.useEffect(() => {
+    if (props.isSubmit && file) {
+      // если кнопка "отправить" была нажата и в стейте этого компонента есть formData, то оправляем данные
+      dispatch(uploadExcel(file));
+      // скрываем модалку
+      // props.toggle();
+    }
+  }, [props.isSubmit]);
 
   // прослушиваем drag and drop
   const handleDrag = function (e) {

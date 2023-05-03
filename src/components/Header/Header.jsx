@@ -58,7 +58,7 @@ const navBarData = [
 ];
 
 function Header() {
-  const [active, setActive] = useState(null);
+  const [active, setActive] = useState(0);
   // проверяем активную вкладку в хранилище localStorage
   const activeTab = localStorage.getItem("activeTab");
 
@@ -80,8 +80,9 @@ function Header() {
           setActive(index);
         }
       });
-    }
-  }, [activeTab]);
+    } else setActive(0);
+    return () => {};
+  }, []);
 
   return (
     <Styles>
