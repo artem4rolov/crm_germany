@@ -182,7 +182,7 @@ const SideBar = (props) => {
   const stickNavbar = () => {
     if (window !== undefined) {
       let windowHeight = window.scrollY;
-      windowHeight > 60 ? setStickyClass("sticky-nav") : setStickyClass("");
+      windowHeight > 100 ? setStickyClass("sticky-nav") : setStickyClass("");
     }
   };
 
