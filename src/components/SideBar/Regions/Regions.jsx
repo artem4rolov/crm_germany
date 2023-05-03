@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { setFilterRegion } from "../../../redux/slices/holidays/holidays";
 import { getRegions } from "../../../redux/slices/holidays/holidaysActions";
+import { setFilterRegionHoliday } from "../../../redux/slices/sidebar/sidebarSlice";
 
 const Styles = styled.div`
   .sidebar-regions {
@@ -85,10 +85,10 @@ const Regions = () => {
   useEffect(() => {
     // если выбран фильтр "Alle" (все регионы), передаем в запрос null (чтобы выевести весь список регионов без фильтра)
     if (regionActvie.indexOf("Alle") > -1) {
-      dispatch(setFilterRegion(null));
+      dispatch(setFilterRegionHoliday(null));
       return;
     }
-    dispatch(setFilterRegion(regionActvie));
+    dispatch(setFilterRegionHoliday(regionActvie));
     return () => {};
   }, [regionActvie]);
 

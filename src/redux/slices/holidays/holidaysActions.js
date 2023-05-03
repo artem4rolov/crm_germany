@@ -1,26 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import apiClient from "../../services/api";
 
-// получаем праздники текущего года с 1 января по 31 декабря сразу при загрузке страницы Holidays.jsx
-export const getHolidaysNowYear = createAsyncThunk(
-  "auth/getHolidaysNowYear",
-  async () => {
-    try {
-      const { data } = await apiClient
-        .get(`/api/holidays/01.01.2020-31.12.2020`)
-        .then((response) => {
-          return response;
-        });
-      return data.data;
-    } catch (error) {
-      return error.status;
-    }
-  }
-);
-
-// получаем праздники текущего года с 1 января по 31 декабря
+// получаем праздники по фильтру дат
 export const getHolidaysByFilter = createAsyncThunk(
-  "auth/getHolidaysByFilter",
+  "holidays/getHolidaysByFilter",
   async ({ date, region }) => {
     try {
       // если фильтр региона не выбран - оставляем только дату для запроса
@@ -40,7 +23,7 @@ export const getHolidaysByFilter = createAsyncThunk(
 );
 
 // получаем праздники текущего года с 1 января по 31 декабря
-export const getRegions = createAsyncThunk("auth/getRegions", async () => {
+export const getRegions = createAsyncThunk("holidays/getRegions", async () => {
   try {
     // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
     const { data } = await apiClient
@@ -56,7 +39,7 @@ export const getRegions = createAsyncThunk("auth/getRegions", async () => {
 
 // удаление праздника (по id региона)
 export const removeHolidayById = createAsyncThunk(
-  "auth/removeHolidayById",
+  "holidays/removeHolidayById",
   async ({ id }) => {
     try {
       // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
@@ -69,7 +52,7 @@ export const removeHolidayById = createAsyncThunk(
 
 // загрузка excel-файла на сервер
 export const uploadExcel = createAsyncThunk(
-  "auth/uploadExcel",
+  "holidays/uploadExcel",
   async (formData) => {
     try {
       const config = {
@@ -88,7 +71,7 @@ export const uploadExcel = createAsyncThunk(
 
 // скачивание excel-файла c сервера
 export const downloadExcel = createAsyncThunk(
-  "auth/downloadExcel",
+  "holidays/downloadExcel",
   async () => {
     try {
       const config = {

@@ -101,7 +101,7 @@ const columnTitle = [
 
 const Timesheet = () => {
   // достаем переменные из стейта для фильтра праздников
-  const { filterDate } = useSelector((state) => state.holidays);
+  const { filterDate } = useSelector((state) => state.sidebar);
 
   const [tableDays, setTableDays] = useState(null);
 

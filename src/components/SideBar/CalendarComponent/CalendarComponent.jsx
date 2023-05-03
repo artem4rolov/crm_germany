@@ -3,12 +3,12 @@ import "react-calendar/dist/Calendar.css";
 import Calendar from "react-calendar";
 import styled from "styled-components";
 import CalendarImage from "../../../assets/icon_calendar.svg";
-import { setFilterDate } from "../../../redux/slices/holidays/holidays";
 import NextImage1 from "../../../assets/calendar_next_1.svg";
 import NextImage2 from "../../../assets/calendar_next_2.svg";
 import PrevImage1 from "../../../assets/calendar_prev_1.svg";
 import PrevImage2 from "../../../assets/calendar_prev_2.svg";
 import { useDispatch, useSelector } from "react-redux";
+import { setFilterDateDAY } from "../../../redux/slices/sidebar/sidebarSlice";
 
 const Styles = styled.div`
   .calendar-container {
@@ -156,7 +156,7 @@ const CalendarComponent = () => {
   // тогглим показ окна с календарем
   const [showCalendar, setShowCalendar] = useState(false);
   // достаем переменные из стейта для фильтра праздников
-  const { filterDate } = useSelector((state) => state.holidays);
+  const { filterDate } = useSelector((state) => state.sidebar);
 
   const dispatch = useDispatch();
 
@@ -164,7 +164,7 @@ const CalendarComponent = () => {
   React.useEffect(() => {
     if (date) {
       dispatch(
-        setFilterDate(
+        setFilterDateDAY(
           `${date[0].toLocaleDateString()}-${date[1].toLocaleDateString()}`
         )
       );

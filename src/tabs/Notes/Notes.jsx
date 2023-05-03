@@ -8,6 +8,9 @@ import EditIcon from "../../assets/icon_edit.svg";
 import TrashIcon from "../../assets/icon_trash-can.svg";
 
 import data from "../../mock/notes.json";
+import { useDispatch, useSelector } from "react-redux";
+import { getNotesByFilter } from "../../redux/slices/notes/notesActions";
+import Loader from "../../components/Loader/Loader";
 
 const Styles = styled.div`
   .notes-wrapper {
@@ -120,12 +123,33 @@ const columnTitle = [
 ];
 
 const Notes = () => {
+  // достаем переменные из стейта для рендера заметок
+  const { loadingNotes, notes, needRefreshData, error } = useSelector(
+    (state) => state.notes
+  );
+  const dispatch = useDispatch();
+  const { filterDate } = useSelector((state) => state.sidebar);
+
   // тогглим модалки для разных функций (добавление, редактирование, удаление)
   const [toggleAddNote, setToggleAddNote] = useState(false);
   const [toggleEditNote, setToggleEditNote] = useState(false);
   const [toggleRemoveNote, setToggleRemoveNote] = useState(false);
   //стейт для установки current project
   const [currentNote, setCurrentNote] = useState(null);
+
+  const [currentDate, setCurrentDate] = useState(null);
+
+  React.useEffect(() => {
+    dispatch(
+      getNotesByFilter({
+        date: filterDate,
+      })
+    );
+
+    return () => {};
+  }, [filterDate, needRefreshData]);
+
+  console.log(notes);
 
   return (
     <Styles>
@@ -134,64 +158,76 @@ const Notes = () => {
           calendar
           columnTitle={columnTitle}
           filters={[{ title: "Важные" }]}
-          addNote={() => setToggleAddNote((prev) => !prev)}
+          addNote={setToggleAddNote}
           search
         />
         <div className="table-titles-wrapper"></div>
         <Container>
-          <Table responsive>
-            <thead className="table-titles">
-              {/* формируем столбцы */}
-              <tr>
-                {columnTitle.map((item, index) => (
-                  <th className={item.classes} key={index}>
-                    {item.title}
-                  </th>
-                ))}
-                <th
-                  className="add-item"
-                  onClick={() => {
-                    setToggleAddNote((prev) => !prev);
-                  }}
-                >
-                  <img src={PlusIconBlue} alt="" />
-                  <span>Anmerkung hinzufügen</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((row, index) => (
-                <tr key={index} className={`table-content`}>
-                  {row.map((col, index) => (
-                    <th key={index}>{col}</th>
+          {!loadingNotes ? (
+            <Table responsive>
+              <thead className="table-titles">
+                {/* формируем столбцы */}
+                <tr>
+                  {columnTitle.map((item, index) => (
+                    <th className={item.classes} key={index}>
+                      {item.title}
+                    </th>
                   ))}
-                  {/* модалка в углу строки при клике на строку */}
-                  <th className="row-modal">
-                    <div>
-                      <img
-                        src={EditIcon}
-                        alt="edit icon"
-                        onClick={() => {
-                          setCurrentNote(row);
-                          setToggleEditNote((prev) => !prev);
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <img
-                        src={TrashIcon}
-                        alt="trash icon"
-                        onClick={() => {
-                          setCurrentNote(row);
-                          setToggleRemoveNote((prev) => !prev);
-                        }}
-                      />
-                    </div>
+                  <th
+                    className="add-item"
+                    onClick={() => {
+                      setToggleAddNote((prev) => !prev);
+                    }}
+                  >
+                    <img src={PlusIconBlue} alt="" />
+                    <span>Anmerkung hinzufügen</span>
                   </th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody>
+                {notes &&
+                  notes.map((row, index) => (
+                    <tr key={index} className={`table-content`}>
+                      <th>
+                        {new Date(row.created_at).toLocaleString("ru", {
+                          year: "numeric",
+                          month: "numeric",
+                          day: "numeric",
+                        })}
+                      </th>
+                      <th>{row.title}</th>
+                      <th>{row.content}</th>
+
+                      {/* модалка в углу строки при клике на строку */}
+                      <th className="row-modal">
+                        <div>
+                          <img
+                            src={EditIcon}
+                            alt="edit icon"
+                            onClick={() => {
+                              setCurrentNote(row);
+                              setToggleEditNote((prev) => !prev);
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <img
+                            src={TrashIcon}
+                            alt="trash icon"
+                            onClick={() => {
+                              setCurrentNote(row);
+                              setToggleRemoveNote((prev) => !prev);
+                            }}
+                          />
+                        </div>
+                      </th>
+                    </tr>
+                  ))}
+              </tbody>
+            </Table>
+          ) : (
+            <Loader big />
+          )}
         </Container>
         {/* добавить новую заметку*/}
         {toggleAddNote && (
@@ -207,7 +243,7 @@ const Notes = () => {
           <Modal
             important
             edit_note={currentNote}
-            title={currentNote[1]}
+            title={currentNote.title}
             toggle={setToggleEditNote}
           />
         )}
@@ -217,7 +253,7 @@ const Notes = () => {
             important
             footer_delete
             remove_note={currentNote}
-            title={"REMOVE " + currentNote[1]}
+            title={"REMOVE " + currentNote.title}
             toggle={setToggleRemoveNote}
           />
         )}

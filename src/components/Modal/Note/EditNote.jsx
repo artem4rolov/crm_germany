@@ -117,7 +117,7 @@ const Styles = styled.div`
   /* *********************************** */
 `;
 
-const EditNote = () => {
+const EditNote = (props) => {
   return (
     <Styles>
       <div className="edit_note">
@@ -138,19 +138,25 @@ const EditNote = () => {
                   //   start: value,
                   // }));
                 }}
+                value={new Date(props.created_at).toLocaleString("ru", {
+                  year: "numeric",
+                  month: "numeric",
+                  day: "numeric",
+                })}
+                onChange={() => {}}
               />
             </div>
           </div>
           {/* инпут */}
           <div className="thema">
             <label htmlFor="">Thema</label>
-            <input type="text" />
+            <input type="text" value={props.title} onChange={() => {}} />
           </div>
         </div>
         {/* текстовое поле */}
         <div className="edit_note_main">
           <label htmlFor="">Inhalt</label>
-          <textarea type="text" />
+          <textarea type="text" value={props.content} onChange={() => {}} />
         </div>
       </div>
     </Styles>

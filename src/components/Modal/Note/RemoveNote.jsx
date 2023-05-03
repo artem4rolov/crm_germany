@@ -133,7 +133,7 @@ const Styles = styled.div`
   /* *********************************** */
 `;
 
-const RemoveNote = () => {
+const RemoveNote = (props) => {
   return (
     <Styles>
       <div className="remove_note">
@@ -155,19 +155,24 @@ const RemoveNote = () => {
                   //   start: value,
                   // }));
                 }}
+                value={new Date(props.created_at).toLocaleString("ru", {
+                  year: "numeric",
+                  month: "numeric",
+                  day: "numeric",
+                })}
               />
             </div>
           </div>
           {/* инпут */}
           <div className="thema">
             <label htmlFor="">Thema</label>
-            <input type="text" disabled />
+            <input type="text" disabled value={props.title} />
           </div>
         </div>
         {/* текстовое поле */}
         <div className="remove_note_main">
           <label htmlFor="">Inhalt</label>
-          <textarea type="text" disabled />
+          <textarea type="text" disabled value={props.content} />
         </div>
       </div>
     </Styles>
