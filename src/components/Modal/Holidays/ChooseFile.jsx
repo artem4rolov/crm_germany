@@ -80,7 +80,12 @@ const ChooseFile = (props) => {
     // сначала создаем объект formData для отправки на сервер
     const formData = new FormData();
     // добавляем файл, который нужно передать в объект formData
-    formData.append("file", files[0]);
+    formData.append("file", files[0], files[0].name);
+
+    const file = {
+      file: files[0],
+    };
+
     // задаем имя выбранного файла, чтобы отобразить его
     setFileName(files[0].name);
     // отдаем нашу formData в родительский компонент Modal при нажатии кнопки "отправить данные"
@@ -134,7 +139,7 @@ const ChooseFile = (props) => {
           ref={inputRef}
           type="file"
           id="input-file-upload"
-          multiple={true}
+          multiple={false}
           onChange={handleChange}
         />
         <label

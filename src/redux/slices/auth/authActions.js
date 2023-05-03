@@ -6,7 +6,6 @@ export const userLogin = createAsyncThunk(
   "auth/login",
   async ({ email, password }) => {
     try {
-      // await axios.get("/sanctum/csrf-cookie");
       const user = await apiClient.post("/login", {
         email: email,
         password: password,
@@ -31,8 +30,6 @@ export const userLogout = createAsyncThunk("auth/logout", async () => {
 // проверка действительности сессии на сервере (при перезагрузке страницы, чтобы не логиниться)
 export const testAuth = createAsyncThunk("auth/testAuth", async () => {
   try {
-    // await axios.get("/sanctum/csrf-cookie");
-
     const data = await apiClient.get("/user/confirmed-password-status");
 
     return data.status;

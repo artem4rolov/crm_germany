@@ -223,6 +223,7 @@ const Modal = (props) => {
     // e.preventDefault();
     console.log(currentModalData);
     dispatch(uploadExcel(currentModalData));
+    props.toggle();
   };
 
   return (

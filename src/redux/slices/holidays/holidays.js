@@ -5,6 +5,7 @@ import {
   getHolidaysNowYear,
   getRegions,
   removeHolidayById,
+  uploadExcel,
 } from "./holidaysActions";
 
 const initialState = {
@@ -88,6 +89,20 @@ const holidaySlice = createSlice({
         state.needRefreshData = true;
       })
       .addCase(removeHolidayById.rejected, (state, action) => {
+        state.loadingHolidays = false;
+        state.needRefreshData = false;
+        state.error = action.payload;
+      })
+      // загрузка excel на сервер
+      .addCase(uploadExcel.pending, (state) => {
+        state.loadingHolidays = true;
+        state.needRefreshData = false;
+      })
+      .addCase(uploadExcel.fulfilled, (state, action) => {
+        state.loadingHolidays = false;
+        state.needRefreshData = true;
+      })
+      .addCase(uploadExcel.rejected, (state, action) => {
         state.loadingHolidays = false;
         state.needRefreshData = false;
         state.error = action.payload;

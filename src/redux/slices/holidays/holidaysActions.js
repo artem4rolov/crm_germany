@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import apiClient from "../../services/api";
+import axios from "axios";
 
 // получаем праздники текущего года с 1 января по 31 декабря сразу при загрузке страницы Holidays.jsx
 export const getHolidaysNowYear = createAsyncThunk(
@@ -79,12 +80,14 @@ export const uploadExcel = createAsyncThunk(
   "auth/uploadExcel",
   async (formData) => {
     try {
+      const config = {
+        headers: {
+          "Content-type": "multipart/form-data",
+          "Accept-Encoding": "gzip, deflate, br",
+        },
+      };
       // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
-      const { data } = await apiClient.post(`/api/holidays/excel`, {
-        formData,
-      });
-
-      console.log(data);
+      await apiClient.post(`/api/holidays/excel`, formData, config);
     } catch (error) {
       return error;
     }
