@@ -7,7 +7,6 @@ import PlusIconBlue from "../../assets/icon_added_blue.svg";
 import EditIcon from "../../assets/icon_edit.svg";
 import TrashIcon from "../../assets/icon_trash-can.svg";
 
-import data from "../../mock/notes.json";
 import { useDispatch, useSelector } from "react-redux";
 import { getNotesByFilter } from "../../redux/slices/notes/notesActions";
 import Loader from "../../components/Loader/Loader";

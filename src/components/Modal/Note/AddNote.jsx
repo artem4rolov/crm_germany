@@ -1,20 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 
 import CalendarIcon from "../../../assets/icon_calendar.svg";
 import styled from "styled-components";
+import moment from "moment/moment";
+import { useDispatch } from "react-redux";
+import { createNote } from "../../../redux/slices/notes/notesActions";
 
 const Styles = styled.div`
   width: 100%;
   /* страница Notes */
-  /* add Note */
-  .add_note {
+  /* edit Note */
+  .edit_note {
     display: flex;
     width: 100%;
     flex-direction: column;
     gap: 40px;
     padding: 40px;
 
-    .add_note_header {
+    .edit_note_header {
       display: flex;
       justify-content: start;
       align-items: center;
@@ -46,10 +49,6 @@ const Styles = styled.div`
             position: absolute;
             width: 24px;
             height: 24px;
-
-            &:hover {
-              background: #000;
-            }
           }
 
           input {
@@ -95,7 +94,7 @@ const Styles = styled.div`
       }
     }
 
-    .add_note_main {
+    .edit_note_main {
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -121,12 +120,42 @@ const Styles = styled.div`
   /* *********************************** */
 `;
 
-const AddNote = () => {
+const AddNote = (props) => {
+  const dispatch = useDispatch();
+
+  const [state, setState] = useState({
+    // created_at: moment(props.edit_note.created_at).format("yyy-MM-DD"),
+    title: null,
+    content: null,
+    favorite: 0,
+  });
+
+  // следим за чекбоксом "важный", меняем стейт в случае изменения чекбокса
+  React.useEffect(() => {
+    if (props.isImportant === true) {
+      setState({ ...state, favorite: 1 });
+    } else {
+      setState({ ...state, favorite: 0 });
+    }
+
+    return () => {};
+  }, [props.isImportant]);
+
+  // следим за стейтом родительской модалки (если там будет клик по кнопке "отправить" - отправляем данные на сервер)
+  React.useEffect(() => {
+    // если кнопка "отправить" была нажата и в стейте этого компонента есть formData, то оправляем данные
+    if (props.isSubmit && state) {
+      dispatch(createNote({ obj: state }));
+      // скрываем модалку
+      props.toggle();
+    }
+  }, [props.isSubmit]);
+
   return (
     <Styles>
-      <div className="add_note">
+      <div className="edit_note">
         {/* время вверху */}
-        <div className="add_note_header">
+        <div className="edit_note_header">
           {/* календарь */}
           <div className="datum">
             <label>Datum</label>
@@ -137,24 +166,34 @@ const AddNote = () => {
                 className="start"
                 name="start"
                 onInput={({ target: { value } }) => {
-                  // setState((state) => ({
-                  //   ...state,
-                  //   start: value,
-                  // }));
+                  setState((state) => ({ ...state, created_at: value }));
                 }}
+                value={state.created_at ? state.created_at : null}
               />
             </div>
           </div>
           {/* инпут */}
           <div className="thema">
             <label htmlFor="">Thema</label>
-            <input type="text" />
+            <input
+              type="text"
+              onInput={({ target: { value } }) => {
+                setState((state) => ({ ...state, title: value }));
+              }}
+              value={state.title ? state.title : null}
+            />
           </div>
         </div>
         {/* текстовое поле */}
-        <div className="add_note_main">
+        <div className="edit_note_main">
           <label htmlFor="">Inhalt</label>
-          <textarea type="text" />
+          <textarea
+            type="text"
+            onInput={({ target: { value } }) => {
+              setState((state) => ({ ...state, content: value }));
+            }}
+            value={state.content ? state.content : null}
+          />
         </div>
       </div>
     </Styles>

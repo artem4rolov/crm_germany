@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getNotesByFilter } from "./notesActions";
+import {
+  createNote,
+  editNote,
+  getNotesByFilter,
+  removeNote,
+} from "./notesActions";
 
 const initialState = {
   needRefreshData: false, // после удаления необходимо заново по установленным фильтрам запросить актуальные данные
@@ -18,19 +23,64 @@ const notesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // авторизация
+      // получаем заметки по фильтрам
       .addCase(getNotesByFilter.pending, (state) => {
-        state.loading = true;
+        state.loadingNotes = true;
         state.notes = null;
         state.error = null;
       })
       .addCase(getNotesByFilter.fulfilled, (state, action) => {
-        state.loading = false;
+        state.loadingNotes = false;
         state.notes = action.payload;
       })
       .addCase(getNotesByFilter.rejected, (state, action) => {
-        state.loading = false;
+        state.loadingNotes = false;
         state.notes = null;
+        state.error = action.payload;
+      })
+      // редактируем заметку
+      .addCase(editNote.pending, (state) => {
+        state.loadingNotes = true;
+        state.needRefreshData = false;
+        state.error = null;
+      })
+      .addCase(editNote.fulfilled, (state, action) => {
+        state.loadingNotes = false;
+        state.needRefreshData = true;
+      })
+      .addCase(editNote.rejected, (state, action) => {
+        state.loadingNotes = false;
+        state.needRefreshData = false;
+        state.error = action.payload;
+      })
+      // создаем заметку
+      .addCase(createNote.pending, (state) => {
+        state.loadingNotes = true;
+        state.needRefreshData = false;
+        state.error = null;
+      })
+      .addCase(createNote.fulfilled, (state, action) => {
+        state.loadingNotes = false;
+        state.needRefreshData = true;
+      })
+      .addCase(createNote.rejected, (state, action) => {
+        state.loadingNotes = false;
+        state.needRefreshData = false;
+        state.error = action.payload;
+      })
+      // удаляем заметку
+      .addCase(removeNote.pending, (state) => {
+        state.loadingNotes = true;
+        state.needRefreshData = false;
+        state.error = null;
+      })
+      .addCase(removeNote.fulfilled, (state, action) => {
+        state.loadingNotes = false;
+        state.needRefreshData = true;
+      })
+      .addCase(removeNote.rejected, (state, action) => {
+        state.loadingNotes = false;
+        state.needRefreshData = false;
         state.error = action.payload;
       });
   },

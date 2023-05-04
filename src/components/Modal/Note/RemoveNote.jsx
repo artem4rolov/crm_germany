@@ -2,6 +2,9 @@ import React from "react";
 
 import CalendarIcon from "../../../assets/icon_calendar.svg";
 import styled from "styled-components";
+import moment from "moment";
+import { useDispatch } from "react-redux";
+import { removeNote } from "../../../redux/slices/notes/notesActions";
 
 const Styles = styled.div`
   width: 100%;
@@ -134,6 +137,18 @@ const Styles = styled.div`
 `;
 
 const RemoveNote = (props) => {
+  const dispatch = useDispatch();
+
+  // следим за стейтом родительской модалки (если там будет клик по кнопке "отправить" - отправляем данные на сервер)
+  React.useEffect(() => {
+    // если кнопка "отправить" была нажата и в стейте этого компонента есть formData, то оправляем данные
+    if (props.isRemove) {
+      dispatch(removeNote({ id: props.remove_note.id }));
+      // скрываем модалку
+      props.toggle();
+    }
+  }, [props.isRemove]);
+
   return (
     <Styles>
       <div className="remove_note">
@@ -149,30 +164,21 @@ const RemoveNote = (props) => {
                 type="date"
                 className="start"
                 name="start"
-                onInput={({ target: { value } }) => {
-                  // setState((state) => ({
-                  //   ...state,
-                  //   start: value,
-                  // }));
-                }}
-                value={new Date(props.created_at).toLocaleString("ru", {
-                  year: "numeric",
-                  month: "numeric",
-                  day: "numeric",
-                })}
+                onChange={() => {}}
+                value={moment(props.remove_note.created_at).format("yyy-MM-DD")}
               />
             </div>
           </div>
           {/* инпут */}
           <div className="thema">
             <label htmlFor="">Thema</label>
-            <input type="text" disabled value={props.title} />
+            <input type="text" disabled value={props.remove_note.title} />
           </div>
         </div>
         {/* текстовое поле */}
         <div className="remove_note_main">
           <label htmlFor="">Inhalt</label>
-          <textarea type="text" disabled value={props.content} />
+          <textarea type="text" disabled value={props.remove_note.content} />
         </div>
       </div>
     </Styles>

@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 
 import CalendarIcon from "../../../assets/icon_calendar.svg";
 import styled from "styled-components";
+import moment from "moment/moment";
+import { useDispatch } from "react-redux";
+import { editNote } from "../../../redux/slices/notes/notesActions";
 
 const Styles = styled.div`
   width: 100%;
@@ -118,6 +121,36 @@ const Styles = styled.div`
 `;
 
 const EditNote = (props) => {
+  const dispatch = useDispatch();
+
+  const [state, setState] = useState({
+    // created_at: moment(props.edit_note.created_at).format("yyy-MM-DD"),
+    title: props.edit_note.title,
+    content: props.edit_note.content,
+    favorite: 0,
+  });
+
+  // следим за чекбоксом "важный", меняем стейт в случае изменения чекбокса
+  React.useEffect(() => {
+    if (props.isImportant === true) {
+      setState({ ...state, favorite: 1 });
+    } else {
+      setState({ ...state, favorite: 0 });
+    }
+
+    return () => {};
+  }, [props.isImportant]);
+
+  // следим за стейтом родительской модалки (если там будет клик по кнопке "отправить" - отправляем данные на сервер)
+  React.useEffect(() => {
+    // если кнопка "отправить" была нажата и в стейте этого компонента есть formData, то оправляем данные
+    if (props.isSubmit && state) {
+      dispatch(editNote({ id: props.edit_note.id, obj: state }));
+      // скрываем модалку
+      props.toggle();
+    }
+  }, [props.isSubmit]);
+
   return (
     <Styles>
       <div className="edit_note">
@@ -133,30 +166,38 @@ const EditNote = (props) => {
                 className="start"
                 name="start"
                 onInput={({ target: { value } }) => {
-                  // setState((state) => ({
-                  //   ...state,
-                  //   start: value,
-                  // }));
+                  setState((state) => ({ ...state, created_at: value }));
                 }}
-                value={new Date(props.created_at).toLocaleString("ru", {
-                  year: "numeric",
-                  month: "numeric",
-                  day: "numeric",
-                })}
-                onChange={() => {}}
+                value={
+                  state.created_at
+                    ? state.created_at
+                    : moment(props.edit_note.created_at).format("yyy-MM-DD")
+                }
               />
             </div>
           </div>
           {/* инпут */}
           <div className="thema">
             <label htmlFor="">Thema</label>
-            <input type="text" value={props.title} onChange={() => {}} />
+            <input
+              type="text"
+              onInput={({ target: { value } }) => {
+                setState((state) => ({ ...state, title: value }));
+              }}
+              value={state.title ? state.title : props.edit_note.title}
+            />
           </div>
         </div>
         {/* текстовое поле */}
         <div className="edit_note_main">
           <label htmlFor="">Inhalt</label>
-          <textarea type="text" value={props.content} onChange={() => {}} />
+          <textarea
+            type="text"
+            onInput={({ target: { value } }) => {
+              setState((state) => ({ ...state, content: value }));
+            }}
+            value={state.content ? state.content : props.edit_note.content}
+          />
         </div>
       </div>
     </Styles>

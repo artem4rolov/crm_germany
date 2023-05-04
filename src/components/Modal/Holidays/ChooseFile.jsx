@@ -101,7 +101,7 @@ const ChooseFile = (props) => {
       // если кнопка "отправить" была нажата и в стейте этого компонента есть formData, то оправляем данные
       dispatch(uploadExcel(file));
       // скрываем модалку
-      // props.toggle();
+      props.toggle();
     }
   }, [props.isSubmit]);
 
