@@ -2,13 +2,13 @@ import React from "react";
 import Header from "../components/Header/Header";
 import { useNavigate, Route, Routes } from "react-router";
 import Dashboard from "../tabs/Dashboard/Dashboard";
-import YearSummary from "../tabs/Reports/Excel/Excel";
+import Excel from "../tabs/Reports/Excel/Excel";
 import Error from "./Error";
 import Holidays from "../tabs/Holidays/Holidays";
 import Timesheet from "../tabs/Timesheet/Timesheet";
 import Notes from "../tabs/Notes/Notes";
 import Projects from "../tabs/Projects/Projects";
-import Excel from "../tabs/Reports/YearSummary/YearSummary";
+import YearSummary from "../tabs/Reports/YearSummary/YearSummary";
 import { useSelector } from "react-redux";
 
 const Home = () => {

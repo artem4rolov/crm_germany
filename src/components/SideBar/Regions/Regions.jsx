@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { getRegions } from "../../../redux/slices/holidays/holidaysActions";
-import { setFilterRegionHoliday } from "../../../redux/slices/sidebar/sidebarSlice";
+import { setFilterRegionHoliday } from "../../../redux/slices/holidays/holidays";
 
 const Styles = styled.div`
   .sidebar-regions {

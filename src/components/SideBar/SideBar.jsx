@@ -3,13 +3,10 @@ import { Container, Table } from "react-bootstrap";
 
 import SettingsImage from "../../assets/icon_setting.svg";
 import SearchImage from "../../assets/icon_search.svg";
-import ImportImage from "../../assets/icon_download.svg";
-import ExportImage from "../../assets/icon_upload.svg";
 import styled from "styled-components";
 import { useState } from "react";
 import { useEffect } from "react";
 import PlusIconBlue from "../../assets/icon_added_blue.svg";
-import { useDispatch, useSelector } from "react-redux";
 
 import Regions from "./Regions/Regions";
 import CalendarComponent from "./CalendarComponent/CalendarComponent";
@@ -201,7 +198,7 @@ const SideBar = (props) => {
         <Container>
           <div className="sidebar-top">
             <div className="sidebar-left">
-              <CalendarComponent />
+              <CalendarComponent component={props.component} />
 
               {/* если переданы настройки - рендерим их */}
               {props.settings && (

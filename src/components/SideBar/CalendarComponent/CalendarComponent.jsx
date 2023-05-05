@@ -8,7 +8,9 @@ import NextImage2 from "../../../assets/calendar_next_2.svg";
 import PrevImage1 from "../../../assets/calendar_prev_1.svg";
 import PrevImage2 from "../../../assets/calendar_prev_2.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { setFilterDateDAY } from "../../../redux/slices/sidebar/sidebarSlice";
+import { setFilterDateHolidays } from "../../../redux/slices/holidays/holidays";
+import { setFilterDateNotes } from "../../../redux/slices/notes/notes";
+import ClickAwayListener from "react-click-away-listener";
 
 const Styles = styled.div`
   .calendar-container {
@@ -150,24 +152,40 @@ const Styles = styled.div`
   }
 `;
 
-const CalendarComponent = () => {
+const CalendarComponent = (props) => {
   // стейт для хранения выбранного диапазона дат
   const [date, setDate] = useState();
   // тогглим показ окна с календарем
   const [showCalendar, setShowCalendar] = useState(false);
-  // достаем переменные из стейта для фильтра праздников
-  const { filterDate } = useSelector((state) => state.sidebar);
+  // достаем переменные из стейта для фильтра нужной нам страницы (у каждой страницы свой фильтр даты)
+  const { filterDateHolidays } = useSelector((state) => state.holidays);
+  const { filterDateNotes } = useSelector((state) => state.notes);
+
+  console.log(props.component);
 
   const dispatch = useDispatch();
 
   // при изменении даты - меняем значения в Redux Store
   React.useEffect(() => {
     if (date) {
-      dispatch(
-        setFilterDateDAY(
-          `${date[0].toLocaleDateString()}-${date[1].toLocaleDateString()}`
-        )
-      );
+      switch (props.component) {
+        case "holidays":
+          dispatch(
+            setFilterDateHolidays(
+              `${date[0].toLocaleDateString()}-${date[1].toLocaleDateString()}`
+            )
+          );
+          break;
+        case "notes":
+          dispatch(
+            setFilterDateNotes(
+              `${date[0].toLocaleDateString()}-${date[1].toLocaleDateString()}`
+            )
+          );
+          break;
+        default:
+          return;
+      }
     }
     return () => {};
   }, [date, dispatch]);
@@ -180,33 +198,59 @@ const CalendarComponent = () => {
           onClick={() => setShowCalendar((prev) => !prev)}
         >
           <img src={CalendarImage} alt="" />
-          <div className="start-date">
-            {date ? date[0].toLocaleDateString() : filterDate.split("-")[0]}
-          </div>
-          <div className="finish-date">
-            {date ? date[1].toLocaleDateString() : filterDate.split("-")[1]}
-          </div>
+          {/* для страницы Holidays */}
+          {props.component === "holidays" ? (
+            <>
+              <div className="start-date">
+                {date
+                  ? date[0].toLocaleDateString()
+                  : filterDateHolidays.split("-")[0]}
+              </div>
+              <div className="finish-date">
+                {date
+                  ? date[1].toLocaleDateString()
+                  : filterDateHolidays.split("-")[1]}
+              </div>
+            </>
+          ) : null}
+          {/* для страницы Notes */}
+          {props.component === "notes" ? (
+            <>
+              <div className="start-date">
+                {date
+                  ? date[0].toLocaleDateString()
+                  : filterDateNotes.split("-")[0]}
+              </div>
+              <div className="finish-date">
+                {date
+                  ? date[1].toLocaleDateString()
+                  : filterDateNotes.split("-")[1]}
+              </div>
+            </>
+          ) : null}
         </div>
         {showCalendar && (
-          <div className="component-container">
-            <Calendar
-              onChange={setDate}
-              selectRange={true}
-              defaultValue={date}
-              showDoubleView
-              maxDetail={"month"}
-              minDetail={"year"}
-              locale="en"
-              nextLabel={<img src={NextImage1} alt="" />}
-              next2Label={
-                <img src={NextImage2} alt="" style={{ width: "25px" }} />
-              }
-              prevLabel={<img src={PrevImage1} alt="" />}
-              prev2Label={
-                <img src={PrevImage2} alt="" style={{ width: "25px" }} />
-              }
-            />
-          </div>
+          <ClickAwayListener onClickAway={() => setShowCalendar(false)}>
+            <div className="component-container">
+              <Calendar
+                onChange={setDate}
+                selectRange={true}
+                defaultValue={date}
+                showDoubleView
+                maxDetail={"month"}
+                minDetail={"year"}
+                locale="en"
+                nextLabel={<img src={NextImage1} alt="" />}
+                next2Label={
+                  <img src={NextImage2} alt="" style={{ width: "25px" }} />
+                }
+                prevLabel={<img src={PrevImage1} alt="" />}
+                prev2Label={
+                  <img src={PrevImage2} alt="" style={{ width: "25px" }} />
+                }
+              />
+            </div>
+          </ClickAwayListener>
         )}
       </div>
     </Styles>

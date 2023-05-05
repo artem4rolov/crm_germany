@@ -194,9 +194,11 @@ const EditNote = (props) => {
           <textarea
             type="text"
             onInput={({ target: { value } }) => {
-              setState((state) => ({ ...state, content: value }));
+              setState((state) => ({ ...state, content: value.trim() }));
             }}
-            value={state.content ? state.content : props.edit_note.content}
+            value={
+              state.content ? state.content : props.edit_note.content.trim()
+            }
           />
         </div>
       </div>

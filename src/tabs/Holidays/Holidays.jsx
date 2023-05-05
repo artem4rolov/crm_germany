@@ -96,13 +96,14 @@ const columnTitle = [
 
 const Holidays = () => {
   // достаем переменные из стейта для фильтра праздников
-  const { loadingHolidays, holidays, needRefreshData } = useSelector(
-    (state) => state.holidays
-  );
+  const {
+    loadingHolidays,
+    holidays,
+    needRefreshData,
+    filterRegion,
+    filterDateHolidays,
+  } = useSelector((state) => state.holidays);
   const dispatch = useDispatch();
-
-  // достаем стейт фильтра дат и региона из слайса сайдбара
-  const { filterDate, filterRegion } = useSelector((state) => state.sidebar);
 
   //стейт для установки current project
   const [currentHoliday, setCurrentHoliday] = useState(null);
@@ -111,22 +112,28 @@ const Holidays = () => {
   const [toggleRemoveHoliday, setToggleRemoveHoliday] = useState(false);
 
   React.useEffect(() => {
-    if (filterDate) {
+    if (filterDateHolidays) {
       dispatch(
         getHolidaysByFilter({
-          date: filterDate,
+          date: filterDateHolidays,
           region: filterRegion,
         })
       );
     }
 
     return () => {};
-  }, [filterDate, filterRegion]);
+  }, [filterDateHolidays, filterRegion]);
 
   return (
     <Styles>
       <div className="holidays-wrapper">
-        <SideBar calendar download columnTitle={columnTitle} regions />
+        <SideBar
+          calendar
+          download
+          columnTitle={columnTitle}
+          regions
+          component={"holidays"}
+        />
         <div className="table-titles-wrapper"></div>
         <Container>
           {!loadingHolidays ? (

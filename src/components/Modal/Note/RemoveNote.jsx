@@ -178,7 +178,11 @@ const RemoveNote = (props) => {
         {/* текстовое поле */}
         <div className="remove_note_main">
           <label htmlFor="">Inhalt</label>
-          <textarea type="text" disabled value={props.remove_note.content} />
+          <textarea
+            type="text"
+            disabled
+            value={props.remove_note.content.trim()}
+          />
         </div>
       </div>
     </Styles>

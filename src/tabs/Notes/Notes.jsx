@@ -123,11 +123,9 @@ const columnTitle = [
 
 const Notes = () => {
   // достаем переменные из стейта для рендера заметок
-  const { loadingNotes, notes, needRefreshData, error } = useSelector(
-    (state) => state.notes
-  );
+  const { loadingNotes, notes, needRefreshData, error, filterDateNotes } =
+    useSelector((state) => state.notes);
   const dispatch = useDispatch();
-  const { filterDate } = useSelector((state) => state.sidebar);
 
   // тогглим модалки для разных функций (добавление, редактирование, удаление)
   const [toggleAddNote, setToggleAddNote] = useState(false);
@@ -136,17 +134,15 @@ const Notes = () => {
   //стейт для установки current project
   const [currentNote, setCurrentNote] = useState(null);
 
-  const [currentDate, setCurrentDate] = useState(null);
-
   React.useEffect(() => {
     dispatch(
       getNotesByFilter({
-        date: filterDate,
+        date: filterDateNotes,
       })
     );
 
     return () => {};
-  }, [filterDate, needRefreshData]);
+  }, [filterDateNotes, needRefreshData]);
 
   console.log(notes);
 
@@ -159,6 +155,7 @@ const Notes = () => {
           filters={[{ title: "Важные" }]}
           addNote={setToggleAddNote}
           search
+          component={"notes"}
         />
         <div className="table-titles-wrapper"></div>
         <Container>

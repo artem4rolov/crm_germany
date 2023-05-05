@@ -7,18 +7,33 @@ import {
   uploadExcel,
 } from "./holidaysActions";
 
+const actualyYear = new Date().getFullYear();
+
 const initialState = {
   needRefreshData: false, // после удаления необходимо заново по установленным фильтрам запросить актуальные данные
   loadingHolidays: false, // отображение загрузки
   holidays: null, // пользователь
   error: null, // значение ошибки
   regions: [],
+  filterRegion: null, // ВЫБРАННЫЙ фильтр регионов
+  filterDateHolidays: `01.01.${actualyYear}-31.12.${actualyYear}`, // фильтр дат
 };
 
 const holidaySlice = createSlice({
   name: "holidays",
   initialState,
-  reducers: {},
+  reducers: {
+    setFilterRegionHoliday: (state, { payload }) => {
+      // если выбран Alle - делаем запрос без фильтров по регионам
+      if (payload == ["Alle"]) {
+        return (state.filterRegion = null);
+      }
+      state.filterRegion = payload;
+    },
+    setFilterDateHolidays: (state, { payload }) => {
+      state.filterDateHolidays = payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       // получить праздники по фильтру
@@ -81,4 +96,6 @@ const holidaySlice = createSlice({
   },
 });
 
+export const { setFilterRegionHoliday, setFilterDateHolidays } =
+  holidaySlice.actions;
 export default holidaySlice.reducer;
