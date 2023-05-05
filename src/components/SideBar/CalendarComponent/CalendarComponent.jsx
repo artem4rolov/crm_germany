@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import "react-calendar/dist/Calendar.css";
 import Calendar from "react-calendar";
 import styled from "styled-components";
@@ -201,7 +201,7 @@ const CalendarComponent = (props) => {
           {/* для страницы Holidays */}
           {props.component === "holidays" ? (
             <>
-              <div className="start-date">
+              <div className="start-date" key={"holidays"}>
                 {date
                   ? date[0].toLocaleDateString()
                   : filterDateHolidays.split("-")[0]}
@@ -216,7 +216,7 @@ const CalendarComponent = (props) => {
           {/* для страницы Notes */}
           {props.component === "notes" ? (
             <>
-              <div className="start-date">
+              <div className="start-date" key={"notes"}>
                 {date
                   ? date[0].toLocaleDateString()
                   : filterDateNotes.split("-")[0]}
@@ -237,8 +237,8 @@ const CalendarComponent = (props) => {
                 selectRange={true}
                 defaultValue={date}
                 showDoubleView
-                maxDetail={"month"}
-                minDetail={"year"}
+                maxDetail={"decade"}
+                minDetail={"decade"}
                 locale="en"
                 nextLabel={<img src={NextImage1} alt="" />}
                 next2Label={

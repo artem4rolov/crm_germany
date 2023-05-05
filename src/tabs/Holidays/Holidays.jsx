@@ -7,6 +7,7 @@ import Modal from "../../components/Modal/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { getHolidaysByFilter } from "../../redux/slices/holidays/holidaysActions";
 import Loader from "../../components/Loader/Loader";
+import moment from "moment";
 
 const Styles = styled.div`
   .holidays-wrapper {
@@ -153,15 +154,12 @@ const Holidays = () => {
               <tbody>
                 {holidays &&
                   holidays.map((row, index) => (
-                    <tr key={row.summary} className={`table-content`}>
+                    <tr
+                      key={`${row.summary}${row.date}`}
+                      className={`table-content`}
+                    >
                       <th>{`${index + 1}.`}</th>
-                      <th>
-                        {new Date(row.date).toLocaleString("ru", {
-                          year: "numeric",
-                          month: "numeric",
-                          day: "numeric",
-                        })}
-                      </th>
+                      <th>{moment(row.date).format("YYYY MM DD")}</th>
                       <th>{row.summary}</th>
                       <th>{row.region_aggregated.replace(/,/g, ", ")}</th>
                       <th>{row.notes_aggregated}</th>

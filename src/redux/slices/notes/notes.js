@@ -7,23 +7,13 @@ import {
 } from "./notesActions";
 
 const actualyYear = new Date().getFullYear();
-const actualyDay = new Date().getDay();
-
-function addZero(num) {
-  if (num > 0 && num < 10) {
-    return `0${num}`;
-  }
-  return num;
-}
 
 const initialState = {
   needRefreshData: false, // после удаления необходимо заново по установленным фильтрам запросить актуальные данные
   loadingNotes: false, // отображение загрузки
   notes: null, // пользователь
   error: null, // значение ошибки
-  filterDateNotes: `${addZero(actualyDay)}.05.${actualyYear - 3}-${addZero(
-    actualyDay
-  )}.05.2023`, // фильтр дат
+  filterDateNotes: `01.01.${actualyYear - 3}-31.12.${actualyYear}`, // фильтр дат
 };
 
 const notesSlice = createSlice({
