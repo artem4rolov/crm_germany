@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import "react-calendar/dist/Calendar.css";
 import Calendar from "react-calendar";
 import styled from "styled-components";
@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setFilterDateHolidays } from "../../../redux/slices/holidays/holidays";
 import { setFilterDateNotes } from "../../../redux/slices/notes/notes";
 import ClickAwayListener from "react-click-away-listener";
+import { setFilterDateYearSummary } from "../../../redux/slices/reports/year_summary/yearSummary";
+import { setFilterDateExcel } from "../../../redux/slices/reports/excel/excel";
 
 const Styles = styled.div`
   .calendar-container {
@@ -154,14 +156,14 @@ const Styles = styled.div`
 
 const CalendarComponent = (props) => {
   // стейт для хранения выбранного диапазона дат
-  const [date, setDate] = useState();
+  const [date, setDate] = React.useState();
   // тогглим показ окна с календарем
-  const [showCalendar, setShowCalendar] = useState(false);
+  const [showCalendar, setShowCalendar] = React.useState(false);
   // достаем переменные из стейта для фильтра нужной нам страницы (у каждой страницы свой фильтр даты)
   const { filterDateHolidays } = useSelector((state) => state.holidays);
   const { filterDateNotes } = useSelector((state) => state.notes);
-
-  console.log(props.component);
+  const { filterDateYearSummary } = useSelector((state) => state.yearSummary);
+  const { filterDateExcel } = useSelector((state) => state.excel);
 
   const dispatch = useDispatch();
 
@@ -179,6 +181,20 @@ const CalendarComponent = (props) => {
         case "notes":
           dispatch(
             setFilterDateNotes(
+              `${date[0].toLocaleDateString()}-${date[1].toLocaleDateString()}`
+            )
+          );
+          break;
+        case "year_summary":
+          dispatch(
+            setFilterDateYearSummary(
+              `${date[0].toLocaleDateString()}-${date[1].toLocaleDateString()}`
+            )
+          );
+          break;
+        case "excel":
+          dispatch(
+            setFilterDateExcel(
               `${date[0].toLocaleDateString()}-${date[1].toLocaleDateString()}`
             )
           );
@@ -228,27 +244,80 @@ const CalendarComponent = (props) => {
               </div>
             </>
           ) : null}
+          {/* для страницы YearSummary */}
+          {props.component === "year_summary" ? (
+            <>
+              <div className="start-date" key={"year_summary"}>
+                {date
+                  ? date[0].toLocaleDateString()
+                  : filterDateYearSummary.split("-")[0]}
+              </div>
+              <div className="finish-date">
+                {date
+                  ? date[1].toLocaleDateString()
+                  : filterDateYearSummary.split("-")[1]}
+              </div>
+            </>
+          ) : null}
+          {/* для страницы Excel */}
+          {props.component === "excel" ? (
+            <>
+              <div className="start-date" key={"excel"}>
+                {date
+                  ? date[0].toLocaleDateString()
+                  : filterDateExcel.split("-")[0]}
+              </div>
+              <div className="finish-date">
+                {date
+                  ? date[1].toLocaleDateString()
+                  : filterDateExcel.split("-")[1]}
+              </div>
+            </>
+          ) : null}
         </div>
         {showCalendar && (
           <ClickAwayListener onClickAway={() => setShowCalendar(false)}>
             <div className="component-container">
-              <Calendar
-                onChange={setDate}
-                selectRange={true}
-                defaultValue={date}
-                showDoubleView
-                maxDetail={"decade"}
-                minDetail={"decade"}
-                locale="en"
-                nextLabel={<img src={NextImage1} alt="" />}
-                next2Label={
-                  <img src={NextImage2} alt="" style={{ width: "25px" }} />
-                }
-                prevLabel={<img src={PrevImage1} alt="" />}
-                prev2Label={
-                  <img src={PrevImage2} alt="" style={{ width: "25px" }} />
-                }
-              />
+              {props.component === "notes" || props.component === "holidays" ? (
+                <Calendar
+                  onChange={setDate}
+                  selectRange={true}
+                  defaultValue={date}
+                  showDoubleView
+                  returnValue={"range"}
+                  maxDetail={"decade"}
+                  minDetail={"decade"}
+                  locale="en"
+                  nextLabel={<img src={NextImage1} alt="" />}
+                  next2Label={
+                    <img src={NextImage2} alt="" style={{ width: "25px" }} />
+                  }
+                  prevLabel={<img src={PrevImage1} alt="" />}
+                  prev2Label={
+                    <img src={PrevImage2} alt="" style={{ width: "25px" }} />
+                  }
+                />
+              ) : null}
+              {props.component === "year_summary" ||
+              props.component === "excel" ? (
+                <Calendar
+                  onChange={setDate}
+                  returnValue={"range"}
+                  selectRange={false}
+                  defaultValue={date}
+                  maxDetail={"decade"}
+                  minDetail={"decade"}
+                  locale="en"
+                  nextLabel={<img src={NextImage1} alt="" />}
+                  next2Label={
+                    <img src={NextImage2} alt="" style={{ width: "25px" }} />
+                  }
+                  prevLabel={<img src={PrevImage1} alt="" />}
+                  prev2Label={
+                    <img src={PrevImage2} alt="" style={{ width: "25px" }} />
+                  }
+                />
+              ) : null}
             </div>
           </ClickAwayListener>
         )}

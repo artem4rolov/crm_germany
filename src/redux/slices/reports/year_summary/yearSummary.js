@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const actualyYear = new Date().getFullYear();
+
 const initialState = {
-  // filterRegion: null, // ВЫБРАННЫЙ фильтр регионов
-  // filterDate: "01.05.2023-31.05.2023", // фильтр дат
+  filterDateYearSummary: `01.01.${actualyYear}-31.12.${actualyYear}`, // фильтр дат
 };
 
-const sidebarSlice = createSlice({
+const yearSummarySlice = createSlice({
   name: "sidebar",
   initialState,
   reducers: {
@@ -16,13 +17,12 @@ const sidebarSlice = createSlice({
     //   }
     //   state.filterRegion = payload;
     // },
-    // setFilterDateDAY: (state, { payload }) => {
-    //   state.filterDate = payload;
-    // },
+    setFilterDateYearSummary: (state, { payload }) => {
+      state.filterDateYearSummary = payload;
+    },
   },
   extraReducers: (builder) => {},
 });
 
-export const { setFilterRegionHoliday, setFilterDateDAY } =
-  sidebarSlice.actions;
-export default sidebarSlice.reducer;
+export const { setFilterDateYearSummary } = yearSummarySlice.actions;
+export default yearSummarySlice.reducer;

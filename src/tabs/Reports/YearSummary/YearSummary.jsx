@@ -97,6 +97,7 @@ const YearSummary = () => {
           filters={[{ title: "Важные" }]}
           search
           columnTitle={columnTitle}
+          component={"year_summary"}
         />
         <div className="table-titles-wrapper"></div>
         <Container>
