@@ -13,6 +13,7 @@ import { setFilterDateNotes } from "../../../redux/slices/notes/notes";
 import ClickAwayListener from "react-click-away-listener";
 import { setFilterDateYearSummary } from "../../../redux/slices/reports/year_summary/yearSummary";
 import { setFilterDateExcel } from "../../../redux/slices/reports/excel/excel";
+import moment from "moment";
 
 const Styles = styled.div`
   .calendar-container {
@@ -130,7 +131,7 @@ const Styles = styled.div`
         background-color: #f8f8fa;
       }
       .react-calendar__tile--range {
-        background: #f2f3f4;
+        background: #b8b8b8;
         color: #4b4e51;
         border-radius: 0;
       }
@@ -278,12 +279,20 @@ const CalendarComponent = (props) => {
         {showCalendar && (
           <ClickAwayListener onClickAway={() => setShowCalendar(false)}>
             <div className="component-container">
-              {props.component === "notes" || props.component === "holidays" ? (
+              {props.component === "notes" ? (
                 <Calendar
                   onChange={setDate}
                   selectRange={true}
-                  defaultValue={date}
-                  showDoubleView
+                  value={[
+                    moment(filterDateNotes.split("-")[0]).format("YYYY-MM-DD"),
+                    Array.of(
+                      filterDateNotes
+                        .split("-")[1]
+                        .split(".")
+                        .reverse()
+                        .join("-")
+                    ).toString(),
+                  ]}
                   returnValue={"range"}
                   maxDetail={"decade"}
                   minDetail={"decade"}
@@ -299,12 +308,13 @@ const CalendarComponent = (props) => {
                 />
               ) : null}
               {props.component === "year_summary" ||
-              props.component === "excel" ? (
+              props.component === "excel" ||
+              props.component === "holidays" ? (
                 <Calendar
                   onChange={setDate}
                   returnValue={"range"}
                   selectRange={false}
-                  defaultValue={date}
+                  value={date}
                   maxDetail={"decade"}
                   minDetail={"decade"}
                   locale="en"

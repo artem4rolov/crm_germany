@@ -50,7 +50,7 @@ const Styles = styled.div`
     width: 532px;
     height: 405px;
     background: #e7ebf0;
-    border-radius: 4px 0px 0px 4px;
+    border-radius: 4px 4px 4px 4px;
     padding: 56px;
 
     z-index: 2;
@@ -79,6 +79,10 @@ const Styles = styled.div`
 
       &:disabled {
         background-color: #a5a5a5;
+      }
+
+      &.error {
+        border: 1px solid #b00e0e;
       }
     }
 
@@ -191,6 +195,7 @@ const Login = () => {
               <div className="login">
                 <label>E-Mail</label>
                 <input
+                  className={`${userStatus === 422 ? "error" : ""}`}
                   type="email"
                   value={username}
                   onChange={(e) => setUserName(e.target.value)}
@@ -201,6 +206,7 @@ const Login = () => {
               <div className="password">
                 <label>Password</label>
                 <input
+                  className={`${userStatus === 422 ? "error" : ""}`}
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -210,7 +216,9 @@ const Login = () => {
               {/* галочка запомнить меня */}
               <div className="remember-me">
                 <input
-                  className="remember-me-check"
+                  className={`remember-me-check ${
+                    userStatus === 422 ? "error" : ""
+                  }`}
                   type="checkbox"
                   id="check"
                 />
@@ -222,10 +230,6 @@ const Login = () => {
               <button type="submit" onClick={handleSubmit} disabled={loading}>
                 {!loading ? "Anmelden" : <Loader small />}
               </button>
-              {/* сообщения об ошибках */}
-              {userStatus === 422 && (
-                <span className="error-message">Неверный логин или пароль</span>
-              )}
             </div>
           </div>
         </div>

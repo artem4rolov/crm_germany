@@ -130,6 +130,7 @@ const Timesheet = () => {
       day.add(1, "day");
     }
 
+    // тут что-то делаем с полученными данными (из них нужно создать список проектов и пустых дней, где нет проектов, при этом, рядом с каждым понедельником необходимо выводить номер недели конкретного года)
     data.map((project) => {});
 
     setTableDays(calendar);
@@ -139,7 +140,7 @@ const Timesheet = () => {
   console.log(data);
 
   useEffect(() => {
-    getRangeArray();
+    // getRangeArray();
   }, [filterDate]);
 
   return (
