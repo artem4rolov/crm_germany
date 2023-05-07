@@ -5,6 +5,7 @@ import Select from "../../../Select/Select";
 
 const Styles = styled.div`
   width: 100%;
+  padding: 10px;
   /* страница Projecte */
   /* new project */
   .new_project {
@@ -14,10 +15,9 @@ const Styles = styled.div`
     .new_project-header {
       display: flex;
       justify-content: space-between;
-      gap: 16px;
-      padding: 38px 0;
       width: 100%;
       border-bottom: 1px solid #e1e1e1;
+      padding-bottom: 20px;
 
       .project_name,
       .kurze_beschreibung {
@@ -33,17 +33,17 @@ const Styles = styled.div`
           border: 1px solid #e1e1e1;
           border-radius: 4px;
 
-          &.project_name {
-            width: 300px;
+          &.projekt_name {
+            width: 180px;
           }
           &.kurze_beschreibung {
-            width: 600px;
+            width: 480px;
           }
           &.start {
-            width: 150px;
+            width: 100px;
           }
           &.ende {
-            width: 150px;
+            width: 100px;
           }
         }
       }
@@ -102,8 +102,7 @@ const Styles = styled.div`
     .new_project_main {
       display: flex;
       justify-content: space-between;
-      gap: 16px;
-      padding: 40px 0;
+      padding: 20px 0;
 
       .vertag,
       .bezeichnung_vermittler,
@@ -121,10 +120,10 @@ const Styles = styled.div`
           border-radius: 4px;
 
           &.vertag {
-            width: 300px;
+            width: 240px;
           }
           &.bezeichnung_vermittler {
-            width: 260px;
+            width: 200px;
           }
           &.bezeichnung_kunde {
             width: 250px;
@@ -230,7 +229,7 @@ const NewProject = (props) => {
 
   // следим за изменением стейта, и при малейшем изменении - передаем данные в компонент Modal, для дальнейшей отправки на сервер
   useEffect(() => {
-    props.setData(state);
+    // props.setData(state);
   }, [state]);
 
   return (

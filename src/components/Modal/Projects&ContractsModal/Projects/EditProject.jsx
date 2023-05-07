@@ -11,7 +11,6 @@ const Styles = styled.div`
       display: flex;
       justify-content: space-between;
       width: 100%;
-      gap: 16px;
 
       .projekt_name,
       .kurze_beschreibung {
@@ -25,12 +24,13 @@ const Styles = styled.div`
           background: #ffffff;
           border: 1px solid #e1e1e1;
           border-radius: 4px;
+          outline: none;
 
           &.projekt_name {
-            width: 300px;
+            width: 180px;
           }
           &.kurze_beschreibung {
-            width: 600px;
+            width: 480px;
           }
           &.start {
             width: 100px;

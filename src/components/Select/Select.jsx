@@ -67,6 +67,7 @@ const Styles = styled.div`
       outline: none;
       border: 1px solid #e1e1e1;
       border-radius: 4px;
+      z-index: 5;
     }
 
     &__item {

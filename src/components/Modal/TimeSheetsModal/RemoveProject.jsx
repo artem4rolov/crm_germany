@@ -6,13 +6,14 @@ import styled from "styled-components";
 
 const Styles = styled.div`
   width: 100%;
+  padding: 10px;
   /* страница Zeiterfassung */
   /* add project TODAY */
   .edit_project_today {
     display: flex;
     width: 100%;
     flex-direction: column;
-    gap: 40px;
+    gap: 10px;
 
     .inputs {
       display: flex;

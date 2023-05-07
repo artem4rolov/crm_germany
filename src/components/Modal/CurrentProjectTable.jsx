@@ -12,7 +12,7 @@ const Styles = styled.div`
     .table-titles-wrapper {
       position: absolute;
       top: 0;
-      height: 60px;
+      height: 80px;
       background: #fcfcfc;
       box-shadow: 0px 3px 4px rgba(166, 166, 166, 0.2);
       border: none;

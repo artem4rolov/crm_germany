@@ -37,13 +37,13 @@ const Styles = styled.div`
           outline: none;
 
           &.vertag {
-            width: 280px;
+            width: 200px;
           }
           &.bezeichnung_vermittler {
-            width: 280px;
+            width: 200px;
           }
           &.bezeichnung_kunde {
-            width: 280px;
+            width: 200px;
           }
           &.budget {
             width: 60px;
@@ -107,7 +107,7 @@ const Styles = styled.div`
       justify-content: start;
       gap: 16px;
       border-bottom: 1px solid #e1e1e1;
-      padding-bottom: 40px;
+      padding-bottom: 20px;
 
       .excel_format {
         display: flex;
@@ -168,13 +168,13 @@ const Styles = styled.div`
             width: 300px;
           }
           &.kurze_beschreibung {
-            width: 700px;
+            width: 400px;
           }
           &.start {
-            width: 100px;
+            width: 130px;
           }
           &.ende {
-            width: 100px;
+            width: 130px;
           }
 
           &:disabled {

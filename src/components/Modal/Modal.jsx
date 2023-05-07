@@ -53,9 +53,11 @@ const Styles = styled.div`
 
   .modal-window {
     z-index: 2;
-    width: 100%;
-    height: 720px;
+    width: 80%;
+    height: 500px;
     background: #f6f6f6;
+
+    margin: 0 auto;
 
     display: flex;
     flex-direction: column;
@@ -72,7 +74,7 @@ const Styles = styled.div`
 
     /* MODAL HEADER */
     .modal-header {
-      padding: 30px;
+      padding: 10px;
       display: flex;
       justify-content: space-between;
       background: #fcfcfc;
@@ -98,7 +100,7 @@ const Styles = styled.div`
 
     /* MODAL CONTENT */
     .modal-content {
-      padding: 30px;
+      padding: 10px;
       display: flex;
       height: 100%;
       overflow: auto;
@@ -116,7 +118,7 @@ const Styles = styled.div`
 
     /* MODAL FOOTER */
     .modal-footer {
-      padding: 30px;
+      padding: 10px;
       display: flex;
       justify-content: space-between;
       background: #fcfcfc;
