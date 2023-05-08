@@ -14,6 +14,7 @@ import ClickAwayListener from "react-click-away-listener";
 import { setFilterDateYearSummary } from "../../../redux/slices/reports/year_summary/yearSummary";
 import { setFilterDateExcel } from "../../../redux/slices/reports/excel/excel";
 import moment from "moment";
+import { setFilterDateTimesheet } from "../../../redux/slices/timesheet/timesheet";
 
 const Styles = styled.div`
   .calendar-container {
@@ -58,7 +59,7 @@ const Styles = styled.div`
       left: 0;
 
       .react-calendar {
-        width: 600px;
+        width: 640px;
         height: 100%;
         background-color: #fff;
         border: 1px solid rgb(190, 190, 190);
@@ -165,6 +166,7 @@ const CalendarComponent = (props) => {
   const { filterDateNotes } = useSelector((state) => state.notes);
   const { filterDateYearSummary } = useSelector((state) => state.yearSummary);
   const { filterDateExcel } = useSelector((state) => state.excel);
+  const { filterDateTimesheet } = useSelector((state) => state.timesheet);
 
   const dispatch = useDispatch();
 
@@ -196,6 +198,13 @@ const CalendarComponent = (props) => {
         case "excel":
           dispatch(
             setFilterDateExcel(
+              `${date[0].toLocaleDateString()}-${date[1].toLocaleDateString()}`
+            )
+          );
+          break;
+        case "timesheet":
+          dispatch(
+            setFilterDateTimesheet(
               `${date[0].toLocaleDateString()}-${date[1].toLocaleDateString()}`
             )
           );
@@ -275,6 +284,21 @@ const CalendarComponent = (props) => {
               </div>
             </>
           ) : null}
+          {/* для страницы Timesheet */}
+          {props.component === "timesheet" ? (
+            <>
+              <div className="start-date" key={"timesheet"}>
+                {date
+                  ? date[0].toLocaleDateString()
+                  : filterDateTimesheet.split("-")[0]}
+              </div>
+              <div className="finish-date">
+                {date
+                  ? date[1].toLocaleDateString()
+                  : filterDateTimesheet.split("-")[1]}
+              </div>
+            </>
+          ) : null}
         </div>
         {showCalendar && (
           <ClickAwayListener onClickAway={() => setShowCalendar(false)}>
@@ -283,18 +307,10 @@ const CalendarComponent = (props) => {
                 <Calendar
                   onChange={setDate}
                   selectRange={true}
-                  value={[
-                    moment(filterDateNotes.split("-")[0]).format("YYYY-MM-DD"),
-                    Array.of(
-                      filterDateNotes
-                        .split("-")[1]
-                        .split(".")
-                        .reverse()
-                        .join("-")
-                    ).toString(),
-                  ]}
+                  showDoubleView
+                  value={date}
                   returnValue={"range"}
-                  maxDetail={"decade"}
+                  maxDetail={"month"}
                   minDetail={"decade"}
                   locale="en"
                   nextLabel={<img src={NextImage1} alt="" />}
@@ -316,6 +332,27 @@ const CalendarComponent = (props) => {
                   selectRange={false}
                   value={date}
                   maxDetail={"decade"}
+                  minDetail={"decade"}
+                  locale="en"
+                  nextLabel={<img src={NextImage1} alt="" />}
+                  next2Label={
+                    <img src={NextImage2} alt="" style={{ width: "25px" }} />
+                  }
+                  prevLabel={<img src={PrevImage1} alt="" />}
+                  prev2Label={
+                    <img src={PrevImage2} alt="" style={{ width: "25px" }} />
+                  }
+                />
+              ) : null}
+              {props.component === "timesheet" ? (
+                <Calendar
+                  showDoubleView
+                  onChange={setDate}
+                  returnValue={"range"}
+                  selectRange={true}
+                  showWeekNumbers={true}
+                  value={date}
+                  maxDetail={"month"}
                   minDetail={"decade"}
                   locale="en"
                   nextLabel={<img src={NextImage1} alt="" />}

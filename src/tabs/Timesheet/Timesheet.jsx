@@ -9,8 +9,9 @@ import EditIcon from "../../assets/icon_edit.svg";
 import TrashIcon from "../../assets/icon_trash-can.svg";
 
 import data from "../../mock/table-projects.json";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import moment from "moment/moment";
+import { getHolidaysByFilter } from "../../redux/slices/holidays/holidaysActions";
 
 const Styles = styled.div`
   .timesheet-wrapper {
@@ -41,6 +42,19 @@ const Styles = styled.div`
 
     .table-content {
       position: relative;
+
+      &.holiday {
+        background: #ffebeb;
+        border-radius: 4px;
+
+        font-size: 15px;
+        line-height: 20px;
+        color: #e03333;
+
+        .holiday_desc {
+          font-style: italic;
+        }
+      }
 
       .row-modal {
         position: absolute;
@@ -100,9 +114,16 @@ const columnTitle = [
 ];
 
 const Timesheet = () => {
-  // достаем переменные из стейта для фильтра праздников
-  const { filterDate } = useSelector((state) => state.sidebar);
+  const dispatch = useDispatch();
 
+  // достаем переменные из стейта timesheet
+  const { filterDateTimesheet, needRefreshData } = useSelector(
+    (state) => state.timesheet
+  );
+  // достаем переменные из стейта holidays
+  const { holidays } = useSelector((state) => state.holidays);
+
+  // массив дней, который мы будем выводить
   const [tableDays, setTableDays] = useState(null);
 
   // тогглим модалки для разных функций (добавление, редактирование, удаление)
@@ -114,34 +135,81 @@ const Timesheet = () => {
   const [currentProject, setCurrentProject] = useState(null);
 
   function getRangeArray() {
+    // обозначаем начало и конец промежутка дат, чтобы создать массив с количеством дней выбранного диапазона
     const startDay = moment(
-      filterDate.split("-")[0].split(".").reverse().join("-")
+      filterDateTimesheet.split("-")[0].split(".").reverse().join("-")
     );
     const endDay = moment(
-      filterDate.split("-")[1].split(".").reverse().join("-")
+      filterDateTimesheet.split("-")[1].split(".").reverse().join("-")
     );
 
+    // будущий массив из диапазона дат с объектами, в которых будут проекты или праздники
     const calendar = [];
 
     const day = startDay.clone();
 
+    // если в массиве текущий день "меньше" чем конец массива выбранных дат - добавляем в массив calendar этот день, чтобы создать диапазон дат
     while (!day.isAfter(endDay)) {
       calendar.push(day.clone());
       day.add(1, "day");
     }
 
+    // мутируем массив с датами
+    calendar.map((day, index) => {
+      // очищаем объект даты от ненужных ключей, оставляем только дату в формуте string (YYYY-MM-DD)
+      Object.keys(day).forEach((n) => (n !== "_d" ? delete day[n] : null));
+      day._d = moment(day._d).format("YYYY-MM-DD");
+      // здесь же перебираем массив полученных праздников и сравниваем даты этих праздников с выбранным диапазоном дат для проектов
+      holidays &&
+        holidays.length > 0 &&
+        holidays.map((holiday, index) => {
+          if (holiday.date === day._d) {
+            // если даты совпадают - отображаем праздник в текущем дне и останавливаем цикл перебора праздников
+            return (day.holiday = holiday.summary);
+          } else {
+            // иначе ничего не делаем
+            return null;
+          }
+        });
+      day.project = null;
+
+      return day;
+    });
+
+    console.log(holidays);
+
     // тут что-то делаем с полученными данными (из них нужно создать список проектов и пустых дней, где нет проектов, при этом, рядом с каждым понедельником необходимо выводить номер недели конкретного года)
-    data.map((project) => {});
+    // data.map((project) => {});
 
     setTableDays(calendar);
   }
 
   console.log(tableDays);
-  console.log(data);
+
+  // console.log(data);
 
   useEffect(() => {
-    // getRangeArray();
-  }, [filterDate]);
+    if (holidays && holidays.length > 0 && tableDays) {
+      getRangeArray();
+    }
+  }, [filterDateTimesheet]);
+
+  // при первом рендере получаем ВСЕ праздники с  сервера
+  useEffect(() => {
+    const promise = new Promise((resolve, reject) => {
+      const actualyYear = new Date().getFullYear();
+      dispatch(
+        getHolidaysByFilter({
+          date: `01.01.2001-31.12.${actualyYear}`,
+          region: null,
+        })
+      );
+    });
+    if (holidays && holidays.length > 0 && !tableDays) {
+      getRangeArray();
+    }
+    return () => {};
+  }, []);
 
   return (
     <Styles>
@@ -151,6 +219,7 @@ const Timesheet = () => {
           columnTitle={columnTitle}
           search
           calendar
+          component={"timesheet"}
         />
         <div className="table-titles-wrapper"></div>
         <Container>
@@ -166,45 +235,88 @@ const Timesheet = () => {
               </tr>
             </thead>
             <tbody>
-              {data.map((row, index) => (
-                <tr key={index} className={`table-content`}>
-                  {row.map((col, index) => (
-                    <th key={index}>{col}</th>
-                  ))}
-                  {/* модалка в углу строки при клике на строку */}
-                  <th className="row-modal">
-                    <div>
-                      <img
-                        src={PlusIcon}
-                        alt="plus icon"
-                        onClick={() =>
-                          setToggleAddProjectToday((prev) => !prev)
-                        }
-                      />
-                    </div>
-                    <div>
-                      <img
-                        src={EditIcon}
-                        alt="edit icon"
-                        onClick={() => {
-                          setCurrentProject(row);
-                          setToggleEditProjectToday((prev) => !prev);
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <img
-                        src={TrashIcon}
-                        alt="trash icon"
-                        onClick={() => {
-                          setCurrentProject(row[2]);
-                          setToggleRemoveProjectToday((prev) => !prev);
-                        }}
-                      />
-                    </div>
-                  </th>
-                </tr>
-              ))}
+              {tableDays &&
+                tableDays.map((row, index) =>
+                  !row.holiday ? (
+                    <tr key={index} className={`table-content`}>
+                      <th>{index + 1}</th>
+                      <th>{moment(row._d).format("DD.MM.YY")}</th>
+                      <th>
+                        {row.project && row.project.name
+                          ? row.project.name
+                          : ""}
+                      </th>
+                      <th>
+                        {row.project && row.project.von ? row.project.von : ""}
+                      </th>
+                      <th>
+                        {row.project && row.project.bis ? row.project.bis : ""}
+                      </th>
+                      <th>
+                        {row.project && row.project.pause
+                          ? row.project.pause
+                          : ""}
+                      </th>
+                      <th>
+                        {row.project && row.project.zeit
+                          ? row.project.zeit
+                          : ""}
+                      </th>
+                      <th>
+                        {row.project && row.project.pt ? row.project.pt : ""}
+                      </th>
+                      <th>
+                        {row.project && row.project.note
+                          ? row.project.note
+                          : ""}
+                      </th>
+                      {/* модалка в углу строки при клике на строку */}
+                      <th className="row-modal">
+                        <div>
+                          <img
+                            src={PlusIcon}
+                            alt="plus icon"
+                            onClick={() =>
+                              setToggleAddProjectToday((prev) => !prev)
+                            }
+                          />
+                        </div>
+                        <div>
+                          <img
+                            src={EditIcon}
+                            alt="edit icon"
+                            onClick={() => {
+                              setCurrentProject(row);
+                              setToggleEditProjectToday((prev) => !prev);
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <img
+                            src={TrashIcon}
+                            alt="trash icon"
+                            onClick={() => {
+                              setCurrentProject(row[2]);
+                              setToggleRemoveProjectToday((prev) => !prev);
+                            }}
+                          />
+                        </div>
+                      </th>
+                    </tr>
+                  ) : (
+                    <tr key={index} className={`table-content holiday`}>
+                      <th>{index + 1}</th>
+                      <th>{moment(row._d).format("DD.MM.YY")}</th>
+                      <th>Не работал</th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th></th>
+                      <th className="holiday_desc">{row.holiday}</th>
+                    </tr>
+                  )
+                )}
             </tbody>
           </Table>
         </Container>

@@ -2,17 +2,30 @@ import { createSlice } from "@reduxjs/toolkit";
 // функция авторизации
 import {} from "./timesheetActions";
 
+const actualyYear = new Date().getFullYear();
+const actualyMonth = new Date().getMonth();
+
+function addZero(num) {
+  if (num > 0 && num < 10) {
+    return `0${num}`;
+  } else {
+    return num;
+  }
+}
+
 const initialState = {
   needRefreshData: false, // после удаления необходимо заново по установленным фильтрам запросить актуальные данные
   loadingProjects: false, // отображение загрузки
   projects: null, // пользователь
   error: null, // значение ошибки
   filter: null, // ВЫБРАННЫЙ фильтр регионов
-  filterDate: null, // фильтр дат
+  filterDateTimesheet: `01.${addZero(
+    actualyMonth + 1
+  )}.${actualyYear}-31.${addZero(actualyMonth + 1)}.${actualyYear}`, // фильтр дат
 };
 
 const timesheetSlice = createSlice({
-  name: "projects",
+  name: "timesheet",
   initialState,
   reducers: {
     // setFilterRegion: (state, { payload }) => {
@@ -22,9 +35,10 @@ const timesheetSlice = createSlice({
     //   }
     //   state.filterRegion = payload;
     // },
-    // setFilterDate: (state, { payload }) => {
-    //   state.filterDate = payload;
-    // },
+    setFilterDateTimesheet: (state, { payload }) => {
+      state.filterDateTimesheet = payload;
+      state.needRefreshData = true;
+    },
   },
   extraReducers: (builder) => {
     // builder;
@@ -45,5 +59,5 @@ const timesheetSlice = createSlice({
   },
 });
 
-// export const { setFilterRegion, setFilterDate } = projectsSlice.actions;
+export const { setFilterDateTimesheet } = timesheetSlice.actions;
 export default timesheetSlice.reducer;

@@ -125,6 +125,8 @@ const Holidays = () => {
     return () => {};
   }, [filterDateHolidays, filterRegion]);
 
+  console.log(holidays);
+
   return (
     <Styles>
       <div className="holidays-wrapper">

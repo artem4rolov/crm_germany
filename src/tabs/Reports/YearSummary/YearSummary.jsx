@@ -95,7 +95,6 @@ const YearSummary = () => {
         <SideBar
           calendar
           filters={[{ title: "Важные" }]}
-          search
           columnTitle={columnTitle}
           component={"year_summary"}
         />

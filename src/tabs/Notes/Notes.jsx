@@ -144,7 +144,7 @@ const Notes = () => {
     return () => {};
   }, [filterDateNotes, needRefreshData]);
 
-  console.log(notes);
+  // console.log(notes);
 
   return (
     <Styles>
