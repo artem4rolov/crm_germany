@@ -338,7 +338,10 @@ const DoubleCalendarComponent = (props) => {
               returnValue={"start"}
               // selectRange={true}
               showWeekNumbers={true}
-              value={dateStart}
+              value={[
+                `${moment(dateStart).format("YYYY-MM-DD")}`,
+                `${moment(dateFinish).format("YYYY-MM-DD")}`,
+              ]}
               maxDetail={"month"}
               minDetail={"decade"}
               locale="en"
@@ -362,7 +365,10 @@ const DoubleCalendarComponent = (props) => {
               returnValue={"end"}
               // selectRange={true}
               showWeekNumbers={true}
-              value={dateFinish}
+              value={[
+                `${moment(dateStart).format("YYYY-MM-DD")}`,
+                `${moment(dateFinish).format("YYYY-MM-DD")}`,
+              ]}
               maxDetail={"month"}
               minDetail={"decade"}
               locale="en"
