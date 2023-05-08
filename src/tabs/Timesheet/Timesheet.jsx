@@ -218,8 +218,8 @@ const Timesheet = () => {
           filters={[{ title: "Важные" }, { title: "Очистить пустые" }]}
           columnTitle={columnTitle}
           search
-          calendar
-          component={"timesheet"}
+          doubleCalendar
+          tab={"timesheet"}
         />
         <div className="table-titles-wrapper"></div>
         <Container>

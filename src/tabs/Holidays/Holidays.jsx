@@ -135,7 +135,7 @@ const Holidays = () => {
           download
           columnTitle={columnTitle}
           regions
-          component={"holidays"}
+          tab={"holidays"}
         />
         <div className="table-titles-wrapper"></div>
         <Container>

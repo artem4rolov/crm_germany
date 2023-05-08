@@ -155,7 +155,7 @@ const Notes = () => {
           filters={[{ title: "Важные" }]}
           addNote={setToggleAddNote}
           search
-          component={"notes"}
+          tab={"notes"}
         />
         <div className="table-titles-wrapper"></div>
         <Container>

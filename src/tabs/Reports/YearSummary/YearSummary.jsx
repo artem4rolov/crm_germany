@@ -96,7 +96,7 @@ const YearSummary = () => {
           calendar
           filters={[{ title: "Важные" }]}
           columnTitle={columnTitle}
-          component={"year_summary"}
+          tab={"year_summary"}
         />
         <div className="table-titles-wrapper"></div>
         <Container>

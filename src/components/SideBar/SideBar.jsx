@@ -11,6 +11,7 @@ import PlusIconBlue from "../../assets/icon_added_blue.svg";
 import Regions from "./Regions/Regions";
 import CalendarComponent from "./CalendarComponent/CalendarComponent";
 import UploadDownload from "./UploadDownload/UploadDownload";
+import DoubleCalendarComponent from "./DoubleCalendarComponent/DoubleCalendarComponent";
 
 const Styles = styled.div`
   tbody,
@@ -198,7 +199,12 @@ const SideBar = (props) => {
         <Container>
           <div className="sidebar-top">
             <div className="sidebar-left">
-              <CalendarComponent component={props.component} />
+              {/* для страницы с праздниками и проектами выводим двойной календарь (независимый) */}
+              {!props.doubleCalendar ? (
+                <CalendarComponent tab={props.tab} />
+              ) : (
+                <DoubleCalendarComponent tab={props.tab} />
+              )}
 
               {/* если переданы настройки - рендерим их */}
               {props.settings && (

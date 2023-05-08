@@ -59,7 +59,7 @@ const Styles = styled.div`
       left: 0;
 
       .react-calendar {
-        width: 640px;
+        width: 600px;
         height: 100%;
         background-color: #fff;
         border: 1px solid rgb(190, 190, 190);
@@ -173,7 +173,7 @@ const CalendarComponent = (props) => {
   // при изменении даты - меняем значения в Redux Store
   React.useEffect(() => {
     if (date) {
-      switch (props.component) {
+      switch (props.tab) {
         case "holidays":
           dispatch(
             setFilterDateHolidays(
@@ -202,13 +202,7 @@ const CalendarComponent = (props) => {
             )
           );
           break;
-        case "timesheet":
-          dispatch(
-            setFilterDateTimesheet(
-              `${date[0].toLocaleDateString()}-${date[1].toLocaleDateString()}`
-            )
-          );
-          break;
+
         default:
           return;
       }
@@ -225,7 +219,7 @@ const CalendarComponent = (props) => {
         >
           <img src={CalendarImage} alt="" />
           {/* для страницы Holidays */}
-          {props.component === "holidays" ? (
+          {props.tab === "holidays" ? (
             <>
               <div className="start-date" key={"holidays"}>
                 {date
@@ -240,7 +234,7 @@ const CalendarComponent = (props) => {
             </>
           ) : null}
           {/* для страницы Notes */}
-          {props.component === "notes" ? (
+          {props.tab === "notes" ? (
             <>
               <div className="start-date" key={"notes"}>
                 {date
@@ -255,7 +249,7 @@ const CalendarComponent = (props) => {
             </>
           ) : null}
           {/* для страницы YearSummary */}
-          {props.component === "year_summary" ? (
+          {props.tab === "year_summary" ? (
             <>
               <div className="start-date" key={"year_summary"}>
                 {date
@@ -270,7 +264,7 @@ const CalendarComponent = (props) => {
             </>
           ) : null}
           {/* для страницы Excel */}
-          {props.component === "excel" ? (
+          {props.tab === "excel" ? (
             <>
               <div className="start-date" key={"excel"}>
                 {date
@@ -284,53 +278,25 @@ const CalendarComponent = (props) => {
               </div>
             </>
           ) : null}
-          {/* для страницы Timesheet */}
-          {props.component === "timesheet" ? (
-            <>
-              <div className="start-date" key={"timesheet"}>
-                {date
-                  ? date[0].toLocaleDateString()
-                  : filterDateTimesheet.split("-")[0]}
-              </div>
-              <div className="finish-date">
-                {date
-                  ? date[1].toLocaleDateString()
-                  : filterDateTimesheet.split("-")[1]}
-              </div>
-            </>
-          ) : null}
         </div>
         {showCalendar && (
           <ClickAwayListener onClickAway={() => setShowCalendar(false)}>
             <div className="component-container">
-              {props.component === "notes" ? (
+              {props.tab === "notes" ? (
                 <Calendar
                   onChange={setDate}
                   selectRange={true}
-                  showDoubleView
-                  value={date}
+                  value={[
+                    moment(filterDateNotes.split("-")[0]).format("YYYY-MM-DD"),
+                    Array.of(
+                      filterDateNotes
+                        .split("-")[1]
+                        .split(".")
+                        .reverse()
+                        .join("-")
+                    ).toString(),
+                  ]}
                   returnValue={"range"}
-                  maxDetail={"month"}
-                  minDetail={"decade"}
-                  locale="en"
-                  nextLabel={<img src={NextImage1} alt="" />}
-                  next2Label={
-                    <img src={NextImage2} alt="" style={{ width: "25px" }} />
-                  }
-                  prevLabel={<img src={PrevImage1} alt="" />}
-                  prev2Label={
-                    <img src={PrevImage2} alt="" style={{ width: "25px" }} />
-                  }
-                />
-              ) : null}
-              {props.component === "year_summary" ||
-              props.component === "excel" ||
-              props.component === "holidays" ? (
-                <Calendar
-                  onChange={setDate}
-                  returnValue={"range"}
-                  selectRange={false}
-                  value={date}
                   maxDetail={"decade"}
                   minDetail={"decade"}
                   locale="en"
@@ -344,15 +310,15 @@ const CalendarComponent = (props) => {
                   }
                 />
               ) : null}
-              {props.component === "timesheet" ? (
+              {props.tab === "year_summary" ||
+              props.tab === "excel" ||
+              props.tab === "holidays" ? (
                 <Calendar
-                  showDoubleView
                   onChange={setDate}
                   returnValue={"range"}
-                  selectRange={true}
-                  showWeekNumbers={true}
+                  selectRange={false}
                   value={date}
-                  maxDetail={"month"}
+                  maxDetail={"decade"}
                   minDetail={"decade"}
                   locale="en"
                   nextLabel={<img src={NextImage1} alt="" />}

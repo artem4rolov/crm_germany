@@ -105,7 +105,7 @@ const Excel = () => {
           columnTitle={columnTitle}
           tableInTable
           search
-          component={"excel"}
+          tab={"excel"}
         />
         <div className="table-titles-wrapper"></div>
         <Container>
