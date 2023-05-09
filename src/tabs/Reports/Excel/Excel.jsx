@@ -97,11 +97,7 @@ const Excel = () => {
       <div className="excel-wrapper">
         <SideBar
           calendar
-          filters={[
-            { title: "Важные" },
-            { title: "Оплачиваемые" },
-            { title: "Завершенные" },
-          ]}
+          filters={[{ title: "Оплачиваемые" }, { title: "Завершенные" }]}
           columnTitle={columnTitle}
           tableInTable
           search

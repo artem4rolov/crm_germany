@@ -8,7 +8,6 @@ import PlusIcon from "../../assets/icon_added.svg";
 import EditIcon from "../../assets/icon_edit.svg";
 import TrashIcon from "../../assets/icon_trash-can.svg";
 
-import data from "../../mock/table-projects.json";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment/moment";
 import { getHolidaysByFilter } from "../../redux/slices/holidays/holidaysActions";
@@ -115,7 +114,7 @@ const Styles = styled.div`
 
 const columnTitle = [
   { title: "KW", classes: "col" },
-  { title: "Datum", classes: "col-1" },
+  { title: "Datum", classes: "col-2" },
   { title: "Projekt", classes: "col-3" },
   { title: "Von", classes: "col" },
   { title: "Bis", classes: "col" },
@@ -224,7 +223,7 @@ const Timesheet = () => {
     <Styles>
       <div className="timesheet-wrapper">
         <SideBar
-          filters={[{ title: "Важные" }, { title: "Очистить пустые" }]}
+          filters={[{ title: "Очистить пустые" }]}
           columnTitle={columnTitle}
           search
           doubleCalendar
@@ -246,39 +245,60 @@ const Timesheet = () => {
             <tbody>
               {tableDays &&
                 tableDays.map((row, index) =>
+                  // если нет праздников - выводим обычный стиль для дня календаря
+                  // если есть праздник - красим в красный цвет день каледнаря
                   !row.holiday ? (
                     <>
                       <tr key={index} className={`table-content`}>
-                        <th>{index + 1}</th>
-                        <th>{moment(row._d).format("DD.MM.YY")}</th>
+                        {/* KW */}
+                        <th>
+                          {/* Week number on every Monday */}
+                          {moment(row._d).format("dddd").substring(0, 3) ===
+                          "Mon"
+                            ? moment(row._d).week()
+                            : null}
+                        </th>
+                        {/* Datum "Mon, 01.01.2001" */}
+                        <th className="text-left">{`${moment(row._d)
+                          .format("dddd")
+                          .substring(0, 3)}., ${moment(row._d).format(
+                          "DD.MM.YY"
+                        )}`}</th>
+                        {/* Project */}
                         <th>
                           {row.project && row.project.name
                             ? row.project.name
                             : ""}
                         </th>
+                        {/* Von */}
                         <th>
                           {row.project && row.project.von
                             ? row.project.von
                             : ""}
                         </th>
+                        {/* Bis */}
                         <th>
                           {row.project && row.project.bis
                             ? row.project.bis
                             : ""}
                         </th>
+                        {/* Pause */}
                         <th>
                           {row.project && row.project.pause
                             ? row.project.pause
                             : ""}
                         </th>
+                        {/* Zeit */}
                         <th>
                           {row.project && row.project.zeit
                             ? row.project.zeit
                             : ""}
                         </th>
+                        {/* PT */}
                         <th>
                           {row.project && row.project.pt ? row.project.pt : ""}
                         </th>
+                        {/* Tätigkeiten */}
                         <th>
                           {row.project && row.project.note
                             ? row.project.note
@@ -335,8 +355,17 @@ const Timesheet = () => {
                     </>
                   ) : (
                     <tr key={index} className={`table-content holiday`}>
-                      <th>{index + 1}</th>
-                      <th>{moment(row._d).format("DD.MM.YY")}</th>
+                      {/* Week number on every Monday */}
+                      <th>
+                        {moment(row._d).format("dddd").substring(0, 3) === "Mon"
+                          ? moment(row._d).week()
+                          : null}
+                      </th>
+                      <th>{`${moment(row._d)
+                        .format("dddd")
+                        .substring(0, 3)}., ${moment(row._d).format(
+                        "DD.MM.YY"
+                      )}`}</th>
                       <th>Не работал</th>
                       <th></th>
                       <th></th>
@@ -353,7 +382,6 @@ const Timesheet = () => {
         {/* добавить новый проект */}
         {toggleAddProjectToday && (
           <Modal
-            important
             add_project_today
             title="Projekt hinzufügen"
             toggle={setToggleAddProjectToday}
@@ -362,7 +390,6 @@ const Timesheet = () => {
         {/* редактировать текущий проект */}
         {toggleEditProjectToday && (
           <Modal
-            important
             edit_project_today={currentProject}
             title={currentProject[2]}
             toggle={setToggleEditProjectToday}
@@ -371,7 +398,6 @@ const Timesheet = () => {
         {/* удалить текущий проект */}
         {toggleRemoveProjectToday && (
           <Modal
-            important
             footer_delete
             remove_project_today={currentProject}
             title={"REMOVE " + currentProject[2]}

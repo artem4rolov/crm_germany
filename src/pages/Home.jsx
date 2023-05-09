@@ -8,8 +8,8 @@ import Holidays from "../tabs/Holidays/Holidays";
 import Timesheet from "../tabs/Timesheet/Timesheet";
 import Notes from "../tabs/Notes/Notes";
 import Projects from "../tabs/Projects/Projects";
-import YearSummary from "../tabs/Reports/YearSummary/YearSummary";
 import { useSelector } from "react-redux";
+import YearSummaryComponent from "../tabs/Reports/YearSummary/YearSummary";
 
 const Home = () => {
   const { loading, isAuth, userStatus, error } = useSelector(
@@ -31,7 +31,10 @@ const Home = () => {
         <Route path="/timesheet" element={<Timesheet />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/reports/excel" element={<Excel />} />
-        <Route path="/reports/year-summary" element={<YearSummary />} />
+        <Route
+          path="/reports/year-summary"
+          element={<YearSummaryComponent />}
+        />
         <Route path="/holidays" element={<Holidays />} />
         <Route path="/notes" element={<Notes />} />
         <Route path="/*" element={<Error />} />

@@ -204,8 +204,6 @@ const Modal = (props) => {
   const [isSubmit, setIsSubmit] = useState(false);
   // определяем, произошел клик по кнопке удаления или нет
   const [isRemove, setIsRemove] = useState(false);
-  // определяем, важный item при отправке или нет (галочка в header модального окна)
-  const [isImportant, setImportant] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -266,22 +264,6 @@ const Modal = (props) => {
                     </div>
                   )}
                 </div>
-                {/* если есть такой пропс - рендерим чекбокс "важный проект" */}
-                {props.important && (
-                  <div className="check-block">
-                    <input
-                      type="checkbox"
-                      id="важный"
-                      onChange={() => setImportant((prev) => !prev)}
-                      value={
-                        props.edit_note && props.edit_note.favorite
-                          ? props.edit_note.favorite
-                          : null
-                      }
-                    />
-                    <label htmlFor="важный">Важный</label>
-                  </div>
-                )}
               </div>
               {/* content модального окна */}
               {/* если смотрим контракты проекта на странице Projecte.jsx, убираем padding у контента модального окна */}
@@ -331,21 +313,9 @@ const Modal = (props) => {
 
                 {/* страница Note (Note.jsx) */}
                 {/* добавить новую заметку */}
-                {props.add_note && (
-                  <AddNote
-                    {...props}
-                    isImportant={isImportant}
-                    isSubmit={isSubmit}
-                  />
-                )}
+                {props.add_note && <AddNote {...props} isSubmit={isSubmit} />}
                 {/* редактироватть заметку */}
-                {props.edit_note && (
-                  <EditNote
-                    {...props}
-                    isImportant={isImportant}
-                    isSubmit={isSubmit}
-                  />
-                )}
+                {props.edit_note && <EditNote {...props} isSubmit={isSubmit} />}
                 {/* удалить заметку */}
                 {props.remove_note && (
                   <RemoveNote {...props} isRemove={isRemove} />

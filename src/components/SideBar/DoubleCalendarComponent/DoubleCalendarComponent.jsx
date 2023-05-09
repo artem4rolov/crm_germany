@@ -8,11 +8,7 @@ import NextImage2 from "../../../assets/calendar_next_2.svg";
 import PrevImage1 from "../../../assets/calendar_prev_1.svg";
 import PrevImage2 from "../../../assets/calendar_prev_2.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { setFilterDateHolidays } from "../../../redux/slices/holidays/holidays";
-import { setFilterDateNotes } from "../../../redux/slices/notes/notes";
 import ClickAwayListener from "react-click-away-listener";
-import { setFilterDateYearSummary } from "../../../redux/slices/reports/year_summary/yearSummary";
-import { setFilterDateExcel } from "../../../redux/slices/reports/excel/excel";
 import moment from "moment";
 import { setFilterDateTimesheet } from "../../../redux/slices/timesheet/timesheet";
 
@@ -72,7 +68,7 @@ const Styles = styled.div`
       z-index: 1;
       position: absolute;
       top: 50px;
-      left: 300px;
+      left: 340px;
 
       .react-calendar {
         width: 350px;
@@ -131,7 +127,8 @@ const Styles = styled.div`
       }
       .react-calendar__tile--hasActive:enabled:hover,
       .react-calendar__tile--hasActive:enabled:focus {
-        background: #f8f8fa;
+        background: #354a5f;
+        color: #fff;
       }
       .react-calendar__tile--active {
         background: #6f48eb;
@@ -148,7 +145,7 @@ const Styles = styled.div`
         background-color: #f8f8fa;
       }
       .react-calendar__tile--range {
-        background: #b8b8b8;
+        background: #fff;
         color: #4b4e51;
         border-radius: 0;
       }
@@ -174,7 +171,7 @@ const Styles = styled.div`
       z-index: 1;
       position: absolute;
       top: 50px;
-      left: -50px;
+      left: 0px;
 
       .react-calendar {
         width: 350px;
@@ -233,7 +230,8 @@ const Styles = styled.div`
       }
       .react-calendar__tile--hasActive:enabled:hover,
       .react-calendar__tile--hasActive:enabled:focus {
-        background: #f8f8fa;
+        background: #354a5f;
+        color: #fff;
       }
       .react-calendar__tile--active {
         background: #6f48eb;
@@ -250,7 +248,7 @@ const Styles = styled.div`
         background-color: #f8f8fa;
       }
       .react-calendar__tile--range {
-        background: #b8b8b8;
+        background: #fff;
         color: #4b4e51;
         border-radius: 0;
       }

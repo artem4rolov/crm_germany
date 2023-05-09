@@ -152,7 +152,6 @@ const Notes = () => {
         <SideBar
           calendar
           columnTitle={columnTitle}
-          filters={[{ title: "Важные" }]}
           addNote={setToggleAddNote}
           search
           tab={"notes"}
@@ -228,7 +227,6 @@ const Notes = () => {
         {/* добавить новую заметку*/}
         {toggleAddNote && (
           <Modal
-            important
             add_note
             title="Neue Notiz erstellen"
             toggle={setToggleAddNote}
@@ -237,7 +235,6 @@ const Notes = () => {
         {/* редактировать текущую заметку */}
         {toggleEditNote && (
           <Modal
-            important
             edit_note={currentNote}
             title={currentNote.title}
             toggle={setToggleEditNote}
@@ -246,7 +243,6 @@ const Notes = () => {
         {/* удалить текущую заметку */}
         {toggleRemoveNote && (
           <Modal
-            important
             footer_delete
             remove_note={currentNote}
             title={"REMOVE " + currentNote.title}

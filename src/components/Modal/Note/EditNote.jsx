@@ -127,19 +127,7 @@ const EditNote = (props) => {
     // created_at: moment(props.edit_note.created_at).format("yyy-MM-DD"),
     title: props.edit_note.title,
     content: props.edit_note.content,
-    favorite: 0,
   });
-
-  // следим за чекбоксом "важный", меняем стейт в случае изменения чекбокса
-  React.useEffect(() => {
-    if (props.isImportant === true) {
-      setState({ ...state, favorite: 1 });
-    } else {
-      setState({ ...state, favorite: 0 });
-    }
-
-    return () => {};
-  }, [props.isImportant]);
 
   // следим за стейтом родительской модалки (если там будет клик по кнопке "отправить" - отправляем данные на сервер)
   React.useEffect(() => {

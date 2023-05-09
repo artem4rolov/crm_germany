@@ -2,7 +2,10 @@ import React from "react";
 import { Container, Table } from "react-bootstrap";
 import styled from "styled-components";
 import SideBar from "../../../components/SideBar/SideBar";
-import data from "../../../mock/work-days-per-year.json";
+import { useDispatch, useSelector } from "react-redux";
+import { getReportsSummary } from "../../../redux/slices/reports/year_summary/yearSummaryActions";
+import Loader from "../../../components/Loader/Loader";
+import YearSummary from "./YearSummary";
 
 const Styles = styled.div`
   table {
@@ -88,56 +91,184 @@ const columnTitle = [
   { title: "Summe", classes: "col text-center sum" },
 ];
 
-const YearSummary = () => {
+const YearSummaryComponent = () => {
+  // достаем переменные из стейта для рендера заметок
+  const {
+    loadingYearSummary,
+    yearSummaryData,
+    needRefreshData,
+    error,
+    filterDateYearSummary,
+  } = useSelector((state) => state.yearSummary);
+
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    dispatch(
+      getReportsSummary(filterDateYearSummary.split("-")[0].split(".")[2])
+    );
+  }, [filterDateYearSummary]);
+
+  // React.useEffect(() => {
+  //   if (yearSummaryData) {
+  //     yearSummaryData.billableProjects.map((project, index) => {
+  //       // Object.keys(project).map((keyName, i) => console.log(project[keyName]));
+  //       console.log(project);
+  //     });
+  //   }
+  // }, [yearSummaryData]);
+
   return (
     <Styles>
       <div className="yearsummary-wrapper">
-        <SideBar
-          calendar
-          filters={[{ title: "Важные" }]}
-          columnTitle={columnTitle}
-          tab={"year_summary"}
-        />
+        <SideBar calendar columnTitle={columnTitle} tab={"year_summary"} />
         <div className="table-titles-wrapper"></div>
         <Container>
-          <Table responsive>
-            <thead className="table-titles">
-              {/* формируем столбцы */}
-              <tr>
-                {columnTitle.map((item, index) => (
-                  <td className={item.classes} key={index}>
-                    {item.title}
-                  </td>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="yearsummary-label">
-                <th>Fakturierbare Aufwände</th>
-              </tr>
-              {data.map((row, index) => (
-                <tr className="table-content" key={index}>
-                  {row.map((col, index) => (
-                    <td
-                      className={`${index === 0 ? "" : "text-center"}`}
-                      key={index}
-                    >
-                      {col}
+          {!loadingYearSummary ? (
+            <Table responsive>
+              <thead className="table-titles">
+                {/* формируем столбцы */}
+                <tr>
+                  {columnTitle.map((item, index) => (
+                    <td className={item.classes} key={index}>
+                      {item.title}
                     </td>
                   ))}
-                  <td key={index} className="sum text-center">
-                    {row
-                      .filter((item) => typeof item === "number")
-                      .reduce((curr, sum) => curr + sum)}
-                  </td>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody>
+                {/* верхняя секция Zusammenfassung */}
+                <tr className="yearsummary-label">
+                  <th>Zusammenfassung</th>
+                </tr>
+                {/* Arbeitstage im Monat */}
+                {yearSummaryData && (
+                  <tr className="table-content">
+                    {Object.keys(yearSummaryData.businessDays).map(
+                      (keyName, i) => (
+                        <td
+                          className={`${i === 0 ? "" : "text-center"} ${
+                            i === 13 ? "sum" : ""
+                          }`}
+                          key={i}
+                        >
+                          {i === 0
+                            ? "Arbeitstage im Monat"
+                            : yearSummaryData.businessDays[keyName]}
+                        </td>
+                      )
+                    )}
+                  </tr>
+                )}
+                {/* Fakturierbare Aufwände */}
+                {yearSummaryData && (
+                  <tr className="table-content">
+                    {Object.keys(yearSummaryData.billableDays).map(
+                      (keyName, i) => (
+                        <td
+                          className={`${i === 0 ? "" : "text-center"} ${
+                            i === 13 ? "sum" : ""
+                          }`}
+                          key={i}
+                        >
+                          {i === 0
+                            ? "Fakturierbare Aufwände"
+                            : yearSummaryData.billableDays[keyName]}
+                        </td>
+                      )
+                    )}
+                  </tr>
+                )}
+                {/* Nicht fakturierbare Aufwände */}
+                {yearSummaryData && (
+                  <tr className="table-content">
+                    {Object.keys(yearSummaryData.notBillableDays).map(
+                      (keyName, i) => (
+                        <td
+                          className={`${i === 0 ? "" : "text-center"} ${
+                            i === 13 ? "sum" : ""
+                          }`}
+                          key={i}
+                        >
+                          {i === 0
+                            ? "Nicht fakturierbare Aufwände"
+                            : yearSummaryData.notBillableDays[keyName]}
+                        </td>
+                      )
+                    )}
+                  </tr>
+                )}
+                {/* Nicht gebuchte Tage */}
+                {yearSummaryData && (
+                  <tr className="table-content">
+                    {Object.keys(yearSummaryData.notBookedDays).map(
+                      (keyName, i) => (
+                        <td
+                          className={`${i === 0 ? "" : "text-center"} ${
+                            i === 13 ? "sum" : ""
+                          }`}
+                          key={i}
+                        >
+                          {i === 0
+                            ? "Nicht gebuchte Tage"
+                            : yearSummaryData.notBookedDays[keyName]}
+                        </td>
+                      )
+                    )}
+                  </tr>
+                )}
+                {/* секция с проектами Fakturierbare Aufwände */}
+                <tr className="yearsummary-label">
+                  <th>Fakturierbare Aufwände</th>
+                </tr>
+
+                {/* Nicht gebuchte Tage */}
+                {yearSummaryData &&
+                  yearSummaryData.billableProjects.map((project, index) => (
+                    <tr className="table-content" key={index}>
+                      {Object.keys(project).map((keyName, i) => (
+                        <td
+                          className={`${i === 0 ? "" : "text-center"} ${
+                            i === 13 ? "sum" : ""
+                          }`}
+                          key={i}
+                        >
+                          {project[keyName]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+
+                {/* нижняя секция Fakturierbare Aufwände */}
+                <tr className="yearsummary-label">
+                  <th>Nicht fakturierbare Aufwände</th>
+                </tr>
+
+                {/* List of not billable projects */}
+                {yearSummaryData &&
+                  yearSummaryData.notBillableProjects.map((project, index) => (
+                    <tr className="table-content" key={index}>
+                      {Object.keys(project).map((keyName, i) => (
+                        <td
+                          className={`${i === 0 ? "" : "text-center"} ${
+                            i === 13 ? "sum" : ""
+                          }`}
+                          key={i}
+                        >
+                          {project[keyName]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+              </tbody>
+            </Table>
+          ) : (
+            <Loader big />
+          )}
         </Container>
       </div>
     </Styles>
   );
 };
 
-export default YearSummary;
+export default YearSummaryComponent;

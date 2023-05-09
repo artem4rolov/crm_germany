@@ -166,7 +166,6 @@ const CalendarComponent = (props) => {
   const { filterDateNotes } = useSelector((state) => state.notes);
   const { filterDateYearSummary } = useSelector((state) => state.yearSummary);
   const { filterDateExcel } = useSelector((state) => state.excel);
-  const { filterDateTimesheet } = useSelector((state) => state.timesheet);
 
   const dispatch = useDispatch();
 

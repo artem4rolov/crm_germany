@@ -190,11 +190,7 @@ const Projects = () => {
       <div className="projects-wrapper">
         <SideBar
           calendar
-          filters={[
-            { title: "Важные" },
-            { title: "Оплачиваемые" },
-            { title: "Завершенные" },
-          ]}
+          filters={[{ title: "Оплачиваемые" }, { title: "Завершенные" }]}
           columnTitle={columnTitle}
           search
         />
@@ -352,7 +348,6 @@ const Projects = () => {
       {/* создание нового ПРОЕКТА */}
       {toggleNewProjectModal && (
         <Modal
-          important
           new_project
           title="Proekt erstellen"
           toggle={() => setToggleNewProjectModal(false)}
@@ -361,7 +356,6 @@ const Projects = () => {
       {/* редактирование CURRENT ПРОЕКТА */}
       {toggleEditProjectModal && (
         <Modal
-          important
           footer_delete
           current_project={currentProject}
           title={currentProject.project}
@@ -371,7 +365,6 @@ const Projects = () => {
       {/* список всех контрактов проекта */}
       {toggleProjectDataModal && (
         <Modal
-          important
           footer_desc="Фильтр по дате не применен"
           current_project_table={currentProject}
           title={currentProject.project}
@@ -382,7 +375,6 @@ const Projects = () => {
       {/* создание нового КОНТРАКТА */}
       {toggleNewContractModal && (
         <Modal
-          important
           current_project_for_new_contract={currentProject}
           title="Vertrag erstellen"
           toggle={() => setToggleNewContractModal(false)}
@@ -391,7 +383,6 @@ const Projects = () => {
       {/* редактирование CURRENT КОНТРАКТА */}
       {toggleCurrentContractModal && (
         <Modal
-          important
           current_contract={currentContract}
           current_project_disabled={currentProject}
           title={currentContract[0]}
@@ -410,7 +401,6 @@ const Projects = () => {
       {/* просмотреть отдельный контракт в таблице */}
       {toggleContractDataModal && (
         <Modal
-          important
           footer_desc="Фильтр по дате не применен"
           current_contract_table={currentContract}
           title={currentProject.project}
