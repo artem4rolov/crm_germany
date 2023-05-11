@@ -39,15 +39,18 @@ const Styles = styled.div`
       border-color: #fcfcfc;
     }
 
-    .month_name {
-      background-color: #4f6780;
-      color: #ffffff;
-      /* border-radius: 8px; */
-      width: 100%;
-      border: 1px solid #4f6780;
-
-      th {
+    tbody {
+      tr.month_name {
+        background-color: #4f6780;
+        color: #ffffff;
+        /* border-radius: 8px; */
+        width: 100%;
         border: 1px solid #4f6780;
+        border-radius: 4px;
+
+        th {
+          border: 1px solid #4f6780;
+        }
       }
     }
 
@@ -71,7 +74,7 @@ const Styles = styled.div`
         color: #107e3e;
         background: #d3ffd3;
         border-bottom: 1px solid #99ee98;
-        border-radius: 4px 4px 0px 0px;
+        border-radius: 4px;
       }
 
       .row-modal {
@@ -202,8 +205,6 @@ const Timesheet = () => {
 
   console.log(tableDays);
 
-  // console.log(data);
-
   // при первом рендере получаем ВСЕ праздники с  сервера
   useEffect(() => {
     const actualyYear = new Date().getFullYear();
@@ -214,9 +215,6 @@ const Timesheet = () => {
       })
     );
 
-    // if (holidays && holidays.length > 0 && !tableDays) {
-    //   getRangeArray();
-    // }
     return () => {};
   }, []);
 
@@ -256,7 +254,7 @@ const Timesheet = () => {
                   // если есть праздник - красим в красный цвет день каледнаря
                   !row.holiday ? (
                     <>
-                      {/* если следующая строка имеет другой месяц - рендерим сначала синюю полосу с названием нового месяца, количеством выходных и праздников */}
+                      {/* если следующая строка имеет другой месяц И если это не первый элемент массива - рендерим сначала синюю полосу с названием нового месяца, количеством выходных и праздников */}
                       {moment(row._d).month() !==
                         moment(row._d).add(1, "day").month() && index !== 0 ? (
                         <tr className="month_name">
@@ -384,7 +382,7 @@ const Timesheet = () => {
                         .substring(0, 3)}., ${moment(row._d).format(
                         "DD.MM.YY"
                       )}`}</th>
-                      <th>{row.holiday.summary}</th>
+                      <th className="holiday_desc">{`${row.holiday.summary} (${row.holiday.region_aggregated})`}</th>
                       <th></th>
                       <th></th>
                       <th></th>
