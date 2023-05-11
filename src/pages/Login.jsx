@@ -4,7 +4,7 @@ import LoginImage1 from "../assets/login-image-1.svg";
 import LoginImage2 from "../assets/login-image-2.svg";
 import LoginModal from "../assets/login-modal-image.svg";
 import styled from "styled-components";
-import { Link, unstable_HistoryRouter, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userLogin } from "../redux/slices/auth/authActions";
 import Loader from "../components/Loader/Loader";
@@ -37,13 +37,23 @@ const Styles = styled.div`
     position: absolute;
     left: 0;
     z-index: 1;
+
+    max-width: 100%;
+    width: 60%;
+    min-width: 10%;
+    margin: 0 auto;
   }
 
   .login-image-2 {
     position: absolute;
     right: 0;
 
-    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    max-width: 100%;
+    width: 60%;
+    min-width: 10%;
+    margin: 0 auto;
+
+    /* filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)); */
   }
 
   .login-modal {

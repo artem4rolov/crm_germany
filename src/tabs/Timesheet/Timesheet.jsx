@@ -67,6 +67,13 @@ const Styles = styled.div`
         }
       }
 
+      &.weekend {
+        color: #107e3e;
+        background: #d3ffd3;
+        border-bottom: 1px solid #99ee98;
+        border-radius: 4px 4px 0px 0px;
+      }
+
       .row-modal {
         position: absolute;
         top: 0;
@@ -174,7 +181,7 @@ const Timesheet = () => {
         holidays.map((holiday, index) => {
           if (holiday.date === day._d) {
             // если даты совпадают - отображаем праздник в текущем дне и останавливаем цикл перебора праздников
-            return (day.holiday = holiday.summary);
+            return (day.holiday = holiday);
           } else {
             // иначе ничего не делаем
             return null;
@@ -190,7 +197,7 @@ const Timesheet = () => {
     // тут что-то делаем с полученными данными (из них нужно создать список проектов и пустых дней, где нет проектов, при этом, рядом с каждым понедельником необходимо выводить номер недели конкретного года)
     // data.map((project) => {});
 
-    setTableDays(calendar);
+    setTableDays(calendar.reverse());
   }
 
   console.log(tableDays);
@@ -249,16 +256,42 @@ const Timesheet = () => {
                   // если есть праздник - красим в красный цвет день каледнаря
                   !row.holiday ? (
                     <>
-                      <tr key={index} className={`table-content`}>
+                      {/* если следующая строка имеет другой месяц - рендерим сначала синюю полосу с названием нового месяца, количеством выходных и праздников */}
+                      {moment(row._d).month() !==
+                        moment(row._d).add(1, "day").month() && index !== 0 ? (
+                        <tr className="month_name">
+                          <th>{moment(row._d).add(1, "day").format("MMMM")}</th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th>Arbeitstage: </th>
+                          <th>Feiertage: </th>
+                        </tr>
+                      ) : null}
+
+                      {/* выводим дни недели с праздниками, выходными и проектами */}
+                      <tr
+                        key={index}
+                        className={`table-content ${
+                          moment(row._d).format("dddd") === "Dienstag" ||
+                          moment(row._d).format("dddd") === "Mittwoch"
+                            ? "weekend"
+                            : ""
+                        }`}
+                      >
                         {/* KW */}
+                        {console.log()}
                         <th>
-                          {/* Week number on every Monday */}
+                          {/* номер недели на каждом понедельнике Monday */}
                           {moment(row._d).format("dddd").substring(0, 3) ===
                           "Mon"
                             ? moment(row._d).week()
                             : null}
                         </th>
-                        {/* Datum "Mon, 01.01.2001" */}
+                        {/* Datum "Mon, 01.01.2001" формат "de" (немецкий) */}
                         <th className="text-left">{`${moment(row._d)
                           .format("dddd")
                           .substring(0, 3)}., ${moment(row._d).format(
@@ -337,21 +370,6 @@ const Timesheet = () => {
                           </div>
                         </th>
                       </tr>
-
-                      {moment(row._d).month() !==
-                      moment(row._d).add(1, "day").month() ? (
-                        <tr className="month_name">
-                          <th>{moment(row._d).add(1, "day").format("MMMM")}</th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th>Arbeitstage: </th>
-                          <th>Feiertage: </th>
-                        </tr>
-                      ) : null}
                     </>
                   ) : (
                     <tr key={index} className={`table-content holiday`}>
@@ -366,13 +384,15 @@ const Timesheet = () => {
                         .substring(0, 3)}., ${moment(row._d).format(
                         "DD.MM.YY"
                       )}`}</th>
-                      <th>Не работал</th>
+                      <th>{row.holiday.summary}</th>
                       <th></th>
                       <th></th>
                       <th></th>
                       <th></th>
                       <th></th>
-                      <th className="holiday_desc">{row.holiday}</th>
+                      <th className="holiday_desc">
+                        {row.holiday.notes_aggregated}
+                      </th>
                     </tr>
                   )
                 )}

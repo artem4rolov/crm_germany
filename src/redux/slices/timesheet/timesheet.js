@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 // функция авторизации
 import {} from "./timesheetActions";
+import moment from "moment";
 
+const actualyDay = new Date().getDay();
 const actualyYear = new Date().getFullYear();
 const actualyMonth = new Date().getMonth();
 
@@ -19,9 +21,11 @@ const initialState = {
   projects: null, // пользователь
   error: null, // значение ошибки
   filter: null, // ВЫБРАННЫЙ фильтр регионов
-  filterDateTimesheet: `01.${addZero(
+  filterDateTimesheet: `${moment()
+    .subtract(42, "days")
+    .format("DD.MM.YYYY")}-${addZero(actualyDay)}.${addZero(
     actualyMonth + 1
-  )}.${actualyYear}-31.${addZero(actualyMonth + 1)}.${actualyYear}`, // фильтр дат
+  )}.${actualyYear}`, // фильтр дат
 };
 
 const timesheetSlice = createSlice({

@@ -83,7 +83,17 @@ export const downloadExcel = createAsyncThunk(
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", "file.xlsx");
+
+        // получаем имя файла и расширение
+        let filename = response.headers["content-disposition"]
+          .split("filename=")[1]
+          .split(".")[0];
+        let extension = response.headers["content-disposition"]
+          .split(".")[1]
+          .split(";")[0];
+
+        // создаем ссылку на скачивание файла на пк
+        link.setAttribute("download", `${filename}.${extension}`);
         document.body.appendChild(link);
         link.click();
       });

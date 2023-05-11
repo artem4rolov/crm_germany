@@ -5,6 +5,9 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { testAuth } from "./redux/slices/auth/authActions";
 
+// для локализации дат на немецком
+import "moment/locale/de"; // without this line it didn't work
+
 const navBarData = [
   { title: "Dashboard", href: "/" },
   { title: "Zeiterfassung", href: "/timesheet" },

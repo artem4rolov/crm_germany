@@ -5,7 +5,6 @@ import SideBar from "../../../components/SideBar/SideBar";
 import { useDispatch, useSelector } from "react-redux";
 import { getReportsSummary } from "../../../redux/slices/reports/year_summary/yearSummaryActions";
 import Loader from "../../../components/Loader/Loader";
-import YearSummary from "./YearSummary";
 
 const Styles = styled.div`
   table {
@@ -24,6 +23,8 @@ const Styles = styled.div`
           line-height: 28px;
           color: #0854a0;
           border-color: transparent;
+
+          border-spacing: 0 50px;
         }
 
         &.table-content {
@@ -31,6 +32,26 @@ const Styles = styled.div`
             background-color: white;
             border: white;
             cursor: pointer;
+          }
+
+          .label {
+            font-family: "Inter";
+            font-style: normal;
+            font-weight: 500;
+            font-size: 15px;
+            line-height: 21px;
+            color: #4b4e51;
+          }
+
+          .label-no-data {
+            font-family: "Inter";
+            font-style: normal;
+            font-weight: 500;
+            font-size: 15px;
+            line-height: 21px;
+            color: #4b4e51;
+
+            border-color: transparent;
           }
         }
       }
@@ -109,15 +130,6 @@ const YearSummaryComponent = () => {
     );
   }, [filterDateYearSummary]);
 
-  // React.useEffect(() => {
-  //   if (yearSummaryData) {
-  //     yearSummaryData.billableProjects.map((project, index) => {
-  //       // Object.keys(project).map((keyName, i) => console.log(project[keyName]));
-  //       console.log(project);
-  //     });
-  //   }
-  // }, [yearSummaryData]);
-
   return (
     <Styles>
       <div className="yearsummary-wrapper">
@@ -147,7 +159,7 @@ const YearSummaryComponent = () => {
                     {Object.keys(yearSummaryData.businessDays).map(
                       (keyName, i) => (
                         <td
-                          className={`${i === 0 ? "" : "text-center"} ${
+                          className={`${i === 0 ? "label" : "text-center"} ${
                             i === 13 ? "sum" : ""
                           }`}
                           key={i}
@@ -166,7 +178,7 @@ const YearSummaryComponent = () => {
                     {Object.keys(yearSummaryData.billableDays).map(
                       (keyName, i) => (
                         <td
-                          className={`${i === 0 ? "" : "text-center"} ${
+                          className={`${i === 0 ? "label" : "text-center"} ${
                             i === 13 ? "sum" : ""
                           }`}
                           key={i}
@@ -185,7 +197,7 @@ const YearSummaryComponent = () => {
                     {Object.keys(yearSummaryData.notBillableDays).map(
                       (keyName, i) => (
                         <td
-                          className={`${i === 0 ? "" : "text-center"} ${
+                          className={`${i === 0 ? "label" : "text-center"} ${
                             i === 13 ? "sum" : ""
                           }`}
                           key={i}
@@ -204,7 +216,7 @@ const YearSummaryComponent = () => {
                     {Object.keys(yearSummaryData.notBookedDays).map(
                       (keyName, i) => (
                         <td
-                          className={`${i === 0 ? "" : "text-center"} ${
+                          className={`${i === 0 ? "label" : "text-center"} ${
                             i === 13 ? "sum" : ""
                           }`}
                           key={i}
@@ -224,11 +236,12 @@ const YearSummaryComponent = () => {
 
                 {/* Nicht gebuchte Tage */}
                 {yearSummaryData &&
+                yearSummaryData.billableProjects.length > 0 ? (
                   yearSummaryData.billableProjects.map((project, index) => (
                     <tr className="table-content" key={index}>
                       {Object.keys(project).map((keyName, i) => (
                         <td
-                          className={`${i === 0 ? "" : "text-center"} ${
+                          className={`${i === 0 ? "label" : "text-center"} ${
                             i === 13 ? "sum" : ""
                           }`}
                           key={i}
@@ -237,7 +250,12 @@ const YearSummaryComponent = () => {
                         </td>
                       ))}
                     </tr>
-                  ))}
+                  ))
+                ) : (
+                  <tr className="table-content">
+                    <td className="label-no-data">Keine Projekte vorhanden</td>
+                  </tr>
+                )}
 
                 {/* нижняя секция Fakturierbare Aufwände */}
                 <tr className="yearsummary-label">
@@ -246,11 +264,12 @@ const YearSummaryComponent = () => {
 
                 {/* List of not billable projects */}
                 {yearSummaryData &&
+                yearSummaryData.notBillableProjects.length > 0 ? (
                   yearSummaryData.notBillableProjects.map((project, index) => (
                     <tr className="table-content" key={index}>
                       {Object.keys(project).map((keyName, i) => (
                         <td
-                          className={`${i === 0 ? "" : "text-center"} ${
+                          className={`${i === 0 ? "label" : "text-center"} ${
                             i === 13 ? "sum" : ""
                           }`}
                           key={i}
@@ -259,7 +278,12 @@ const YearSummaryComponent = () => {
                         </td>
                       ))}
                     </tr>
-                  ))}
+                  ))
+                ) : (
+                  <tr className="table-content">
+                    <td className="label-no-data">Keine Projekte vorhanden</td>
+                  </tr>
+                )}
               </tbody>
             </Table>
           ) : (

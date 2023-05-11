@@ -10,6 +10,7 @@ import TrashIcon from "../../assets/icon_trash-can.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { getNotesByFilter } from "../../redux/slices/notes/notesActions";
 import Loader from "../../components/Loader/Loader";
+import moment from "moment";
 
 const Styles = styled.div`
   .notes-wrapper {
@@ -184,11 +185,9 @@ const Notes = () => {
                   notes.map((row, index) => (
                     <tr key={index} className={`table-content`}>
                       <th>
-                        {new Date(row.created_at).toLocaleString("ru", {
-                          year: "numeric",
-                          month: "numeric",
-                          day: "numeric",
-                        })}
+                        {moment(row.created_at)
+                          .locale("de")
+                          .format("dd., DD.MM.YYYY")}
                       </th>
                       <th>{row.title}</th>
                       <th>{row.content}</th>

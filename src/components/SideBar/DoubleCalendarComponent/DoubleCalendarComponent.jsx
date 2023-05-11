@@ -40,7 +40,7 @@ const Styles = styled.div`
         }
 
         &.active {
-          background: rgb(53, 74, 95);
+          background: #0461bd;
           border: 8px;
           color: rgb(255, 255, 255);
         }
@@ -68,7 +68,7 @@ const Styles = styled.div`
       z-index: 1;
       position: absolute;
       top: 50px;
-      left: 340px;
+      left: 0;
 
       .react-calendar {
         width: 350px;
@@ -154,7 +154,7 @@ const Styles = styled.div`
         border-bottom-right-radius: 0;
         border-top-left-radius: 6px;
         border-bottom-left-radius: 6px;
-        background: #354a5f;
+        background: #0461bd;
         color: white;
       }
       .react-calendar__tile--rangeEnd {
@@ -171,7 +171,7 @@ const Styles = styled.div`
       z-index: 1;
       position: absolute;
       top: 50px;
-      left: 0px;
+      left: 0;
 
       .react-calendar {
         width: 350px;
@@ -223,14 +223,14 @@ const Styles = styled.div`
       }
       .react-calendar__tile--now:enabled:hover,
       .react-calendar__tile--now:enabled:focus {
-        background: #6f48eb33;
+        background: #0461bd;
         border-radius: 6px;
         font-weight: bold;
         color: #fff;
       }
       .react-calendar__tile--hasActive:enabled:hover,
       .react-calendar__tile--hasActive:enabled:focus {
-        background: #354a5f;
+        background: #0461bd;
         color: #fff;
       }
       .react-calendar__tile--active {
@@ -241,7 +241,7 @@ const Styles = styled.div`
       }
       .react-calendar__tile--active:enabled:hover,
       .react-calendar__tile--active:enabled:focus {
-        background: #354a5f;
+        background: #0461bd;
         color: white;
       }
       .react-calendar--selectRange .react-calendar__tile--hover {
@@ -257,7 +257,7 @@ const Styles = styled.div`
         border-bottom-right-radius: 0;
         border-top-left-radius: 6px;
         border-bottom-left-radius: 6px;
-        background: #354a5f;
+        background: #0461bd;
         color: white;
       }
       .react-calendar__tile--rangeEnd {
@@ -329,58 +329,69 @@ const DoubleCalendarComponent = (props) => {
           </div>
         </div>
         {showFirstCalendar && (
-          // <ClickAwayListener onClickAway={() => setShowFirstCalendar(false)}>
-          <div className="component-container-first">
-            <Calendar
-              onChange={setDateStart}
-              returnValue={"start"}
-              // selectRange={true}
-              showWeekNumbers={true}
-              value={[
-                `${moment(dateStart).format("YYYY-MM-DD")}`,
-                `${moment(dateFinish).format("YYYY-MM-DD")}`,
-              ]}
-              maxDetail={"month"}
-              minDetail={"decade"}
-              locale="en"
-              nextLabel={<img src={NextImage1} alt="" />}
-              next2Label={
-                <img src={NextImage2} alt="" style={{ width: "25px" }} />
-              }
-              prevLabel={<img src={PrevImage1} alt="" />}
-              prev2Label={
-                <img src={PrevImage2} alt="" style={{ width: "25px" }} />
-              }
-            />
-          </div>
-          // </ClickAwayListener>
+          <ClickAwayListener onClickAway={() => setShowFirstCalendar(false)}>
+            <div className="component-container-first">
+              <Calendar
+                onClickDay={setDateStart}
+                onChange={() => {
+                  setShowFirstCalendar(false);
+                  setShowSecondCalendar(true);
+                }}
+                returnValue={"start"}
+                showWeekNumbers={true}
+                value={[
+                  `${moment(dateStart).format("YYYY-MM-DD")}`,
+                  `${moment(dateFinish).format("YYYY-MM-DD")}`,
+                ]}
+                maxDetail={"month"}
+                minDetail={"decade"}
+                locale="en"
+                nextLabel={<img src={NextImage1} alt="" />}
+                next2Label={
+                  <img src={NextImage2} alt="" style={{ width: "25px" }} />
+                }
+                prevLabel={<img src={PrevImage1} alt="" />}
+                prev2Label={
+                  <img src={PrevImage2} alt="" style={{ width: "25px" }} />
+                }
+              />
+            </div>
+          </ClickAwayListener>
         )}
         {showSecondCalendar && (
-          // <ClickAwayListener onClickAway={() => setShowSecondCalendar(false)}>
-          <div className="component-container-second">
-            <Calendar
-              onChange={setDateFinish}
-              returnValue={"end"}
-              // selectRange={true}
-              showWeekNumbers={true}
-              value={[
-                `${moment(dateStart).format("YYYY-MM-DD")}`,
-                `${moment(dateFinish).format("YYYY-MM-DD")}`,
-              ]}
-              maxDetail={"month"}
-              minDetail={"decade"}
-              locale="en"
-              nextLabel={<img src={NextImage1} alt="" />}
-              next2Label={
-                <img src={NextImage2} alt="" style={{ width: "25px" }} />
-              }
-              prevLabel={<img src={PrevImage1} alt="" />}
-              prev2Label={
-                <img src={PrevImage2} alt="" style={{ width: "25px" }} />
-              }
-            />
-          </div>
-          // </ClickAwayListener>
+          <ClickAwayListener onClickAway={() => setShowSecondCalendar(false)}>
+            <div
+              className="component-container-second"
+              onClick={(e) => {
+                e.target.classList.contains("react-calendar__tile") &&
+                  setShowSecondCalendar(false);
+              }}
+            >
+              <Calendar
+                onClickDay={setDateFinish}
+                onChange={() => {
+                  setShowSecondCalendar(false);
+                }}
+                returnValue={"end"}
+                showWeekNumbers={true}
+                value={[
+                  `${moment(dateStart).format("YYYY-MM-DD")}`,
+                  `${moment(dateFinish).format("YYYY-MM-DD")}`,
+                ]}
+                maxDetail={"month"}
+                minDetail={"decade"}
+                locale="en"
+                nextLabel={<img src={NextImage1} alt="" />}
+                next2Label={
+                  <img src={NextImage2} alt="" style={{ width: "25px" }} />
+                }
+                prevLabel={<img src={PrevImage1} alt="" />}
+                prev2Label={
+                  <img src={PrevImage2} alt="" style={{ width: "25px" }} />
+                }
+              />
+            </div>
+          </ClickAwayListener>
         )}
       </div>
     </Styles>

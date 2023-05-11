@@ -161,7 +161,11 @@ const Holidays = () => {
                       className={`table-content`}
                     >
                       <th>{`${index + 1}.`}</th>
-                      <th>{moment(row.date).format("YYYY MM DD")}</th>
+                      <th>
+                        {moment(row.date)
+                          .locale("de")
+                          .format("dd., DD.MM.YYYY")}
+                      </th>
                       <th>{row.summary}</th>
                       <th>{row.region_aggregated.replace(/,/g, ", ")}</th>
                       <th>{row.notes_aggregated}</th>
