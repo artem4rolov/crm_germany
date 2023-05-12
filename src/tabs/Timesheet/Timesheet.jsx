@@ -40,16 +40,13 @@ const Styles = styled.div`
     }
 
     tbody {
-      tr.month_name {
-        background-color: #4f6780;
-        color: #ffffff;
-        /* border-radius: 8px; */
-        width: 100%;
-        border: 1px solid #4f6780;
-        border-radius: 4px;
-
-        th {
-          border: 1px solid #4f6780;
+      th {
+        &.month_name {
+          background-color: #4f6780;
+          color: #ffffff;
+          /* border-radius: 8px; */
+          border-color: transparent;
+          /* border-radius: 4px; */
         }
       }
     }
@@ -257,16 +254,13 @@ const Timesheet = () => {
                       {/* если следующая строка имеет другой месяц И если это не первый элемент массива - рендерим сначала синюю полосу с названием нового месяца, количеством выходных и праздников */}
                       {moment(row._d).month() !==
                         moment(row._d).add(1, "day").month() && index !== 0 ? (
-                        <tr className="month_name">
-                          <th>{moment(row._d).format("MMMM")}</th>
+                        <tr>
                           <th></th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th>Arbeitstage: </th>
-                          <th>Feiertage: </th>
+                          <th colSpan={7} className="month_name">
+                            {moment(row._d).format("MMMM")}
+                          </th>
+                          <th className="month_name">Arbeitstage: </th>
+                          <th className="month_name">Feiertage: </th>
                         </tr>
                       ) : null}
 
