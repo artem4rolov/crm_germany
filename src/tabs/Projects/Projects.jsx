@@ -147,6 +147,10 @@ const Projects = () => {
   const [toggleNewProjectModal, setToggleNewProjectModal] = useState(false);
   // изменение текущего проекта
   const [toggleEditProjectModal, setToggleEditProjectModal] = useState(false);
+  // изменение текущего проекта
+  const [toggleRemoveProjectModal, setToggleRemoveProjectModal] =
+    useState(false);
+  // просмотр всех контрактов текущего проекта
   // просмотр всех контрактов текущего проекта
   const [toggleProjectDataModal, setToggleProjectDataModal] = useState(false);
 
@@ -192,7 +196,8 @@ const Projects = () => {
           calendar
           filters={[{ title: "Оплачиваемые" }, { title: "Завершенные" }]}
           columnTitle={columnTitle}
-          search
+          tab={"projects"}
+          addProject={() => setToggleNewProjectModal((prev) => !prev)}
         />
         <div className="table-titles-wrapper"></div>
         <Container>
@@ -246,20 +251,21 @@ const Projects = () => {
                     <th className="row-modal project">
                       <div>
                         <img
-                          src={PlusIcon}
-                          alt="plus icon"
-                          onClick={() =>
-                            setToggleNewProjectModal((prev) => !prev)
-                          }
-                        />
-                      </div>
-                      <div>
-                        <img
                           src={EditIcon}
                           alt="edit icon"
                           onClick={() => {
                             setCurrentProject(row);
                             setToggleEditProjectModal((prev) => !prev);
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <img
+                          src={TrashIcon}
+                          alt="remove icon"
+                          onClick={() => {
+                            setCurrentProject(row);
+                            setToggleRemoveProjectModal((prev) => !prev);
                           }}
                         />
                       </div>
@@ -360,6 +366,16 @@ const Projects = () => {
           current_project={currentProject}
           title={currentProject.project}
           toggle={() => setToggleEditProjectModal(false)}
+        />
+      )}
+      {/* удаление CURRENT ПРОЕКТА */}
+      {toggleRemoveProjectModal && (
+        <Modal
+          footer_delete
+          remove_project
+          current_project={currentProject}
+          title={currentProject.project}
+          toggle={() => setToggleRemoveProjectModal(false)}
         />
       )}
       {/* список всех контрактов проекта */}

@@ -14,7 +14,7 @@ import ClickAwayListener from "react-click-away-listener";
 import { setFilterDateYearSummary } from "../../../redux/slices/reports/year_summary/yearSummary";
 import { setFilterDateExcel } from "../../../redux/slices/reports/excel/excel";
 import moment from "moment";
-import { setFilterDateTimesheet } from "../../../redux/slices/timesheet/timesheet";
+import { setFilterDateProjects } from "../../../redux/slices/projects/projects";
 
 const Styles = styled.div`
   .calendar-container {
@@ -166,6 +166,7 @@ const CalendarComponent = (props) => {
   const { filterDateNotes } = useSelector((state) => state.notes);
   const { filterDateYearSummary } = useSelector((state) => state.yearSummary);
   const { filterDateExcel } = useSelector((state) => state.excel);
+  const { filterDateProjects } = useSelector((state) => state.projects);
 
   const dispatch = useDispatch();
 
@@ -201,7 +202,13 @@ const CalendarComponent = (props) => {
             )
           );
           break;
-
+        case "projects":
+          dispatch(
+            setFilterDateProjects(
+              `${date[0].toLocaleDateString()}-${date[1].toLocaleDateString()}`
+            )
+          );
+          break;
         default:
           return;
       }
@@ -277,6 +284,21 @@ const CalendarComponent = (props) => {
               </div>
             </>
           ) : null}
+          {/* для страницы Excel */}
+          {props.tab === "projects" ? (
+            <>
+              <div className="start-date" key={"excel"}>
+                {date
+                  ? date[0].toLocaleDateString()
+                  : filterDateProjects.split("-")[0]}
+              </div>
+              <div className="finish-date">
+                {date
+                  ? date[1].toLocaleDateString()
+                  : filterDateExcel.split("-")[1]}
+              </div>
+            </>
+          ) : null}
         </div>
         {showCalendar && (
           <ClickAwayListener onClickAway={() => setShowCalendar(false)}>
@@ -311,7 +333,8 @@ const CalendarComponent = (props) => {
               ) : null}
               {props.tab === "year_summary" ||
               props.tab === "excel" ||
-              props.tab === "holidays" ? (
+              props.tab === "holidays" ||
+              props.tab === "projects" ? (
                 <Calendar
                   onChange={setDate}
                   returnValue={"range"}

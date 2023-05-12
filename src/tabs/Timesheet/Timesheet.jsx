@@ -44,9 +44,7 @@ const Styles = styled.div`
         &.month_name {
           background-color: #4f6780;
           color: #ffffff;
-          /* border-radius: 8px; */
-          border-color: transparent;
-          /* border-radius: 4px; */
+          border: 1px solid #4f6780;
         }
       }
     }
@@ -256,9 +254,10 @@ const Timesheet = () => {
                         moment(row._d).add(1, "day").month() && index !== 0 ? (
                         <tr>
                           <th></th>
-                          <th colSpan={7} className="month_name">
+                          <th colSpan={5} className="month_name">
                             {moment(row._d).format("MMMM")}
                           </th>
+                          <th className="month_name"></th>
                           <th className="month_name">Arbeitstage: </th>
                           <th className="month_name">Feiertage: </th>
                         </tr>
@@ -278,8 +277,7 @@ const Timesheet = () => {
                         {console.log()}
                         <th>
                           {/* номер недели на каждом понедельнике Monday */}
-                          {moment(row._d).format("dddd").substring(0, 3) ===
-                          "Mon"
+                          {moment(row._d).format("dddd") === "Sonntag"
                             ? moment(row._d).week()
                             : null}
                         </th>
@@ -372,7 +370,7 @@ const Timesheet = () => {
                     >
                       {/* Week number on every Monday */}
                       <th>
-                        {moment(row._d).format("dddd").substring(0, 3) === "Mon"
+                        {moment(row._d).format("dddd") === "Sonntag"
                           ? moment(row._d).week()
                           : null}
                       </th>

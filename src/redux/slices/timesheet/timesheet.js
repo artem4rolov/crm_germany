@@ -23,9 +23,9 @@ const initialState = {
   filter: null, // ВЫБРАННЫЙ фильтр регионов
   filterDateTimesheet: `${moment()
     .subtract(42, "days")
-    .format("DD.MM.YYYY")}-${addZero(actualyDay)}.${addZero(
-    actualyMonth + 1
-  )}.${actualyYear}`, // фильтр дат
+    .format("DD.MM.YYYY")}-${moment().format("DD")}.${moment().format(
+    "MM"
+  )}.${moment().format("YYYY")}`, // фильтр дат
 };
 
 const timesheetSlice = createSlice({

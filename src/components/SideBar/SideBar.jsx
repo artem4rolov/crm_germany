@@ -23,6 +23,29 @@ const Styles = styled.div`
     border: none;
   }
 
+  .add-item {
+    cursor: pointer;
+    opacity: 0.7;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    img {
+      width: 22px;
+      height: 22px;
+    }
+
+    span {
+      color: #0854a0;
+      font-weight: 500;
+    }
+  }
+
   .table {
     margin-bottom: 0;
 
@@ -239,6 +262,19 @@ const SideBar = (props) => {
 
             {/* если переданы кнопки загрузки и выгрузки - рендерим их */}
             {props.download && <UploadDownload />}
+
+            {/* если передан пропс для добавления item'а, рендерим его */}
+            {props.addProject && (
+              <th
+                className="add-item"
+                onClick={() => {
+                  props.addProject();
+                }}
+              >
+                <img src={PlusIconBlue} alt="" />
+                <span>add project</span>
+              </th>
+            )}
 
             {/* если передан поиск - рендерим его */}
             {props.search && (

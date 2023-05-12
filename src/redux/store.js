@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import authReducer from "./slices/auth/auth";
 import holidaysReducer from "./slices/holidays/holidays";
-import projectsReducer from "./slices/holidays/holidays";
+import projectsReducer from "./slices/projects/projects";
 import notesReducer from "./slices/notes/notes";
 import sidebarReducer from "./slices/sidebar/sidebarSlice";
 import yearSummaryReducer from "./slices/reports/year_summary/yearSummary";

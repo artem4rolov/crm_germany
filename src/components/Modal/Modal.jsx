@@ -18,6 +18,7 @@ import RemoveProjectToday from "./TimeSheetsModal/RemoveProject";
 import RemoveContract from "./Projects&ContractsModal/Contracts/RemoveContract";
 import RemoveNote from "./Note/RemoveNote";
 import ChooseFile from "./Holidays/ChooseFile";
+import RemoveProject from "./Projects&ContractsModal/Projects/RemoveProject";
 
 const Styles = styled.div`
   .modal-wrapper {
@@ -291,6 +292,8 @@ const Modal = (props) => {
                 {props.new_project && <NewProject />}
                 {/* редактирование current проекта */}
                 {props.current_project && <EditProject {...props} />}
+                {/* редактирование current проекта */}
+                {props.remove_project && <RemoveProject {...props} />}
                 {/* просмотр контрактов current проекта */}
                 {props.current_project_table && (
                   <CurrentProjectTable {...props} />
