@@ -258,7 +258,7 @@ const Timesheet = () => {
                       {moment(row._d).month() !==
                         moment(row._d).add(1, "day").month() && index !== 0 ? (
                         <tr className="month_name">
-                          <th>{moment(row._d).add(1, "day").format("MMMM")}</th>
+                          <th>{moment(row._d).format("MMMM")}</th>
                           <th></th>
                           <th></th>
                           <th></th>
@@ -274,8 +274,8 @@ const Timesheet = () => {
                       <tr
                         key={index}
                         className={`table-content ${
-                          moment(row._d).format("dddd") === "Dienstag" ||
-                          moment(row._d).format("dddd") === "Mittwoch"
+                          moment(row._d).format("dddd") === "Samstag" ||
+                          moment(row._d).format("dddd") === "Sonntag"
                             ? "weekend"
                             : ""
                         }`}
@@ -291,7 +291,7 @@ const Timesheet = () => {
                         </th>
                         {/* Datum "Mon, 01.01.2001" формат "de" (немецкий) */}
                         <th className="text-left">{`${moment(row._d)
-                          .format("dddd")
+                          .format("dd")
                           .substring(0, 3)}., ${moment(row._d).format(
                           "DD.MM.YY"
                         )}`}</th>
@@ -370,7 +370,12 @@ const Timesheet = () => {
                       </tr>
                     </>
                   ) : (
-                    <tr key={index} className={`table-content holiday`}>
+                    <tr
+                      key={index}
+                      className={`table-content ${
+                        row.holiday.public_holiday ? "holiday" : ""
+                      }`}
+                    >
                       {/* Week number on every Monday */}
                       <th>
                         {moment(row._d).format("dddd").substring(0, 3) === "Mon"

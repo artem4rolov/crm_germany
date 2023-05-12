@@ -253,13 +253,15 @@ const YearSummaryComponent = () => {
                   ))
                 ) : (
                   <tr className="table-content">
-                    <td className="label-no-data">Keine Projekte vorhanden</td>
+                    <td colSpan={14} className="label-no-data">
+                      Keine Projekte vorhanden
+                    </td>
                   </tr>
                 )}
 
                 {/* нижняя секция Fakturierbare Aufwände */}
                 <tr className="yearsummary-label">
-                  <th>Nicht fakturierbare Aufwände</th>
+                  <td>Nicht fakturierbare Aufwände</td>
                 </tr>
 
                 {/* List of not billable projects */}
@@ -281,7 +283,9 @@ const YearSummaryComponent = () => {
                   ))
                 ) : (
                   <tr className="table-content">
-                    <td className="label-no-data">Keine Projekte vorhanden</td>
+                    <td colSpan={14} className="label-no-data">
+                      Keine Projekte vorhanden
+                    </td>
                   </tr>
                 )}
               </tbody>

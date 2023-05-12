@@ -289,12 +289,20 @@ const DoubleCalendarComponent = (props) => {
 
   // при изменении даты - меняем значения в Redux Store
   React.useEffect(() => {
-    if (dateStart && dateFinish) {
+    if (dateStart || dateFinish) {
       switch (props.tab) {
         case "timesheet":
           dispatch(
             setFilterDateTimesheet(
-              `${dateStart.toLocaleDateString()}-${dateFinish.toLocaleDateString()}`
+              `${
+                dateStart
+                  ? dateStart.toLocaleDateString()
+                  : filterDateTimesheet.split("-")[0]
+              }-${
+                dateFinish
+                  ? dateFinish.toLocaleDateString()
+                  : filterDateTimesheet.split("-")[1]
+              }`
             )
           );
           break;
@@ -335,13 +343,17 @@ const DoubleCalendarComponent = (props) => {
                 onClickDay={setDateStart}
                 onChange={() => {
                   setShowFirstCalendar(false);
-                  setShowSecondCalendar(true);
                 }}
                 returnValue={"start"}
                 showWeekNumbers={true}
                 value={[
-                  `${moment(dateStart).format("YYYY-MM-DD")}`,
-                  `${moment(dateFinish).format("YYYY-MM-DD")}`,
+                  `${Array.of(
+                    filterDateTimesheet
+                      .split("-")[0]
+                      .split(".")
+                      .reverse()
+                      .join("-")
+                  ).toString()}`,
                 ]}
                 maxDetail={"month"}
                 minDetail={"decade"}
@@ -375,8 +387,13 @@ const DoubleCalendarComponent = (props) => {
                 returnValue={"end"}
                 showWeekNumbers={true}
                 value={[
-                  `${moment(dateStart).format("YYYY-MM-DD")}`,
-                  `${moment(dateFinish).format("YYYY-MM-DD")}`,
+                  `${Array.of(
+                    filterDateTimesheet
+                      .split("-")[1]
+                      .split(".")
+                      .reverse()
+                      .join("-")
+                  ).toString()}`,
                 ]}
                 maxDetail={"month"}
                 minDetail={"decade"}
