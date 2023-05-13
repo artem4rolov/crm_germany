@@ -32,30 +32,18 @@ const Styles = styled.div`
     justify-content: center;
     align-items: center;
   }
-
   .login-image-1 {
     position: absolute;
     left: 0;
+    top: 0;
     z-index: 1;
-
-    max-width: 100%;
-    width: 60%;
-    min-width: 10%;
-    margin: 0 auto;
   }
 
   .login-image-2 {
     position: absolute;
     right: 0;
-
-    max-width: 100%;
-    width: 60%;
-    min-width: 10%;
-    margin: 0 auto;
-
-    /* filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)); */
+    bottom: 0;
   }
-
   .login-modal {
     width: 532px;
     height: 405px;

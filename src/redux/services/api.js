@@ -1,5 +1,7 @@
 import axios from "axios";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
+import { store } from "../store";
+import { userLogout } from "../slices/auth/authActions";
 
 // настройка для запроса от бэка scrf токена ПЕРЕД каждым запросе на клиенте
 const apiClient = axios.create({
@@ -19,6 +21,8 @@ const refreshAuthLogic = async (failedRequest) => {
 
   // если статус ошибки 401 (сессия авторизации истекла)
   if (failedRequest.response.status === 401) {
+    const { dispatch } = store;
+    dispatch(userLogout());
     // нужен редирект на страницу логина
     // но здесь необходимо поменять state.userStatus, поскольку он остается 200 (успешно), поэтому просто редирект не будет работать
     return Promise.reject();

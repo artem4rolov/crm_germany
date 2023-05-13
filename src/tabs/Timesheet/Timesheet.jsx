@@ -33,7 +33,7 @@ const Styles = styled.div`
     position: relative;
 
     border-collapse: separate;
-    border-spacing: 0 10px;
+    border-spacing: 0 6px;
 
     thead {
       border-color: #fcfcfc;
@@ -41,6 +41,7 @@ const Styles = styled.div`
 
     tbody {
       th {
+        padding: 15px 5px;
         &.month_name {
           background-color: #4f6780;
           color: #ffffff;

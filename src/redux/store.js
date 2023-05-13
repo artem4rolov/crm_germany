@@ -8,6 +8,7 @@ import sidebarReducer from "./slices/sidebar/sidebarSlice";
 import yearSummaryReducer from "./slices/reports/year_summary/yearSummary";
 import excelReducer from "./slices/reports/excel/excel";
 import timesheetReducer from "./slices/timesheet/timesheet";
+import dashboardReducer from "./slices/dashboard/dashboard";
 
 export const store = configureStore({
   reducer: {
@@ -23,6 +24,8 @@ export const store = configureStore({
     yearSummary: yearSummaryReducer,
     // страница с рабочими часами Excel.jsx
     excel: excelReducer,
+    // страница с рабочими часами Excel.jsx
+    dashboard: dashboardReducer,
     // страница с проектами (Timesheet.jsx)
     timesheet: timesheetReducer,
     // sidebar (фильтры дат, поиска и другие фильтры)

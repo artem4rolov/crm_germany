@@ -15,6 +15,7 @@ import { setFilterDateYearSummary } from "../../../redux/slices/reports/year_sum
 import { setFilterDateExcel } from "../../../redux/slices/reports/excel/excel";
 import moment from "moment";
 import { setFilterDateProjects } from "../../../redux/slices/projects/projects";
+import { setFilterDateDashboard } from "../../../redux/slices/dashboard/dashboard";
 
 const Styles = styled.div`
   .calendar-container {
@@ -167,6 +168,7 @@ const CalendarComponent = (props) => {
   const { filterDateYearSummary } = useSelector((state) => state.yearSummary);
   const { filterDateExcel } = useSelector((state) => state.excel);
   const { filterDateProjects } = useSelector((state) => state.projects);
+  const { filterDateDashboard } = useSelector((state) => state.dashboard);
 
   const dispatch = useDispatch();
 
@@ -205,6 +207,13 @@ const CalendarComponent = (props) => {
         case "projects":
           dispatch(
             setFilterDateProjects(
+              `${date[0].toLocaleDateString()}-${date[1].toLocaleDateString()}`
+            )
+          );
+          break;
+        case "dashboard":
+          dispatch(
+            setFilterDateDashboard(
               `${date[0].toLocaleDateString()}-${date[1].toLocaleDateString()}`
             )
           );
@@ -295,7 +304,22 @@ const CalendarComponent = (props) => {
               <div className="finish-date">
                 {date
                   ? date[1].toLocaleDateString()
-                  : filterDateExcel.split("-")[1]}
+                  : filterDateProjects.split("-")[1]}
+              </div>
+            </>
+          ) : null}
+          {/* для страницы Dashboard */}
+          {props.tab === "dashboard" ? (
+            <>
+              <div className="start-date" key={"excel"}>
+                {date
+                  ? date[0].toLocaleDateString()
+                  : filterDateDashboard.split("-")[0]}
+              </div>
+              <div className="finish-date">
+                {date
+                  ? date[1].toLocaleDateString()
+                  : filterDateDashboard.split("-")[1]}
               </div>
             </>
           ) : null}
@@ -320,6 +344,36 @@ const CalendarComponent = (props) => {
                   returnValue={"range"}
                   maxDetail={"decade"}
                   minDetail={"decade"}
+                  locale="en"
+                  nextLabel={<img src={NextImage1} alt="" />}
+                  next2Label={
+                    <img src={NextImage2} alt="" style={{ width: "25px" }} />
+                  }
+                  prevLabel={<img src={PrevImage1} alt="" />}
+                  prev2Label={
+                    <img src={PrevImage2} alt="" style={{ width: "25px" }} />
+                  }
+                />
+              ) : null}
+              {props.tab === "dashboard" ? (
+                <Calendar
+                  onChange={setDate}
+                  selectRange={true}
+                  value={[
+                    moment(filterDateDashboard.split("-")[0]).format(
+                      "YYYY-MM-DD"
+                    ),
+                    Array.of(
+                      filterDateDashboard
+                        .split("-")[1]
+                        .split(".")
+                        .reverse()
+                        .join("-")
+                    ).toString(),
+                  ]}
+                  returnValue={"range"}
+                  maxDetail={"decade"}
+                  minDetail={"month"}
                   locale="en"
                   nextLabel={<img src={NextImage1} alt="" />}
                   next2Label={
