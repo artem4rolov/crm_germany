@@ -1,26 +1,19 @@
-// import { createAsyncThunk } from "@reduxjs/toolkit";
-// import apiClient from "../../services/api";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import apiClient from "../../services/api";
 
-// // получаем праздники по фильтру дат
-// export const getHolidaysByFilter = createAsyncThunk(
-//   "holidays/getHolidaysByFilter",
-//   async ({ date, region }) => {
-//     try {
-//       // если фильтр региона не выбран - оставляем только дату для запроса
-//       if (region == null) {
-//         const { data } = await apiClient.get(`/api/holidays/${date}`);
-//         return data.data;
-//       }
+// получаем праздники по фильтру дат
+export const getProjectsByFilterDate = createAsyncThunk(
+  "holidays/getProjectsByFilterDate",
+  async (date) => {
+    try {
+      const { data } = await apiClient.get(`/api/projects/${date}`);
 
-//       // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
-//       const { data } = await apiClient.get(`/api/holidays/${date}/${region}`);
-
-//       return data.data;
-//     } catch (error) {
-//       return error.status;
-//     }
-//   }
-// );
+      return data.data;
+    } catch (error) {
+      return error.status;
+    }
+  }
+);
 
 // // получаем праздники текущего года с 1 января по 31 декабря
 // export const getRegions = createAsyncThunk("holidays/getRegions", async () => {

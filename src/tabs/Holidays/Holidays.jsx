@@ -96,7 +96,7 @@ const columnTitle = [
 ];
 
 const Holidays = () => {
-  // достаем переменные из стейта для фильтра праздников
+  // достаем переменные из стейта Redux для фильтра праздников
   const {
     loadingHolidays,
     holidays,

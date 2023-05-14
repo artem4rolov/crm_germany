@@ -9,6 +9,9 @@ import EditIcon from "../../assets/icon_edit.svg";
 import TrashIcon from "../../assets/icon_trash-can.svg";
 import { useState } from "react";
 import Modal from "../../components/Modal/Modal";
+import { useDispatch, useSelector } from "react-redux";
+import { getProjectsByFilterDate } from "../../redux/slices/projects/projectsActions";
+import Loader from "../../components/Loader/Loader";
 
 const Styles = styled.div`
   .projects-wrapper {
@@ -137,6 +140,11 @@ const columnTitle = [
 ];
 
 const Projects = () => {
+  // достаем переменные из стейта Redux для фильтра проектов
+  const { loadingProjects, projects, needRefreshData, filterDateProjects } =
+    useSelector((state) => state.projects);
+  const dispatch = useDispatch();
+
   //стейт для установки current project
   const [currentProject, setCurrentProject] = useState(null);
   //стейт для установки current contract
@@ -177,7 +185,7 @@ const Projects = () => {
     return;
   };
 
-  // открытие таблицы контрактов проекта
+  // открытие таблицы с конкретным контрактом проекта
   const openContractDetails = (e, contract, project) => {
     if (!e.target.parentNode.parentNode.classList.contains("row-modal")) {
       setCurrentProject(project);
@@ -188,6 +196,16 @@ const Projects = () => {
 
     return;
   };
+
+  React.useEffect(() => {
+    if (filterDateProjects) {
+      dispatch(getProjectsByFilterDate(filterDateProjects));
+    }
+
+    return () => {};
+  }, [filterDateProjects]);
+
+  console.log(projects);
 
   return (
     <Styles>
@@ -201,153 +219,173 @@ const Projects = () => {
         />
         <div className="table-titles-wrapper"></div>
         <Container>
-          <Table responsive>
-            <thead className="table-titles">
-              {/* формируем столбцы */}
-              <tr>
-                {columnTitle.map((item, index) => (
-                  <th className={item.classes} key={index}>
-                    {item.title}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((row, index) => (
-                <React.Fragment key={index}>
-                  {/* данные о проекте */}
-                  <tr
-                    key={row.project}
-                    className="table-content row-project"
-                    onClick={(e) => openProjectDetails(e, row)}
-                  >
-                    <th>{row.project}</th>
-                    <th>{row.start}</th>
-                    <th>{row.end}</th>
-                    <th className="text-center">{row.anz}</th>
-                    <th className="text-center">{row.budget}</th>
-                    <th className="text-center">{row.verbraucht}</th>
-                    <th className="text-center">{row.verfugbar}</th>
-                    <th className="text-center">{row.verfallen}</th>
-                    <th className="text-center">
-                      <input
-                        type="checkbox"
-                        checked={row.aktiv}
-                        onChange={() => {}}
-                        disabled
-                      />
+          {!loadingProjects ? (
+            <Table responsive>
+              <thead className="table-titles">
+                {/* формируем столбцы */}
+                <tr>
+                  {columnTitle.map((item, index) => (
+                    <th className={item.classes} key={index}>
+                      {item.title}
                     </th>
-                    <th className="text-center">
-                      <input
-                        className="check-box"
-                        name="checkbox"
-                        type="checkbox"
-                        checked={row.fakturierbar}
-                        onChange={() => {}}
-                        disabled
-                      />
-                    </th>
-                    {/* модалка в углу строки при наведении мыши на проект */}
-                    <th className="row-modal project">
-                      <div>
-                        <img
-                          src={EditIcon}
-                          alt="edit icon"
-                          onClick={() => {
-                            setCurrentProject(row);
-                            setToggleEditProjectModal((prev) => !prev);
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <img
-                          src={TrashIcon}
-                          alt="remove icon"
-                          onClick={() => {
-                            setCurrentProject(row);
-                            setToggleRemoveProjectModal((prev) => !prev);
-                          }}
-                        />
-                      </div>
-                    </th>
-                  </tr>
-                  <tr>
-                    <th className="projects-label">Verträge</th>
-                  </tr>
-                  {/* контракты к проекту */}
-                  {/* заранее задаем стили для каждой колонки, поскольку контент везде разный */}
-                  {row.contracts.map((contract, index) => (
-                    <tr
-                      key={contract[0] + index}
-                      className={`table-content`}
-                      onClick={(e) => openContractDetails(e, contract, row)}
-                    >
-                      <th>{contract[0]}</th>
-                      <th>{contract[1]}</th>
-                      <th>{contract[2]}</th>
-                      <th className="text-center">{contract[3]}</th>
-                      <th className="text-center">{contract[4]}</th>
-                      <th className="text-center">{contract[5]}</th>
-                      <th className="text-center">{contract[6]}</th>
-                      <th className="text-center">{contract[7]}</th>
-                      <th className="text-center">
-                        <input
-                          type="checkbox"
-                          disabled
-                          checked={contract[8]}
-                          onChange={() => {}}
-                        />
-                      </th>
-                      <th className="text-center">
-                        <input
-                          type="checkbox"
-                          disabled
-                          checked={contract[9]}
-                          onChange={() => {}}
-                        />
-                      </th>
-                      {/* модалка в углу строки при наведении мыши на контракт */}
-                      <th className="row-modal">
-                        <div>
-                          <img
-                            src={PlusIcon}
-                            alt="plus icon"
-                            onClick={() => {
-                              setCurrentProject(row);
-                              setToggleNewContractModal((prev) => !prev);
-                            }}
-                          />
-                        </div>
-                        <div>
-                          <img
-                            src={EditIcon}
-                            alt="edit icon"
-                            // при клике на контракт, устанавливаем current project, затем current contract, и потом открываем модалку
-                            onClick={() => {
-                              setCurrentProject(row);
-                              setCurrentContract(contract);
-                              setToggleCurrentContractModal((prev) => !prev);
-                            }}
-                          />
-                        </div>
-                        <div>
-                          <img
-                            src={TrashIcon}
-                            alt="trash icon"
-                            onClick={() => {
-                              setCurrentProject(row);
-                              setCurrentContract(contract);
-                              setToggleRemoveContractModal((prev) => !prev);
-                            }}
-                          />
-                        </div>
-                      </th>
-                    </tr>
                   ))}
-                </React.Fragment>
-              ))}
-            </tbody>
-          </Table>
+                </tr>
+              </thead>
+              <tbody>
+                {projects &&
+                  projects.map((row, index) => (
+                    <React.Fragment key={index}>
+                      {/* данные о проекте */}
+                      <tr
+                        key={row.description}
+                        className="table-content row-project"
+                        onClick={(e) => openProjectDetails(e, row)}
+                      >
+                        <th>{row.name}</th>
+                        <th>{row.start_date}</th>
+                        <th>{row.end_date}</th>
+                        <th className="text-center">{row.contracts.length}</th>
+                        <th className="text-center">{row.budget_total}</th>
+                        <th className="text-center">{row.budget_consumed}</th>
+                        <th className="text-center">{row.budget_available}</th>
+                        <th className="text-center">{row.budget_expired}</th>
+                        <th className="text-center">
+                          <input
+                            type="checkbox"
+                            checked={row.active}
+                            onChange={() => {}}
+                            disabled
+                          />
+                        </th>
+                        <th className="text-center">
+                          <input
+                            className="check-box"
+                            name="checkbox"
+                            type="checkbox"
+                            checked={row.billable}
+                            onChange={() => {}}
+                            disabled
+                          />
+                        </th>
+                        {/* модалка в углу строки при наведении мыши на проект */}
+                        <th className="row-modal project">
+                          <div>
+                            <img
+                              src={EditIcon}
+                              alt="edit icon"
+                              onClick={() => {
+                                setCurrentProject(row);
+                                setToggleEditProjectModal((prev) => !prev);
+                              }}
+                            />
+                          </div>
+                          <div>
+                            <img
+                              src={TrashIcon}
+                              alt="remove icon"
+                              onClick={() => {
+                                setCurrentProject(row);
+                                setToggleRemoveProjectModal((prev) => !prev);
+                              }}
+                            />
+                          </div>
+                        </th>
+                      </tr>
+                      <tr>
+                        <th className="projects-label">Verträge</th>
+                      </tr>
+                      {/* контракты к проекту */}
+                      {/* заранее задаем стили для каждой колонки, поскольку контент везде разный */}
+                      {row.contracts &&
+                        row.contracts.map((contract, index) => (
+                          <tr
+                            key={contract.identifier_provider}
+                            className={`table-content`}
+                            onClick={(e) =>
+                              openContractDetails(e, contract, row)
+                            }
+                          >
+                            <th>{contract.name}</th>
+                            <th>{contract.start_date}</th>
+                            <th>{contract.end_date}</th>
+                            <th className="text-center">{"???"}</th>
+                            <th className="text-center">
+                              {contract.budget_total}
+                            </th>
+                            <th className="text-center">
+                              {contract.budget_consumed}
+                            </th>
+                            <th className="text-center">
+                              {contract.budget_available}
+                            </th>
+                            <th className="text-center">
+                              {contract.budget_expired}
+                            </th>
+                            <th className="text-center">
+                              <input
+                                type="checkbox"
+                                disabled
+                                checked={contract.active}
+                                onChange={() => {}}
+                              />
+                            </th>
+                            <th className="text-center">
+                              <input
+                                type="checkbox"
+                                disabled
+                                checked={contract.billable}
+                                onChange={() => {}}
+                              />
+                            </th>
+                            {/* модалка в углу строки при наведении мыши на контракт */}
+                            <th className="row-modal">
+                              <div>
+                                <img
+                                  src={PlusIcon}
+                                  alt="plus icon"
+                                  onClick={() => {
+                                    setCurrentProject(row);
+                                    setToggleNewContractModal((prev) => !prev);
+                                  }}
+                                />
+                              </div>
+                              <div>
+                                <img
+                                  src={EditIcon}
+                                  alt="edit icon"
+                                  // при клике на контракт, устанавливаем current project, затем current contract, и потом открываем модалку
+                                  onClick={() => {
+                                    setCurrentProject(row);
+                                    setCurrentContract(contract);
+                                    setToggleCurrentContractModal(
+                                      (prev) => !prev
+                                    );
+                                  }}
+                                />
+                              </div>
+                              <div>
+                                <img
+                                  src={TrashIcon}
+                                  alt="trash icon"
+                                  onClick={() => {
+                                    setCurrentProject(row);
+                                    setCurrentContract(contract);
+                                    setToggleRemoveContractModal(
+                                      (prev) => !prev
+                                    );
+                                  }}
+                                />
+                              </div>
+                            </th>
+                          </tr>
+                        ))}
+                    </React.Fragment>
+                  ))}
+              </tbody>
+            </Table>
+          ) : (
+            <Loader big />
+          )}
         </Container>
       </div>
       {/* модальные окна ПРОЕКТОВ */}

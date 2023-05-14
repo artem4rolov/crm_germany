@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { getProjectsByFilterDate } from "./projectsActions";
 
 const actualyYear = new Date().getFullYear();
 
@@ -15,26 +16,26 @@ const projectsSlice = createSlice({
   initialState,
   reducers: {
     setFilterDateProjects: (state, { payload }) => {
-      state.filterDateHolidays = payload;
+      state.filterDateProjects = payload;
     },
   },
   extraReducers: (builder) => {
-    // builder
-    //   // получить праздники по фильтру
-    //   .addCase(getHolidaysByFilter.pending, (state) => {
-    //     state.loadingHolidays = true;
-    //     state.holidays = null;
-    //     state.error = null;
-    //   })
-    //   .addCase(getHolidaysByFilter.fulfilled, (state, action) => {
-    //     state.loadingHolidays = false;
-    //     state.holidays = action.payload;
-    //   })
-    //   .addCase(getHolidaysByFilter.rejected, (state, action) => {
-    //     state.loadingHolidays = false;
-    //     state.holidays = null;
-    //     state.error = action.payload;
-    //   })
+    builder
+      // получить праздники по фильтру
+      .addCase(getProjectsByFilterDate.pending, (state) => {
+        state.loadingProjects = true;
+        state.projects = null;
+        state.error = null;
+      })
+      .addCase(getProjectsByFilterDate.fulfilled, (state, action) => {
+        state.loadingProjects = false;
+        state.projects = action.payload;
+      })
+      .addCase(getProjectsByFilterDate.rejected, (state, action) => {
+        state.loadingProjects = false;
+        state.projects = null;
+        state.error = action.payload;
+      });
   },
 });
 
