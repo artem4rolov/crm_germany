@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import CalendarIcon from "../../../../assets/icon_calendar.svg";
 import styled from "styled-components";
 import Select from "../../../Select/Select";
+import moment from "moment";
 
 const Styles = styled.div`
   width: 100%;
@@ -20,7 +21,6 @@ const Styles = styled.div`
       display: flex;
       justify-content: space-between;
 
-      .vertag,
       .bezeichnung_vermittler,
       .bezeichnung_kunde,
       .budget {
@@ -35,19 +35,6 @@ const Styles = styled.div`
           border: 1px solid #e1e1e1;
           border-radius: 4px;
           outline: none;
-
-          &.vertag {
-            width: 200px;
-          }
-          &.bezeichnung_vermittler {
-            width: 200px;
-          }
-          &.bezeichnung_kunde {
-            width: 200px;
-          }
-          &.budget {
-            width: 60px;
-          }
         }
       }
 
@@ -96,6 +83,10 @@ const Styles = styled.div`
               left: 0;
               z-index: 10;
               background: transparent;
+            }
+
+            &:disabled {
+              background: #f2f3f4;
             }
           }
         }
@@ -201,34 +192,57 @@ const EditContract = (props) => {
       <div className="current_contract">
         {/* current_contract header */}
         <div className="current_contract_header">
-          <div className="vertag">
-            <label htmlFor="">Vertag</label>
-            <input type="text" className="vertag" />
-          </div>
           <div className="bezeichnung_vermittler">
             <label htmlFor="">Bezeichnung Vermittler</label>
-            <input type="text" className="bezeichnung_vermittler" />
+            <input
+              type="text"
+              className="bezeichnung_vermittler"
+              value={props.current_contract.identifier_provider}
+              onInput={() => {}}
+            />
           </div>
           <div className="bezeichnung_kunde">
             <label htmlFor="">Bezeichnung Kunde</label>
-            <input type="text" className="bezeichnung_vermittler" />
+            <input
+              type="text"
+              className="bezeichnung_vermittler"
+              value={props.current_contract.identifier_customer}
+              onInput={() => {}}
+            />
           </div>
           <div className="budget">
             <label htmlFor="">Budget</label>
-            <input type="text" className="budget" />
+            <input
+              type="text"
+              className="budget"
+              value={props.current_contract.budget}
+              onInput={() => {}}
+            />
           </div>
           <div className="start">
             <span>Start</span>
             <div className="start-block">
               <img src={CalendarIcon} alt="calendar icon" />
-              <input type="date" className="start" />
+              <input
+                type="date"
+                className="start"
+                value={props.current_contract.start_date}
+                onInput={() => {}}
+                disabled
+              />
             </div>
           </div>
           <div className="ende">
             <span>Ende</span>
             <div className="ende-block">
               <img src={CalendarIcon} alt="calendar icon" />
-              <input type="date" className="ende" />
+              <input
+                type="date"
+                className="ende"
+                value={props.current_contract.end_date}
+                onInput={() => {}}
+                disabled
+              />
             </div>
           </div>
         </div>
@@ -236,11 +250,23 @@ const EditContract = (props) => {
         <div className="current_contract_main">
           <div className="aktiv">
             <label htmlFor="">Aktiv</label>
-            <input type="checkbox" className="aktiv-check" />
+            <input
+              type="checkbox"
+              className="aktiv-check"
+              checked={props.current_contract.active}
+              onChange={() => {}}
+              disabled
+            />
           </div>
           <div className="fakturierbar">
             <label htmlFor="">Fakturierbar</label>
-            <input type="checkbox" className="fakturierbar-check" />
+            <input
+              type="checkbox"
+              className="fakturierbar-check"
+              checked={props.current_contract.billable}
+              onChange={() => {}}
+              disabled
+            />
           </div>
           <div className="excel_format ">
             <label htmlFor="">Excel</label>
@@ -258,19 +284,29 @@ const EditContract = (props) => {
             <input
               disabled
               type="text"
-              value={props.current_project_disabled.project}
+              value={props.current_project_disabled.name}
+              onChange={() => {}}
               className="projekt_name"
             />
           </div>
           <div className="kurze_beschreibung">
             <label htmlFor="">Kurze beschreibung</label>
-            <input disabled type="text" className="kurze_beschreibung" />
+            <input
+              disabled
+              type="text"
+              className="kurze_beschreibung"
+              value={props.current_project_disabled.description}
+              onChange={() => {}}
+            />
           </div>
           <div className="start">
             <label htmlFor="">Start</label>
             <input
               disabled
-              value={props.current_project_disabled.start}
+              value={moment(props.current_project_disabled.start_date).format(
+                "DD.MM.YYYY"
+              )}
+              onChange={() => {}}
               type="text"
               className="start"
             />
@@ -279,7 +315,10 @@ const EditContract = (props) => {
             <label htmlFor="">Ende</label>
             <input
               disabled
-              value={props.current_project_disabled.end}
+              value={moment(props.current_project_disabled.end_date).format(
+                "DD.MM.YYYY"
+              )}
+              onChange={() => {}}
               type="text"
               className="ende"
             />

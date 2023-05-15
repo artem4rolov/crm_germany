@@ -82,13 +82,14 @@ const Styles = styled.div`
         gap: 12px;
 
         background: #0854a0;
-        width: 138px;
+        width: 100px;
         padding: 8px;
         box-shadow: 0px 6px 30px rgba(147, 147, 147, 0.18);
         border-radius: 4px;
 
         &.project {
-          width: 100px;
+          gap: 12px;
+          width: 138px;
         }
 
         img {
@@ -226,7 +227,7 @@ const Projects = () => {
       <div className="projects-wrapper">
         <SideBar
           calendar
-          filters={[{ title: "Оплачиваемые" }, { title: "Завершенные" }]}
+          filters={[{ title: "Оплачиваемые" }]}
           columnTitle={columnTitle}
           tab={"projects"}
           addProject={() => setToggleNewProjectModal((prev) => !prev)}
@@ -256,9 +257,19 @@ const Projects = () => {
                         onClick={(e) => openProjectDetails(e, row)}
                       >
                         <th>{row.name}</th>
-                        <th>{moment(row.start_date).format("DD.MM.YYYY")}</th>
-                        <th>{moment(row.end_date).format("DD.MM.YYYY")}</th>
-                        <th className="text-center">{row.contracts.length}</th>
+                        <th>
+                          {row.start_date
+                            ? moment(row.start_date).format("DD.MM.YYYY")
+                            : "__.__.__"}
+                        </th>
+                        <th>
+                          {row.end_date
+                            ? moment(row.end_date).format("DD.MM.YYYY")
+                            : "__.__.__"}
+                        </th>
+                        <th className="text-center">
+                          {row.number_of_contracts}
+                        </th>
                         <th className="text-center">{row.budget_total}</th>
                         <th className="text-center">{row.budget_consumed}</th>
                         <th className="text-center">{row.budget_available}</th>
@@ -285,6 +296,16 @@ const Projects = () => {
                         </th>
                         {/* модалка в углу строки при наведении мыши на проект */}
                         <th className="row-modal project">
+                          <div>
+                            <img
+                              src={PlusIcon}
+                              alt="plus icon"
+                              onClick={() => {
+                                setCurrentProject(row);
+                                setToggleNewContractModal((prev) => !prev);
+                              }}
+                            />
+                          </div>
                           <div>
                             <img
                               src={EditIcon}
@@ -323,10 +344,16 @@ const Projects = () => {
                           >
                             <th>{contract.name}</th>
                             <th>
-                              {moment(contract.start_date).format("DD.MM.YYYY")}
+                              {contract.start_date
+                                ? moment(contract.start_date).format(
+                                    "DD.MM.YYYY"
+                                  )
+                                : "__.__.__"}
                             </th>
                             <th>
-                              {moment(contract.end_date).format("DD.MM.YYYY")}
+                              {contract.end_date
+                                ? moment(contract.end_date).format("DD.MM.YYYY")
+                                : "__.__.__"}
                             </th>
                             <th className="text-center">{}</th>
                             <th className="text-center">{contract.budget}</th>
@@ -361,16 +388,6 @@ const Projects = () => {
                             </th>
                             {/* модалка в углу строки при наведении мыши на контракт */}
                             <th className="row-modal">
-                              <div>
-                                <img
-                                  src={PlusIcon}
-                                  alt="plus icon"
-                                  onClick={() => {
-                                    setCurrentProject(row);
-                                    setToggleNewContractModal((prev) => !prev);
-                                  }}
-                                />
-                              </div>
                               <div>
                                 <img
                                   src={EditIcon}
@@ -469,6 +486,7 @@ const Projects = () => {
           footer_delete
           title={"REMOVE " + currentContract[0]}
           remove_current_contract={currentContract}
+          current_project_disabled={currentProject}
           toggle={() => setToggleRemoveContractModal(false)}
         />
       )}

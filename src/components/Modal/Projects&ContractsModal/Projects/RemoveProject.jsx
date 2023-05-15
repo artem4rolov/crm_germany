@@ -40,6 +40,9 @@ const Styles = styled.div`
           &.ende {
             width: 100px;
           }
+          &:disabled {
+            background-color: #f2f3f4;
+          }
         }
       }
 
@@ -88,6 +91,10 @@ const Styles = styled.div`
               left: 0;
               z-index: 10;
               background: transparent;
+            }
+
+            &:disabled {
+              background-color: #f2f3f4;
             }
           }
         }

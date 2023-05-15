@@ -79,35 +79,39 @@ const CurrentProjectTable = (props) => {
           <tbody className="table-content">
             {/* если кликнули на проект - выводим модалку с проектом и его контрактами */}
             {props.current_project_table &&
-              props.current_project_table.contracts.map((contract, index) => (
-                <tr key={contract.name}>
-                  <th>{contract.identifier_provider}</th>
-                  <th>{contract.identifier_customer}</th>
-                  <th className="text-center">{contract.budget}</th>
-                  <th className="text-center">{contract.budget_expired}</th>
-                  <th>{`${moment(contract.start_date).format(
-                    "DD.MM.YYYY"
-                  )} - ${moment(contract.end_date).format("DD.MM.YYYY")}`}</th>
-                  <th className="text-center">
-                    <input
-                      type="checkbox"
-                      className="check-box"
-                      checked={contract.active}
-                      onChange={() => {}}
-                      disabled
-                    />
-                  </th>
-                  <th className="text-center">
-                    <input
-                      type="checkbox"
-                      className="check-box"
-                      checked={contract.billable}
-                      onChange={() => {}}
-                      disabled
-                    />
-                  </th>
-                </tr>
-              ))}
+              props.current_project_table.all_contracts.map(
+                (contract, index) => (
+                  <tr key={contract.name}>
+                    <th>{contract.identifier_provider}</th>
+                    <th>{contract.identifier_customer}</th>
+                    <th className="text-center">{contract.budget}</th>
+                    <th className="text-center">{contract.budget_expired}</th>
+                    <th>{`${moment(contract.start_date).format(
+                      "DD.MM.YYYY"
+                    )} - ${moment(contract.end_date).format(
+                      "DD.MM.YYYY"
+                    )}`}</th>
+                    <th className="text-center">
+                      <input
+                        type="checkbox"
+                        className="check-box"
+                        checked={contract.active}
+                        onChange={() => {}}
+                        disabled
+                      />
+                    </th>
+                    <th className="text-center">
+                      <input
+                        type="checkbox"
+                        className="check-box"
+                        checked={contract.billable}
+                        onChange={() => {}}
+                        disabled
+                      />
+                    </th>
+                  </tr>
+                )
+              )}
             {/* если кликнули на контракт - выводим модалку с контрактом */}
             {props.current_contract_table && (
               <tr key={props.current_contract_table.name}>

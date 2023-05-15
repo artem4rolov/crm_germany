@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import CalendarIcon from "../../../../assets/icon_calendar.svg";
 import Select from "../../../Select/Select";
+import moment from "moment";
 
 const Styles = styled.div`
   width: 100%;
@@ -20,7 +21,6 @@ const Styles = styled.div`
       display: flex;
       justify-content: space-between;
 
-      .vertag,
       .bezeichnung_vermittler,
       .bezeichnung_kunde,
       .budget {
@@ -34,19 +34,6 @@ const Styles = styled.div`
           background: #ffffff;
           border: 1px solid #e1e1e1;
           border-radius: 4px;
-
-          &.vertag {
-            width: 200px;
-          }
-          &.bezeichnung_vermittler {
-            width: 200px;
-          }
-          &.bezeichnung_kunde {
-            width: 200px;
-          }
-          &.budget {
-            width: 60px;
-          }
         }
       }
 
@@ -188,17 +175,6 @@ const NewContract = (props) => {
       <div className="current_contract">
         {/* current_contract header */}
         <div className="current_contract_header">
-          <div className="vertag">
-            <label htmlFor="">Vertag</label>
-            <input
-              type="text"
-              className="vertag"
-              name="vertag"
-              onInput={({ target: { value } }) => {
-                setState((state) => ({ ...state, vertag: value }));
-              }}
-            />
-          </div>
           <div className="bezeichnung_vermittler">
             <label htmlFor="">Bezeichnung Vermittler</label>
             <input
@@ -323,19 +299,28 @@ const NewContract = (props) => {
             <input
               disabled
               type="text"
-              value={props.current_project_for_new_contract.project}
+              value={props.current_project_for_new_contract.name}
+              onChange={() => {}}
               className="projekt_name"
             />
           </div>
           <div className="kurze_beschreibung">
             <label htmlFor="">Kurze beschreibung</label>
-            <input disabled type="text" className="kurze_beschreibung" />
+            <input
+              disabled
+              type="text"
+              className="kurze_beschreibung"
+              value={props.current_project_for_new_contract.description}
+              onChange={() => {}}
+            />
           </div>
           <div className="start">
             <label htmlFor="">Start</label>
             <input
               disabled
-              value={props.current_project_for_new_contract.start}
+              value={moment(
+                props.current_project_for_new_contract.start_date
+              ).format("DD.MM.YYYY")}
               type="text"
               className="start"
             />
@@ -344,7 +329,9 @@ const NewContract = (props) => {
             <label htmlFor="">Ende</label>
             <input
               disabled
-              value={props.current_project_for_new_contract.end}
+              value={moment(
+                props.current_project_for_new_contract.end_date
+              ).format("DD.MM.YYYY")}
               type="text"
               className="ende"
             />
