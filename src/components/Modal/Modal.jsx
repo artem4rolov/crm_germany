@@ -7,11 +7,11 @@ import styled from "styled-components";
 import AddProjectTodayModal from "./TimeSheetsModal/AddProjectToday";
 import NewProject from "./Projects&ContractsModal/Projects/NewProject";
 import EditProject from "./Projects&ContractsModal/Projects/EditProject";
-import CurrentProjectTable from "./CurrentProjectTable";
+import CurrentProjectTable from "./Projects&ContractsModal/CurrentProjectTable";
 import NewContract from "./Projects&ContractsModal/Contracts/NewContract";
 import EditContract from "./Projects&ContractsModal/Contracts/EditContract";
 import EditProjectToday from "./TimeSheetsModal/EditProjectToday";
-import RemoveItem from "./RemoveItem";
+import RemoveItem from "./Holidays/RemoveItem";
 import AddNote from "./Note/AddNote";
 import EditNote from "./Note/EditNote";
 import RemoveProjectToday from "./TimeSheetsModal/RemoveProject";
@@ -19,6 +19,7 @@ import RemoveContract from "./Projects&ContractsModal/Contracts/RemoveContract";
 import RemoveNote from "./Note/RemoveNote";
 import ChooseFile from "./Holidays/ChooseFile";
 import RemoveProject from "./Projects&ContractsModal/Projects/RemoveProject";
+import moment from "moment";
 
 const Styles = styled.div`
   .modal-wrapper {
@@ -260,7 +261,10 @@ const Modal = (props) => {
                   {props.current_project_table && (
                     <div className="current_project_table_desc">
                       <span>
-                        Действует с {props.current_project_table.start}
+                        Действует с{" "}
+                        {moment(props.current_project_table.start_date).format(
+                          "DD.MM.YYYY"
+                        )}
                       </span>
                     </div>
                   )}
@@ -289,11 +293,17 @@ const Modal = (props) => {
                 {/* страница Projecte (Projects.jsx - проекты с контрактами) */}
                 {/* модалки Проектов */}
                 {/* создание нового проекта */}
-                {props.new_project && <NewProject />}
+                {props.new_project && (
+                  <NewProject {...props} isSubmit={isSubmit} />
+                )}
                 {/* редактирование current проекта */}
-                {props.current_project && <EditProject {...props} />}
-                {/* редактирование current проекта */}
-                {props.remove_project && <RemoveProject {...props} />}
+                {props.current_project && (
+                  <EditProject isSubmit={isSubmit} {...props} />
+                )}
+                {/* удаление current проекта */}
+                {props.remove_project && (
+                  <RemoveProject {...props} isRemove={isRemove} />
+                )}
                 {/* просмотр контрактов current проекта */}
                 {props.current_project_table && (
                   <CurrentProjectTable {...props} />
@@ -389,12 +399,14 @@ const Modal = (props) => {
                     disabled={
                       props.remove_item ||
                       props.remove_project_today ||
+                      props.remove_project ||
                       props.remove_contract
                     }
                   >
                     {props.remove_item ||
                     props.remove_project_today ||
                     props.remove_contract ||
+                    props.remove_project ||
                     props.remove_note
                       ? "Ok"
                       : "Erstellen"}

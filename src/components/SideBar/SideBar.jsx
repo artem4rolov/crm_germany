@@ -12,6 +12,7 @@ import Regions from "./Regions/Regions";
 import CalendarComponent from "./CalendarComponent/CalendarComponent";
 import UploadDownload from "./UploadDownload/UploadDownload";
 import DoubleCalendarComponent from "./DoubleCalendarComponent/DoubleCalendarComponent";
+import CheckBoxFilters from "./CheckBoxFilters/CheckBoxFilters";
 
 const Styles = styled.div`
   tbody,
@@ -222,7 +223,7 @@ const SideBar = (props) => {
         <Container>
           <div className="sidebar-top">
             <div className="sidebar-left">
-              {/* для страницы с праздниками и проектами выводим двойной календарь (независимый) */}
+              {/* для страницы с праздниками и проектами выводим двойной календарь (независимый), для остальных обычный календарь */}
               {!props.doubleCalendar ? (
                 <CalendarComponent tab={props.tab} />
               ) : (
@@ -237,24 +238,7 @@ const SideBar = (props) => {
               )}
 
               {/* если переданы фильтры (чекбоксы) - рендерим их */}
-              {props.filters && (
-                <div className="sidebar-filters">
-                  {props.filters.map((filter, index) => {
-                    const { title } = filter;
-
-                    return (
-                      <div className="check-block" key={index}>
-                        <input
-                          type="checkbox"
-                          className="check-box"
-                          id={title}
-                        />
-                        <label htmlFor={title}>{title}</label>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+              {props.filters && <CheckBoxFilters {...props} />}
 
               {/* если переданы фильтры (регионы) - рендерим их */}
               {props.regions && <Regions />}

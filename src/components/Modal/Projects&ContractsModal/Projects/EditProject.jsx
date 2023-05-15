@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import CalendarIcon from "../../../../assets/icon_calendar.svg";
+import { useDispatch } from "react-redux";
+import { editProject } from "../../../../redux/slices/projects/projectsActions";
 
 const Styles = styled.div`
   width: 100%;
@@ -95,6 +97,24 @@ const Styles = styled.div`
 `;
 
 const EditProject = (props) => {
+  const dispatch = useDispatch();
+
+  const [state, setState] = React.useState({
+    // created_at: moment(props.edit_note.created_at).format("yyy-MM-DD"),
+    name: props.current_project.name,
+    description: props.current_project.description,
+  });
+
+  // следим за стейтом родительской модалки (если там будет клик по кнопке "отправить" - отправляем данные на сервер)
+  React.useEffect(() => {
+    // если кнопка "отправить" была нажата и в стейте этого компонента есть formData, то оправляем данные
+    if (props.isSubmit && state) {
+      dispatch(editProject({ id: props.current_project.id, obj: state }));
+      // скрываем модалку
+      props.toggle();
+    }
+  }, [props.isSubmit]);
+
   console.log(props);
 
   return (
@@ -104,24 +124,52 @@ const EditProject = (props) => {
         <div className="current_project_header">
           <div className="projekt_name">
             <label htmlFor="">Projekt</label>
-            <input type="text" className="projekt_name" />
+            <input
+              type="text"
+              className="projekt_name"
+              onInput={({ target: { value } }) => {
+                setState((state) => ({ ...state, name: value }));
+              }}
+              value={state.name ? state.name : props.current_project.name}
+            />
           </div>
           <div className="kurze_beschreibung">
             <label htmlFor="">Kurze beschreibung</label>
-            <input type="text" className="kurze_beschreibung" />
+            <input
+              type="text"
+              className="kurze_beschreibung"
+              onInput={({ target: { value } }) => {
+                setState((state) => ({ ...state, description: value }));
+              }}
+              value={
+                state.description
+                  ? state.description
+                  : props.current_project.description
+              }
+            />
           </div>
           <div className="start">
             <span>Start</span>
             <div className="start-block">
               <img src={CalendarIcon} alt="calendar icon" />
-              <input type="date" className="start" />
+              <input
+                type="date"
+                className="start"
+                onInput={({ target: { value } }) => {}}
+                value={props.current_project.start_date}
+              />
             </div>
           </div>
           <div className="ende">
             <span>Ende</span>
             <div className="ende-block">
               <img src={CalendarIcon} alt="calendar icon" />
-              <input type="date" className="ende" />
+              <input
+                type="date"
+                className="ende"
+                onInput={({ target: { value } }) => {}}
+                value={props.current_project.end_date}
+              />
             </div>
           </div>
         </div>

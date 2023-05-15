@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import CalendarIcon from "../../../../assets/icon_calendar.svg";
 import Select from "../../../Select/Select";
+import { createProject } from "../../../../redux/slices/projects/projectsActions";
+import { useDispatch } from "react-redux";
 
 const Styles = styled.div`
   width: 100%;
@@ -103,12 +105,23 @@ const Styles = styled.div`
 `;
 
 const NewProject = (props) => {
-  const [state, setState] = useState(null);
+  const dispatch = useDispatch();
 
-  // следим за изменением стейта, и при малейшем изменении - передаем данные в компонент Modal, для дальнейшей отправки на сервер
-  useEffect(() => {
-    // props.setData(state);
-  }, [state]);
+  const [state, setState] = useState({
+    // created_at: moment(props.edit_note.created_at).format("yyy-MM-DD"),
+    name: "",
+    description: "",
+  });
+
+  // следим за стейтом родительской модалки (если там будет клик по кнопке "отправить" - отправляем данные на сервер)
+  React.useEffect(() => {
+    // если кнопка "отправить" была нажата и в стейте этого компонента есть formData, то оправляем данные
+    if (props.isSubmit && state) {
+      dispatch(createProject({ obj: state }));
+      // скрываем модалку
+      props.toggle();
+    }
+  }, [props.isSubmit]);
 
   return (
     <Styles>
@@ -121,7 +134,7 @@ const NewProject = (props) => {
               type="text"
               className="project_name"
               onInput={({ target: { value } }) => {
-                setState((state) => ({ ...state, project_name: value }));
+                setState((state) => ({ ...state, name: value }));
               }}
             />
           </div>
@@ -131,7 +144,7 @@ const NewProject = (props) => {
               type="text"
               className="kurze_beschreibung"
               onInput={({ target: { value } }) => {
-                setState((state) => ({ ...state, kurze_beschreibung: value }));
+                setState((state) => ({ ...state, description: value }));
               }}
             />
           </div>
@@ -142,9 +155,9 @@ const NewProject = (props) => {
               <input
                 type="date"
                 className="start"
-                onInput={({ target: { value } }) => {
-                  setState((state) => ({ ...state, start: value }));
-                }}
+                // onInput={({ target: { value } }) => {
+                //   setState((state) => ({ ...state, start: value }));
+                // }}
               />
             </div>
           </div>
@@ -155,9 +168,9 @@ const NewProject = (props) => {
               <input
                 type="date"
                 className="ende"
-                onInput={({ target: { value } }) => {
-                  setState((state) => ({ ...state, ende: value }));
-                }}
+                // onInput={({ target: { value } }) => {
+                //   setState((state) => ({ ...state, ende: value }));
+                // }}
               />
             </div>
           </div>

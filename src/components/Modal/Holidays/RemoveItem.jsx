@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { removeHolidayById } from "../../redux/slices/holidays/holidaysActions";
+import { removeHolidayById } from "../../../redux/slices/holidays/holidaysActions";
 
 const Styles = styled.div`
   width: 100%;

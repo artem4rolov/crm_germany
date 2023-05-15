@@ -1,9 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import apiClient from "../../services/api";
 
-// получаем праздники по фильтру дат
+// получаем проекты по фильтру дат
 export const getProjectsByFilterDate = createAsyncThunk(
-  "holidays/getProjectsByFilterDate",
+  "projects/getProjectsByFilterDate",
   async (date) => {
     try {
       const { data } = await apiClient.get(`/api/projects/${date}`);
@@ -15,83 +15,94 @@ export const getProjectsByFilterDate = createAsyncThunk(
   }
 );
 
-// // получаем праздники текущего года с 1 января по 31 декабря
-// export const getRegions = createAsyncThunk("holidays/getRegions", async () => {
-//   try {
-//     // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
-//     const { data } = await apiClient
-//       .get(`/api/holidays/regions`)
-//       .then((response) => {
-//         return response;
-//       });
-//     return data.data;
-//   } catch (error) {
-//     return error.status;
-//   }
-// });
+// получаем проекты по фильтру дат и по фильтру "оплачиваемые"
+export const getBillableProjects = createAsyncThunk(
+  "projects/getBillableProjects",
+  async (date) => {
+    try {
+      const { data } = await apiClient.get(`/api/projects/${date}/billable`);
 
-// // удаление праздника (по id региона)
-// export const removeHolidayById = createAsyncThunk(
-//   "holidays/removeHolidayById",
-//   async ({ id }) => {
-//     try {
-//       // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
-//       await apiClient.delete(`/api/holidays/${id}`);
-//     } catch (error) {
-//       return error.response.status;
-//     }
-//   }
-// );
+      return data.data;
+    } catch (error) {
+      return error.status;
+    }
+  }
+);
 
-// // загрузка excel-файла на сервер
-// export const uploadExcel = createAsyncThunk(
-//   "holidays/uploadExcel",
-//   async (formData) => {
-//     try {
-//       const config = {
-//         headers: {
-//           "Content-type": "multipart/form-data",
-//           "Accept-Encoding": "gzip, deflate, br",
-//         },
-//       };
-//       // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
-//       await apiClient.post(`/api/holidays/excel`, formData, config);
-//     } catch (error) {
-//       return error.response.status;
-//     }
-//   }
-// );
+// создаем проект
+export const createProject = createAsyncThunk(
+  "projects/createProject",
+  async ({ obj }) => {
+    try {
+      const config = {
+        "Content-type": "application/x-www-form-urlencoded",
+        Accept: "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+      };
+      // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
+      const { data } = await apiClient.post(
+        `/api/projects`,
+        {
+          name: obj.name,
+          description: obj.description,
+        },
+        config
+      );
 
-// // скачивание excel-файла c сервера
-// export const downloadExcel = createAsyncThunk(
-//   "holidays/downloadExcel",
-//   async () => {
-//     try {
-//       const config = {
-//         responseType: "blob",
-//         "Accept-Encoding": "gzip, deflate, br",
-//       };
-//       // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
-//       await apiClient.get(`/api/holidays/excel`, config).then((response) => {
-//         const url = window.URL.createObjectURL(new Blob([response.data]));
-//         const link = document.createElement("a");
-//         link.href = url;
+      return data.data;
+    } catch (error) {
+      return error.status;
+    }
+  }
+);
 
-//         // получаем имя файла и расширение
-//         let filename = response.headers["content-disposition"]
-//           .split("filename=")[1]
-//           .split(".")[0];
-//         let extension = response.headers["content-disposition"]
-//           .split(".")[1]
-//           .split(";")[0];
+// удаляем проект
+export const removeProject = createAsyncThunk(
+  "projects/removeProject",
+  async ({ id }) => {
+    try {
+      const config = {
+        "Content-type": "application/x-www-form-urlencoded",
+        Accept: "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+      };
+      // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
+      const { data } = await apiClient.delete(
+        `/api/projects/${id}`,
 
-//         // создаем ссылку на скачивание файла на пк
-//         link.setAttribute("download", `${filename}.${extension}`);
-//         document.body.appendChild(link);
-//         link.click();
-//       });
-//     } catch (error) {
-//       return error.response.status;
-//     }
-//   }
-// );
+        config
+      );
+
+      return data.data;
+    } catch (error) {
+      return error.status;
+    }
+  }
+);
+
+// редактируем проект
+export const editProject = createAsyncThunk(
+  "Projects/editProject",
+  async ({ id, obj }) => {
+    try {
+      const config = {
+        "Content-type": "application/x-www-form-urlencoded",
+        Accept: "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+      };
+      // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
+      const { data } = await apiClient.put(
+        `/api/projects/${id}`,
+        {
+          name: obj.name,
+          description: obj.description,
+        },
+        config
+      );
+
+      return data.data;
+    } catch (error) {
+      return error.status;
+    }
+  }
+);

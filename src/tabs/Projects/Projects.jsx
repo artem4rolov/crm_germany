@@ -10,8 +10,12 @@ import TrashIcon from "../../assets/icon_trash-can.svg";
 import { useState } from "react";
 import Modal from "../../components/Modal/Modal";
 import { useDispatch, useSelector } from "react-redux";
-import { getProjectsByFilterDate } from "../../redux/slices/projects/projectsActions";
+import {
+  getBillableProjects,
+  getProjectsByFilterDate,
+} from "../../redux/slices/projects/projectsActions";
 import Loader from "../../components/Loader/Loader";
+import moment from "moment";
 
 const Styles = styled.div`
   .projects-wrapper {
@@ -44,6 +48,13 @@ const Styles = styled.div`
 
     border-collapse: separate;
     border-spacing: 0 10px;
+
+    input {
+      &.check-box {
+        width: 18px;
+        height: 18px;
+      }
+    }
 
     tr {
       &.table-content {
@@ -106,22 +117,6 @@ const Styles = styled.div`
       th {
         font-weight: 400;
       }
-
-      input {
-        &.check-box {
-          width: 18px;
-          height: 18px;
-          color: yellow;
-
-          &:checked {
-            background-color: green;
-          }
-
-          &:disabled {
-            fill: red;
-          }
-        }
-      }
     }
   }
 `;
@@ -141,8 +136,13 @@ const columnTitle = [
 
 const Projects = () => {
   // достаем переменные из стейта Redux для фильтра проектов
-  const { loadingProjects, projects, needRefreshData, filterDateProjects } =
-    useSelector((state) => state.projects);
+  const {
+    loadingProjects,
+    projects,
+    needRefreshData,
+    filterDateProjects,
+    billableFilter,
+  } = useSelector((state) => state.projects);
   const dispatch = useDispatch();
 
   //стейт для установки current project
@@ -197,13 +197,27 @@ const Projects = () => {
     return;
   };
 
+  // если установлен фильтр "оплачиваемые" - делаем запрос с этим фильтром
   React.useEffect(() => {
-    if (filterDateProjects) {
+    if (billableFilter) {
+      dispatch(getBillableProjects(filterDateProjects));
+      return;
+    }
+
+    if (!billableFilter && filterDateProjects) {
       dispatch(getProjectsByFilterDate(filterDateProjects));
+      return;
     }
 
     return () => {};
-  }, [filterDateProjects]);
+  }, [billableFilter]);
+
+  // если необходимо обновить данные - снова получам проекты по фильтрам
+  React.useEffect(() => {
+    dispatch(getProjectsByFilterDate(filterDateProjects));
+
+    return () => {};
+  }, [needRefreshData]);
 
   console.log(projects);
 
@@ -242,8 +256,8 @@ const Projects = () => {
                         onClick={(e) => openProjectDetails(e, row)}
                       >
                         <th>{row.name}</th>
-                        <th>{row.start_date}</th>
-                        <th>{row.end_date}</th>
+                        <th>{moment(row.start_date).format("DD.MM.YYYY")}</th>
+                        <th>{moment(row.end_date).format("DD.MM.YYYY")}</th>
                         <th className="text-center">{row.contracts.length}</th>
                         <th className="text-center">{row.budget_total}</th>
                         <th className="text-center">{row.budget_consumed}</th>
@@ -252,6 +266,8 @@ const Projects = () => {
                         <th className="text-center">
                           <input
                             type="checkbox"
+                            className="check-box"
+                            name="checkbox"
                             checked={row.active}
                             onChange={() => {}}
                             disabled
@@ -306,12 +322,14 @@ const Projects = () => {
                             }
                           >
                             <th>{contract.name}</th>
-                            <th>{contract.start_date}</th>
-                            <th>{contract.end_date}</th>
-                            <th className="text-center">{"???"}</th>
-                            <th className="text-center">
-                              {contract.budget_total}
+                            <th>
+                              {moment(contract.start_date).format("DD.MM.YYYY")}
                             </th>
+                            <th>
+                              {moment(contract.end_date).format("DD.MM.YYYY")}
+                            </th>
+                            <th className="text-center">{}</th>
+                            <th className="text-center">{contract.budget}</th>
                             <th className="text-center">
                               {contract.budget_consumed}
                             </th>
@@ -324,6 +342,8 @@ const Projects = () => {
                             <th className="text-center">
                               <input
                                 type="checkbox"
+                                className="check-box"
+                                name="checkbox"
                                 disabled
                                 checked={contract.active}
                                 onChange={() => {}}
@@ -332,6 +352,8 @@ const Projects = () => {
                             <th className="text-center">
                               <input
                                 type="checkbox"
+                                className="check-box"
+                                name="checkbox"
                                 disabled
                                 checked={contract.billable}
                                 onChange={() => {}}
@@ -400,7 +422,6 @@ const Projects = () => {
       {/* редактирование CURRENT ПРОЕКТА */}
       {toggleEditProjectModal && (
         <Modal
-          footer_delete
           current_project={currentProject}
           title={currentProject.project}
           toggle={() => setToggleEditProjectModal(false)}
@@ -410,8 +431,7 @@ const Projects = () => {
       {toggleRemoveProjectModal && (
         <Modal
           footer_delete
-          remove_project
-          current_project={currentProject}
+          remove_project={currentProject}
           title={currentProject.project}
           toggle={() => setToggleRemoveProjectModal(false)}
         />

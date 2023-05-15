@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import CalendarIcon from "../../../../assets/icon_calendar.svg";
+import { useDispatch } from "react-redux";
+import { removeProject } from "../../../../redux/slices/projects/projectsActions";
 
 const Styles = styled.div`
   width: 100%;
@@ -95,6 +97,18 @@ const Styles = styled.div`
 `;
 
 const RemoveProject = (props) => {
+  const dispatch = useDispatch();
+
+  // следим за стейтом родительской модалки (если там будет клик по кнопке "отправить" - отправляем данные на сервер)
+  React.useEffect(() => {
+    // если кнопка "отправить" была нажата и в стейте этого компонента есть formData, то оправляем данные
+    if (props.isRemove) {
+      dispatch(removeProject({ id: props.remove_project.id }));
+      // скрываем модалку
+      props.toggle();
+    }
+  }, [props.isRemove]);
+
   console.log(props);
 
   return (
@@ -104,24 +118,48 @@ const RemoveProject = (props) => {
         <div className="current_project_header">
           <div className="projekt_name">
             <label htmlFor="">Projekt</label>
-            <input disabled type="text" className="projekt_name" />
+            <input
+              disabled
+              type="text"
+              value={props.remove_project.name}
+              className="projekt_name"
+              onChange={() => {}}
+            />
           </div>
           <div className="kurze_beschreibung">
             <label htmlFor="">Kurze beschreibung</label>
-            <input disabled type="text" className="kurze_beschreibung" />
+            <input
+              disabled
+              type="text"
+              value={props.remove_project.description}
+              onChange={() => {}}
+              className="kurze_beschreibung"
+            />
           </div>
           <div className="start">
             <span>Start</span>
             <div className="start-block">
               <img src={CalendarIcon} alt="calendar icon" />
-              <input disabled type="date" className="start" />
+              <input
+                disabled
+                type="date"
+                className="start"
+                value={props.remove_project.start_date}
+                onChange={() => {}}
+              />
             </div>
           </div>
           <div className="ende">
             <span>Ende</span>
             <div className="ende-block">
               <img src={CalendarIcon} alt="calendar icon" />
-              <input disabled type="date" className="ende" />
+              <input
+                disabled
+                type="date"
+                value={props.remove_project.end_date}
+                onChange={() => {}}
+                className="ende"
+              />
             </div>
           </div>
         </div>
