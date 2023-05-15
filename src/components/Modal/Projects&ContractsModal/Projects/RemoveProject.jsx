@@ -3,6 +3,7 @@ import styled from "styled-components";
 import CalendarIcon from "../../../../assets/icon_calendar.svg";
 import { useDispatch } from "react-redux";
 import { removeProject } from "../../../../redux/slices/projects/projectsActions";
+import Select from "../../../Select/Select";
 
 const Styles = styled.div`
   width: 100%;
@@ -12,7 +13,27 @@ const Styles = styled.div`
     .current_project_header {
       display: flex;
       justify-content: space-between;
+      flex-wrap: wrap;
       width: 100%;
+
+      .excel_format {
+        margin-top: 20px;
+        display: flex;
+        justify-content: start;
+        flex-direction: column;
+        gap: 8px;
+
+        select {
+          background: #ffffff;
+          border: 1px solid #e1e1e1;
+          border-radius: 4px;
+          padding: 10px;
+
+          .excel_format {
+            width: 106px;
+          }
+        }
+      }
 
       .projekt_name,
       .kurze_beschreibung {
@@ -168,6 +189,14 @@ const RemoveProject = (props) => {
                 className="ende"
               />
             </div>
+          </div>
+          <div className="excel_format">
+            <label htmlFor="">Excel</label>
+            <Select
+              handleSelect={(value) => {
+                // setState((state) => ({ ...state, excel: value }));
+              }}
+            />
           </div>
         </div>
       </div>

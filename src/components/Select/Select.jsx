@@ -1,9 +1,13 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { getExcelTemplates } from "../../redux/slices/projects/projectsActions";
+import Loader from "../Loader/Loader";
 
 const Styles = styled.div`
   .select {
-    width: 100px;
+    width: 100%;
+    min-width: 500px;
     margin: 0 auto;
     position: relative;
 
@@ -91,11 +95,24 @@ const Styles = styled.div`
   }
 `;
 
-const files = [".xlsx", ".xlsm", ".xls", ".xltm", ".xltx", ".xlsb"];
+// const files = [".xlsx", ".xlsm", ".xls", ".xltm", ".xltx", ".xlsb"];
 
 const Select = (props) => {
+  const dispatch = useDispatch();
+
+  // достаем переменные из стейта Redux для фильтра проектов
+  const { loadingProjects, excelTemplate } = useSelector(
+    (state) => state.projects
+  );
+
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
+
+  React.useEffect(() => {
+    dispatch(getExcelTemplates());
+
+    return () => {};
+  }, []);
 
   const onSelect = (index) => {
     setActive(index);
@@ -104,24 +121,27 @@ const Select = (props) => {
 
   return (
     <Styles>
-      <div className={`select ${props.titles ? "titles" : ""}`}>
-        <div
-          className={`select__header`}
-          onClick={() => setOpen((prev) => !prev)}
-        >
-          <span className="select__current">
-            {props.titles ? props.titles[active] : files[active]}
-          </span>
+      {excelTemplate && !loadingProjects ? (
+        <div className={`select ${props.titles ? "titles" : ""}`}>
+          {/* header, выбранный option */}
           <div
-            className={`select__icon ${open ? "active" : ""}`}
+            className={`select__header`}
             onClick={() => setOpen((prev) => !prev)}
-          />
-        </div>
+          >
+            <span className="select__current">
+              {excelTemplate[active].label}
+            </span>
+            <div
+              className={`select__icon ${open ? "active" : ""}`}
+              onClick={() => setOpen((prev) => !prev)}
+            />
+          </div>
 
-        {open ? (
-          <div className="select__body">
-            {props.titles
-              ? props.titles.map((name, index) => (
+          {/* body, варианты options */}
+          {open ? (
+            <div className="select__body">
+              {excelTemplate &&
+                excelTemplate.map((template, index) => (
                   <div
                     key={index}
                     className="select__item"
@@ -132,26 +152,15 @@ const Select = (props) => {
                       checked={active === index}
                       onChange={() => {}}
                     />
-                    <span>{name}</span>
-                  </div>
-                ))
-              : files.map((name, index) => (
-                  <div
-                    key={index}
-                    className="select__item"
-                    onClick={() => onSelect(index)}
-                  >
-                    <input
-                      type="radio"
-                      checked={active === index}
-                      onChange={() => {}}
-                    />
-                    <span>{name}</span>
+                    <span>{template.label}</span>
                   </div>
                 ))}
-          </div>
-        ) : null}
-      </div>
+            </div>
+          ) : null}
+        </div>
+      ) : (
+        <Loader small />
+      )}
     </Styles>
   );
 };

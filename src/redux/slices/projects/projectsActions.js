@@ -106,3 +106,17 @@ export const editProject = createAsyncThunk(
     }
   }
 );
+
+// получаем шаблоны excel форматов для выпадающего списка Excel
+export const getExcelTemplates = createAsyncThunk(
+  "projects/getExcelTemplates",
+  async (date) => {
+    try {
+      const { data } = await apiClient.get(`/api/reports/excel/templates`);
+
+      return data.data;
+    } catch (error) {
+      return error.status;
+    }
+  }
+);

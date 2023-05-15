@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { createProject } from "../../../../redux/slices/projects/projectsActions";
 import { useDispatch } from "react-redux";
+import Select from "../../../Select/Select";
 
 const Styles = styled.div`
   width: 100%;
@@ -18,6 +19,24 @@ const Styles = styled.div`
       width: 100%;
       border-bottom: 1px solid #e1e1e1;
       padding-bottom: 20px;
+
+      .excel_format {
+        display: flex;
+        justify-content: start;
+        flex-direction: column;
+        gap: 8px;
+
+        select {
+          background: #ffffff;
+          border: 1px solid #e1e1e1;
+          border-radius: 4px;
+          padding: 10px;
+
+          .excel_format {
+            width: 106px;
+          }
+        }
+      }
 
       .project_name,
       .kurze_beschreibung {
@@ -87,6 +106,14 @@ const NewProject = (props) => {
               className="kurze_beschreibung"
               onInput={({ target: { value } }) => {
                 setState((state) => ({ ...state, description: value }));
+              }}
+            />
+          </div>
+          <div className="excel_format">
+            <label htmlFor="">Excel</label>
+            <Select
+              handleSelect={(value) => {
+                // setState((state) => ({ ...state, excel: value }));
               }}
             />
           </div>

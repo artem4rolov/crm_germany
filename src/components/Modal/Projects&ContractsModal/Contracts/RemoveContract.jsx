@@ -104,28 +104,6 @@ const Styles = styled.div`
       border-bottom: 1px solid #e1e1e1;
       padding-bottom: 40px;
 
-      .excel_format {
-        display: flex;
-        justify-content: start;
-        flex-direction: column;
-        gap: 8px;
-
-        select {
-          background: #ffffff;
-          border: 1px solid #e1e1e1;
-          border-radius: 4px;
-          padding: 10px;
-
-          .excel_format {
-            width: 106px;
-          }
-
-          &:disabled {
-            background-color: #f2f3f4;
-          }
-        }
-      }
-
       .aktiv,
       .fakturierbar {
         display: flex;
@@ -272,10 +250,6 @@ const RemoveContract = (props) => {
               className="fakturierbar-check"
               checked={props.remove_current_contract.billable}
             />
-          </div>
-          <div className="excel_format">
-            <label htmlFor="">Excel-Format</label>
-            <select type="checkbox" disabled className="vertag" />
           </div>
         </div>
         {/* current_contract footer */}

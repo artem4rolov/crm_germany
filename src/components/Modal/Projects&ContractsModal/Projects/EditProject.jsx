@@ -3,6 +3,7 @@ import styled from "styled-components";
 import CalendarIcon from "../../../../assets/icon_calendar.svg";
 import { useDispatch } from "react-redux";
 import { editProject } from "../../../../redux/slices/projects/projectsActions";
+import Select from "../../../Select/Select";
 
 const Styles = styled.div`
   width: 100%;
@@ -11,8 +12,28 @@ const Styles = styled.div`
     width: 100%;
     .current_project_header {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       width: 100%;
+
+      .excel_format {
+        margin-top: 20px;
+        display: flex;
+        justify-content: start;
+        flex-direction: column;
+        gap: 8px;
+
+        select {
+          background: #ffffff;
+          border: 1px solid #e1e1e1;
+          border-radius: 4px;
+          padding: 10px;
+
+          .excel_format {
+            width: 106px;
+          }
+        }
+      }
 
       .projekt_name,
       .kurze_beschreibung {
@@ -89,6 +110,10 @@ const Styles = styled.div`
               z-index: 10;
               background: transparent;
             }
+
+            &:disabled {
+              background-color: #f2f3f4;
+            }
           }
         }
       }
@@ -153,6 +178,7 @@ const EditProject = (props) => {
             <div className="start-block">
               <img src={CalendarIcon} alt="calendar icon" />
               <input
+                disabled
                 type="date"
                 className="start"
                 onInput={({ target: { value } }) => {}}
@@ -165,12 +191,21 @@ const EditProject = (props) => {
             <div className="ende-block">
               <img src={CalendarIcon} alt="calendar icon" />
               <input
+                disabled
                 type="date"
                 className="ende"
                 onInput={({ target: { value } }) => {}}
                 value={props.current_project.end_date}
               />
             </div>
+          </div>
+          <div className="excel_format">
+            <label htmlFor="">Excel</label>
+            <Select
+              handleSelect={(value) => {
+                // setState((state) => ({ ...state, excel: value }));
+              }}
+            />
           </div>
         </div>
       </div>

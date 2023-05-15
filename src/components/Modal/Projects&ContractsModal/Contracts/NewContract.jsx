@@ -95,13 +95,6 @@ const Styles = styled.div`
       border-bottom: 1px solid #e1e1e1;
       padding-bottom: 40px;
 
-      .excel_format {
-        display: flex;
-        justify-content: start;
-        flex-direction: column;
-        gap: 8px;
-      }
-
       .aktiv,
       .fakturierbar {
         display: flex;
@@ -279,14 +272,6 @@ const NewContract = (props) => {
                   ...state,
                   fakturierbar: checked,
                 }));
-              }}
-            />
-          </div>
-          <div className="excel_format ">
-            <label htmlFor="">Excel</label>
-            <Select
-              handleSelect={(value) => {
-                setState((state) => ({ ...state, excel: value }));
               }}
             />
           </div>

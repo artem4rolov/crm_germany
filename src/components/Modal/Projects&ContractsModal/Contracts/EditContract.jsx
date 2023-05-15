@@ -100,24 +100,6 @@ const Styles = styled.div`
       border-bottom: 1px solid #e1e1e1;
       padding-bottom: 20px;
 
-      .excel_format {
-        display: flex;
-        justify-content: start;
-        flex-direction: column;
-        gap: 8px;
-
-        select {
-          background: #ffffff;
-          border: 1px solid #e1e1e1;
-          border-radius: 4px;
-          padding: 10px;
-
-          .excel_format {
-            width: 106px;
-          }
-        }
-      }
-
       .aktiv,
       .fakturierbar {
         display: flex;
@@ -266,14 +248,6 @@ const EditContract = (props) => {
               checked={props.current_contract.billable}
               onChange={() => {}}
               disabled
-            />
-          </div>
-          <div className="excel_format ">
-            <label htmlFor="">Excel</label>
-            <Select
-              handleSelect={(value) => {
-                setState((state) => ({ ...state, excel: value }));
-              }}
             />
           </div>
         </div>

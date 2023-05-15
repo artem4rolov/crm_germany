@@ -3,6 +3,7 @@ import {
   createProject,
   editProject,
   getBillableProjects,
+  getExcelTemplates,
   getProjectsByFilterDate,
   removeProject,
 } from "./projectsActions";
@@ -15,6 +16,7 @@ const initialState = {
   projects: null, // пользователь
   error: null, // значение ошибки
   billableFilter: null, // фильтр "оплачиваемые"
+  excelTemplate: null,
   // finishFilter: null, // фильтр "завершенные"
   filterDateProjects: `01.01.${actualyYear}-31.12.${actualyYear}`, // фильтр дат
 };
@@ -101,6 +103,21 @@ const projectsSlice = createSlice({
       })
       .addCase(editProject.rejected, (state, action) => {
         state.loadingProjects = false;
+        state.error = action.payload;
+      })
+      // удалить проект
+      .addCase(getExcelTemplates.pending, (state) => {
+        state.loadingProjects = true;
+        state.excelTemplate = null;
+        state.error = null;
+      })
+      .addCase(getExcelTemplates.fulfilled, (state, action) => {
+        state.loadingProjects = false;
+        state.excelTemplate = action.payload;
+      })
+      .addCase(getExcelTemplates.rejected, (state, action) => {
+        state.loadingProjects = false;
+        state.excelTemplate = null;
         state.error = action.payload;
       });
   },
