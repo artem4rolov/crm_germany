@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import CalendarIcon from "../../../../assets/icon_calendar.svg";
-import Select from "../../../Select/Select";
 import moment from "moment";
+import { useDispatch } from "react-redux";
+import { createContract } from "../../../../redux/slices/projects/projectsActions";
 
 const Styles = styled.div`
   width: 100%;
@@ -19,6 +20,7 @@ const Styles = styled.div`
 
     .current_contract_header {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
 
       .bezeichnung_vermittler,
@@ -115,6 +117,7 @@ const Styles = styled.div`
 
     .current_contract_footer {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
 
       .projekt_name,
@@ -132,19 +135,6 @@ const Styles = styled.div`
           border: 1px solid #e1e1e1;
           border-radius: 4px;
 
-          &.projekt_name {
-            width: 300px;
-          }
-          &.kurze_beschreibung {
-            width: 400px;
-          }
-          &.start {
-            width: 130px;
-          }
-          &.ende {
-            width: 130px;
-          }
-
           &:disabled {
             background: #f2f3f4;
           }
@@ -155,14 +145,29 @@ const Styles = styled.div`
 `;
 
 const NewContract = (props) => {
-  const [state, setState] = useState(null);
+  const dispatch = useDispatch();
 
-  // следим за изменением стейта, и при малейшем изменении - передаем данные в компонент Modal, для дальнейшей отправки на сервер
+  const [state, setState] = useState({
+    project_id: props.current_project_for_new_contract.id,
+    identifier_provider: "",
+    identifier_customer: "",
+    start_date: moment().format("YYYY-MM-DD"),
+    end_date: moment().format("YYYY-MM-DD"),
+    budget: "",
+    billable: 0,
+    active: 0,
+  });
+
+  // следим за стейтом родительской модалки (если там будет клик по кнопке "отправить" - отправляем данные на сервер)
   useEffect(() => {
-    // props.setData(state);
-  }, [state]);
+    // // если кнопка "отправить" была нажата и в стейте этого компонента есть formData, то оправляем данные
+    if (props.isSubmit && state) {
+      dispatch(createContract({ obj: state }));
+      // скрываем модалку
+      props.toggle();
+    }
+  }, [props.isSubmit]);
 
-  console.log(state);
   return (
     <Styles>
       <div className="current_contract">
@@ -177,7 +182,7 @@ const NewContract = (props) => {
               onInput={({ target: { value } }) => {
                 setState((state) => ({
                   ...state,
-                  bezeichnung_vermittler: value,
+                  identifier_provider: value,
                 }));
               }}
             />
@@ -191,7 +196,7 @@ const NewContract = (props) => {
               onInput={({ target: { value } }) => {
                 setState((state) => ({
                   ...state,
-                  bezeichnung_kunde: value,
+                  identifier_customer: value,
                 }));
               }}
             />
@@ -199,13 +204,13 @@ const NewContract = (props) => {
           <div className="budget">
             <label htmlFor="">Budget</label>
             <input
-              type="text"
+              type="number"
               className="budget"
               name="budget"
               onInput={({ target: { value } }) => {
                 setState((state) => ({
                   ...state,
-                  budget: value,
+                  budget: parseInt(value),
                 }));
               }}
             />
@@ -221,7 +226,7 @@ const NewContract = (props) => {
                 onInput={({ target: { value } }) => {
                   setState((state) => ({
                     ...state,
-                    start: value,
+                    start_date: value,
                   }));
                 }}
               />
@@ -238,7 +243,7 @@ const NewContract = (props) => {
                 onInput={({ target: { value } }) => {
                   setState((state) => ({
                     ...state,
-                    ende: value,
+                    end_date: value,
                   }));
                 }}
               />
@@ -256,7 +261,7 @@ const NewContract = (props) => {
               onInput={({ target: { checked } }) => {
                 setState((state) => ({
                   ...state,
-                  aktiv: checked,
+                  active: checked ? 1 : 0,
                 }));
               }}
             />
@@ -270,7 +275,7 @@ const NewContract = (props) => {
               onInput={({ target: { checked } }) => {
                 setState((state) => ({
                   ...state,
-                  fakturierbar: checked,
+                  billable: checked ? 1 : 0,
                 }));
               }}
             />

@@ -193,6 +193,12 @@ const RemoveProject = (props) => {
           <div className="excel_format">
             <label htmlFor="">Excel</label>
             <Select
+              disabled
+              excelTemplate={
+                props.remove_project.excel_template === null
+                  ? "Nothing"
+                  : props.remove_project.excel_template
+              }
               handleSelect={(value) => {
                 // setState((state) => ({ ...state, excel: value }));
               }}

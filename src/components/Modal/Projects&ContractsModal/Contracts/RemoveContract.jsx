@@ -2,6 +2,8 @@ import React from "react";
 import CalendarIcon from "../../../../assets/icon_calendar.svg";
 import styled from "styled-components";
 import moment from "moment";
+import { useDispatch } from "react-redux";
+import { removeContract } from "../../../../redux/slices/projects/projectsActions";
 
 const Styles = styled.div`
   width: 100%;
@@ -19,6 +21,7 @@ const Styles = styled.div`
 
     .current_contract_header {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
 
       .bezeichnung_vermittler,
@@ -128,6 +131,7 @@ const Styles = styled.div`
 
     .current_contract_footer {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
 
       .projekt_name,
@@ -145,19 +149,6 @@ const Styles = styled.div`
           border: 1px solid #e1e1e1;
           border-radius: 4px;
 
-          &.projekt_name {
-            width: 300px;
-          }
-          &.kurze_beschreibung {
-            width: 400px;
-          }
-          &.start {
-            width: 130px;
-          }
-          &.ende {
-            width: 130px;
-          }
-
           &:disabled {
             background-color: #f2f3f4;
           }
@@ -168,7 +159,18 @@ const Styles = styled.div`
 `;
 
 const RemoveContract = (props) => {
-  console.log(props);
+  const dispatch = useDispatch();
+
+  // следим за стейтом родительской модалки (если там будет клик по кнопке "отправить" - отправляем данные на сервер)
+  React.useEffect(() => {
+    // // если кнопка "отправить" была нажата и в стейте этого компонента есть formData, то оправляем данные
+    if (props.isRemove) {
+      dispatch(removeContract({ id: props.remove_current_contract.id }));
+      // скрываем модалку
+      props.toggle();
+    }
+  }, [props.isRemove]);
+
   return (
     <Styles>
       <div className="current_contract">

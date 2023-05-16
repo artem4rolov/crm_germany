@@ -311,14 +311,16 @@ const Modal = (props) => {
                 {/* модалки Контрактов */}
                 {/* создание нового контракта в current проекте */}
                 {props.current_project_for_new_contract && (
-                  <NewContract {...props} />
+                  <NewContract isSubmit={isSubmit} {...props} />
                 )}
                 {/* редактирование current контракта */}
                 {props.current_contract && props.current_project_disabled && (
-                  <EditContract {...props} />
+                  <EditContract isSubmit={isSubmit} {...props} />
                 )}
                 {/* удаление current контракта */}
-                {props.remove_current_contract && <RemoveContract {...props} />}
+                {props.remove_current_contract && (
+                  <RemoveContract isRemove={isRemove} {...props} />
+                )}
                 {/* просмотр отдельного контракта в таблице модалки */}
                 {props.current_contract_table && (
                   <CurrentProjectTable {...props} />

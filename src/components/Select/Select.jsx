@@ -7,6 +7,7 @@ import Loader from "../Loader/Loader";
 const Styles = styled.div`
   .select {
     width: 100%;
+
     min-width: 500px;
     margin: 0 auto;
     position: relative;
@@ -20,11 +21,16 @@ const Styles = styled.div`
       display: flex;
       justify-content: space-between;
       align-items: center;
+      min-height: 40px;
 
       background: #ffffff;
       outline: none;
       border: 1px solid #e1e1e1;
       border-radius: 4px;
+
+      &.disabled {
+        background-color: #f2f3f4;
+      }
     }
 
     &__current {
@@ -109,14 +115,33 @@ const Select = (props) => {
   const [active, setActive] = useState(0);
 
   React.useEffect(() => {
+    // получаем все шаблоны с сервера
     dispatch(getExcelTemplates());
+
+    // проверяем, что в пропсах - если пустое значение - устанавливаем стейт в 0, если не пустое, ищем индекс в массиве шаблонов и устанавливаем стейт (чтобы отображать выбранное значение в Select)
+    if (props.excelTemplate && excelTemplate) {
+      const index = excelTemplate.findIndex(
+        (template) => template.key === props.excelTemplate
+      );
+
+      if (index > 0) {
+        setActive(index);
+        return;
+      } else {
+        setActive(0);
+      }
+      return;
+    }
 
     return () => {};
   }, []);
 
   const onSelect = (index) => {
-    setActive(index);
-    // props.handleSelect(props.titles[index] || files[index]);
+    if (index) {
+      setActive(index);
+      props.handleSelect(excelTemplate[index].key);
+      return;
+    }
   };
 
   return (
@@ -125,11 +150,13 @@ const Select = (props) => {
         <div className={`select ${props.titles ? "titles" : ""}`}>
           {/* header, выбранный option */}
           <div
-            className={`select__header`}
+            className={`select__header ${props.disabled ? "disabled" : ""}`}
             onClick={() => setOpen((prev) => !prev)}
           >
             <span className="select__current">
-              {excelTemplate[active].label}
+              {excelTemplate[active].label === ""
+                ? "Nothing"
+                : excelTemplate[active].label}
             </span>
             <div
               className={`select__icon ${open ? "active" : ""}`}
@@ -138,7 +165,7 @@ const Select = (props) => {
           </div>
 
           {/* body, варианты options */}
-          {open ? (
+          {open && !props.disabled ? (
             <div className="select__body">
               {excelTemplate &&
                 excelTemplate.map((template, index) => (
@@ -152,7 +179,9 @@ const Select = (props) => {
                       checked={active === index}
                       onChange={() => {}}
                     />
-                    <span>{template.label}</span>
+                    <span>
+                      {template.label === "" ? "Nothing" : template.label}
+                    </span>
                   </div>
                 ))}
             </div>

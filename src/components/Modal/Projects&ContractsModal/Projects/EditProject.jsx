@@ -125,7 +125,7 @@ const EditProject = (props) => {
   const dispatch = useDispatch();
 
   const [state, setState] = React.useState({
-    // created_at: moment(props.edit_note.created_at).format("yyy-MM-DD"),
+    excel_template: props.current_project.excel_template,
     name: props.current_project.name,
     description: props.current_project.description,
   });
@@ -139,8 +139,6 @@ const EditProject = (props) => {
       props.toggle();
     }
   }, [props.isSubmit]);
-
-  console.log(props);
 
   return (
     <Styles>
@@ -202,8 +200,13 @@ const EditProject = (props) => {
           <div className="excel_format">
             <label htmlFor="">Excel</label>
             <Select
+              excelTemplate={
+                props.current_project.excel_template === null
+                  ? "Nothing"
+                  : props.current_project.excel_template
+              }
               handleSelect={(value) => {
-                // setState((state) => ({ ...state, excel: value }));
+                setState((state) => ({ ...state, excel_template: value }));
               }}
             />
           </div>

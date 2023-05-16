@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import CalendarIcon from "../../../../assets/icon_calendar.svg";
 import styled from "styled-components";
-import Select from "../../../Select/Select";
 import moment from "moment";
+import { useDispatch } from "react-redux";
+import { updateContract } from "../../../../redux/slices/projects/projectsActions";
 
 const Styles = styled.div`
   width: 100%;
@@ -19,6 +20,7 @@ const Styles = styled.div`
 
     .current_contract_header {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
 
       .bezeichnung_vermittler,
@@ -120,6 +122,7 @@ const Styles = styled.div`
 
     .current_contract_footer {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
 
       .projekt_name,
@@ -137,19 +140,6 @@ const Styles = styled.div`
           border: 1px solid #e1e1e1;
           border-radius: 4px;
 
-          &.projekt_name {
-            width: 300px;
-          }
-          &.kurze_beschreibung {
-            width: 400px;
-          }
-          &.start {
-            width: 130px;
-          }
-          &.ende {
-            width: 130px;
-          }
-
           &:disabled {
             background: #f2f3f4;
           }
@@ -160,14 +150,30 @@ const Styles = styled.div`
 `;
 
 const EditContract = (props) => {
-  const [state, setState] = useState(null);
+  const dispatch = useDispatch();
 
-  // следим за изменением стейта, и при малейшем изменении - передаем данные в компонент Modal, для дальнейшей отправки на сервер
+  const [state, setState] = useState({
+    project_id: props.current_project_disabled.id,
+    identifier_provider: props.current_contract.identifier_provider,
+    identifier_customer: props.current_contract.identifier_customer,
+    start_date: props.current_contract.start_date,
+    end_date: props.current_contract.end_date,
+    budget: props.current_contract.budget,
+    billable: props.current_contract.billable ? 1 : 0,
+    active: props.current_contract.active ? 1 : 0,
+  });
+
+  // следим за стейтом родительской модалки (если там будет клик по кнопке "отправить" - отправляем данные на сервер)
   useEffect(() => {
-    // props.setData(state);
-  }, [state]);
+    // // если кнопка "отправить" была нажата и в стейте этого компонента есть formData, то оправляем данные
+    if (props.isSubmit && state) {
+      dispatch(updateContract({ id: props.current_contract.id, obj: state }));
+      // скрываем модалку
+      props.toggle();
+    }
+  }, [props.isSubmit]);
 
-  console.log(state);
+  console.log(props);
 
   return (
     <Styles>
@@ -179,8 +185,13 @@ const EditContract = (props) => {
             <input
               type="text"
               className="bezeichnung_vermittler"
-              value={props.current_contract.identifier_provider}
-              onInput={() => {}}
+              value={state.identifier_provider}
+              onInput={({ target: { value } }) => {
+                setState((state) => ({
+                  ...state,
+                  identifier_provider: value,
+                }));
+              }}
             />
           </div>
           <div className="bezeichnung_kunde">
@@ -188,8 +199,13 @@ const EditContract = (props) => {
             <input
               type="text"
               className="bezeichnung_vermittler"
-              value={props.current_contract.identifier_customer}
-              onInput={() => {}}
+              value={state.identifier_customer}
+              onInput={({ target: { value } }) => {
+                setState((state) => ({
+                  ...state,
+                  identifier_customer: value,
+                }));
+              }}
             />
           </div>
           <div className="budget">
@@ -197,8 +213,13 @@ const EditContract = (props) => {
             <input
               type="text"
               className="budget"
-              value={props.current_contract.budget}
-              onInput={() => {}}
+              value={state.budget}
+              onInput={({ target: { value } }) => {
+                setState((state) => ({
+                  ...state,
+                  budget: parseInt(value),
+                }));
+              }}
             />
           </div>
           <div className="start">
@@ -208,9 +229,13 @@ const EditContract = (props) => {
               <input
                 type="date"
                 className="start"
-                value={props.current_contract.start_date}
-                onInput={() => {}}
-                disabled
+                value={state.start_date}
+                onInput={({ target: { value } }) => {
+                  setState((state) => ({
+                    ...state,
+                    start_date: value,
+                  }));
+                }}
               />
             </div>
           </div>
@@ -221,9 +246,13 @@ const EditContract = (props) => {
               <input
                 type="date"
                 className="ende"
-                value={props.current_contract.end_date}
-                onInput={() => {}}
-                disabled
+                value={state.end_date}
+                onInput={({ target: { value } }) => {
+                  setState((state) => ({
+                    ...state,
+                    end_date: value,
+                  }));
+                }}
               />
             </div>
           </div>
@@ -235,9 +264,13 @@ const EditContract = (props) => {
             <input
               type="checkbox"
               className="aktiv-check"
-              checked={props.current_contract.active}
-              onChange={() => {}}
-              disabled
+              checked={state.active}
+              onChange={({ target: { checked } }) => {
+                setState((state) => ({
+                  ...state,
+                  active: checked ? 1 : 0,
+                }));
+              }}
             />
           </div>
           <div className="fakturierbar">
@@ -245,9 +278,13 @@ const EditContract = (props) => {
             <input
               type="checkbox"
               className="fakturierbar-check"
-              checked={props.current_contract.billable}
-              onChange={() => {}}
-              disabled
+              checked={state.billable}
+              onChange={({ target: { checked } }) => {
+                setState((state) => ({
+                  ...state,
+                  billable: checked ? 1 : 0,
+                }));
+              }}
             />
           </div>
         </div>

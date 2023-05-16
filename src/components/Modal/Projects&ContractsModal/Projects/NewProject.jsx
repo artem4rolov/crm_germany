@@ -15,6 +15,7 @@ const Styles = styled.div`
 
     .new_project-header {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       width: 100%;
       border-bottom: 1px solid #e1e1e1;
@@ -112,6 +113,7 @@ const NewProject = (props) => {
           <div className="excel_format">
             <label htmlFor="">Excel</label>
             <Select
+              excelTemplate={"Nothing"}
               handleSelect={(value) => {
                 // setState((state) => ({ ...state, excel: value }));
               }}

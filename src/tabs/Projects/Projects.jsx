@@ -484,7 +484,6 @@ const Projects = () => {
       {toggleRemoveContractModal && (
         <Modal
           footer_delete
-          title={"REMOVE " + currentContract[0]}
           remove_current_contract={currentContract}
           current_project_disabled={currentProject}
           toggle={() => setToggleRemoveContractModal(false)}

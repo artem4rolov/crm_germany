@@ -1,11 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  createContract,
   createProject,
   editProject,
   getBillableProjects,
   getExcelTemplates,
   getProjectsByFilterDate,
+  removeContract,
   removeProject,
+  updateContract,
 } from "./projectsActions";
 
 const actualyYear = new Date().getFullYear();
@@ -118,6 +121,51 @@ const projectsSlice = createSlice({
       .addCase(getExcelTemplates.rejected, (state, action) => {
         state.loadingProjects = false;
         state.excelTemplate = null;
+        state.error = action.payload;
+      })
+      // создать контракт
+      .addCase(createContract.pending, (state) => {
+        state.loadingProjects = true;
+        state.needRefreshData = false;
+        state.error = null;
+      })
+      .addCase(createContract.fulfilled, (state, action) => {
+        state.loadingProjects = false;
+        state.needRefreshData = true;
+      })
+      .addCase(createContract.rejected, (state, action) => {
+        state.loadingProjects = false;
+        state.needRefreshData = false;
+        state.error = action.payload;
+      })
+      // обновить контракт
+      .addCase(updateContract.pending, (state) => {
+        state.loadingProjects = true;
+        state.needRefreshData = false;
+        state.error = null;
+      })
+      .addCase(updateContract.fulfilled, (state, action) => {
+        state.loadingProjects = false;
+        state.needRefreshData = true;
+      })
+      .addCase(updateContract.rejected, (state, action) => {
+        state.loadingProjects = false;
+        state.needRefreshData = false;
+        state.error = action.payload;
+      })
+      // удалить контракт
+      .addCase(removeContract.pending, (state) => {
+        state.loadingProjects = true;
+        state.needRefreshData = false;
+        state.error = null;
+      })
+      .addCase(removeContract.fulfilled, (state, action) => {
+        state.loadingProjects = false;
+        state.needRefreshData = true;
+      })
+      .addCase(removeContract.rejected, (state, action) => {
+        state.loadingProjects = false;
+        state.needRefreshData = false;
         state.error = action.payload;
       });
   },
