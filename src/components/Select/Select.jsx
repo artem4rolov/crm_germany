@@ -157,7 +157,7 @@ const Select = (props) => {
             </span>
             <div
               className={`select__icon ${open ? "active" : ""}`}
-              onClick={() => setOpen((prev) => !prev)}
+              // onClick={() => setOpen((prev) => !prev)}
             />
           </div>
 

@@ -159,8 +159,8 @@ const EditContract = (props) => {
     start_date: props.current_contract.start_date,
     end_date: props.current_contract.end_date,
     budget: props.current_contract.budget,
-    billable: props.current_contract.billable ? 1 : 0,
-    active: props.current_contract.active ? 1 : 0,
+    billable: props.current_contract.billable,
+    active: props.current_contract.active,
   });
 
   // следим за стейтом родительской модалки (если там будет клик по кнопке "отправить" - отправляем данные на сервер)
@@ -173,7 +173,7 @@ const EditContract = (props) => {
     }
   }, [props.isSubmit]);
 
-  console.log(props);
+  console.log(props.current_contract);
 
   return (
     <Styles>
@@ -264,11 +264,11 @@ const EditContract = (props) => {
             <input
               type="checkbox"
               className="aktiv-check"
-              checked={state.active}
+              checked={state.active ? true : false}
               onChange={({ target: { checked } }) => {
                 setState((state) => ({
                   ...state,
-                  active: checked ? 1 : 0,
+                  active: checked,
                 }));
               }}
             />
@@ -278,11 +278,11 @@ const EditContract = (props) => {
             <input
               type="checkbox"
               className="fakturierbar-check"
-              checked={state.billable}
+              checked={state.billable ? true : false}
               onChange={({ target: { checked } }) => {
                 setState((state) => ({
                   ...state,
-                  billable: checked ? 1 : 0,
+                  billable: checked,
                 }));
               }}
             />
