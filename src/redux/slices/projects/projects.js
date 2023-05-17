@@ -72,6 +72,7 @@ const projectsSlice = createSlice({
       // создать проект
       .addCase(createProject.pending, (state) => {
         state.loadingProjects = true;
+        state.needRefreshData = false;
         state.error = null;
       })
       .addCase(createProject.fulfilled, (state, action) => {
@@ -80,11 +81,13 @@ const projectsSlice = createSlice({
       })
       .addCase(createProject.rejected, (state, action) => {
         state.loadingProjects = false;
+        state.needRefreshData = false;
         state.error = action.payload;
       })
       // удалить проект
       .addCase(removeProject.pending, (state) => {
         state.loadingProjects = true;
+        state.needRefreshData = false;
         state.error = null;
       })
       .addCase(removeProject.fulfilled, (state, action) => {
@@ -93,11 +96,13 @@ const projectsSlice = createSlice({
       })
       .addCase(removeProject.rejected, (state, action) => {
         state.loadingProjects = false;
+        state.needRefreshData = false;
         state.error = action.payload;
       })
-      // удалить проект
+      // редактировать проект
       .addCase(editProject.pending, (state) => {
         state.loadingProjects = true;
+        state.needRefreshData = false;
         state.error = null;
       })
       .addCase(editProject.fulfilled, (state, action) => {
@@ -106,9 +111,10 @@ const projectsSlice = createSlice({
       })
       .addCase(editProject.rejected, (state, action) => {
         state.loadingProjects = false;
+        state.needRefreshData = false;
         state.error = action.payload;
       })
-      // удалить проект
+      // запросить шаблоны для excel
       .addCase(getExcelTemplates.pending, (state) => {
         state.loadingProjects = true;
         state.excelTemplate = null;

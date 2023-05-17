@@ -2,8 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import SideBar from "../../components/SideBar/SideBar";
 import { Container, Table } from "react-bootstrap";
-import data from "../../mock/table-contracts.json";
-
 import PlusIcon from "../../assets/icon_added.svg";
 import EditIcon from "../../assets/icon_edit.svg";
 import TrashIcon from "../../assets/icon_trash-can.svg";
@@ -219,6 +217,10 @@ const Projects = () => {
 
     return () => {};
   }, [needRefreshData]);
+
+  React.useEffect(() => {
+    dispatch(getProjectsByFilterDate(filterDateProjects));
+  }, []);
 
   console.log(projects);
 
