@@ -70,7 +70,7 @@ const NewProject = (props) => {
   const dispatch = useDispatch();
 
   const [state, setState] = useState({
-    // created_at: moment(props.edit_note.created_at).format("yyy-MM-DD"),
+    excel_template: "",
     name: "",
     description: "",
   });
@@ -78,12 +78,15 @@ const NewProject = (props) => {
   // следим за стейтом родительской модалки (если там будет клик по кнопке "отправить" - отправляем данные на сервер)
   useEffect(() => {
     // если кнопка "отправить" была нажата и в стейте этого компонента есть formData, то оправляем данные
-    if (props.isSubmit && state) {
+    if (props.isSubmit) {
       dispatch(createProject({ obj: state }));
       // скрываем модалку
       props.toggle();
+      // console.log(state);
     }
   }, [props.isSubmit]);
+
+  console.log(props.isSubmit);
 
   return (
     <Styles>
@@ -115,7 +118,7 @@ const NewProject = (props) => {
             <Select
               excelTemplate={"Nothing"}
               handleSelect={(value) => {
-                // setState((state) => ({ ...state, excel: value }));
+                setState((state) => ({ ...state, excel_template: value }));
               }}
             />
           </div>

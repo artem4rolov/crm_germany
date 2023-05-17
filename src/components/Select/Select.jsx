@@ -101,8 +101,6 @@ const Styles = styled.div`
   }
 `;
 
-// const files = [".xlsx", ".xlsm", ".xls", ".xltm", ".xltx", ".xlsb"];
-
 const Select = (props) => {
   const dispatch = useDispatch();
 
@@ -130,6 +128,7 @@ const Select = (props) => {
       } else {
         setActive(0);
       }
+      // setActive(index);
       return;
     }
 
@@ -137,11 +136,9 @@ const Select = (props) => {
   }, []);
 
   const onSelect = (index) => {
-    if (index) {
-      setActive(index);
-      props.handleSelect(excelTemplate[index].key);
-      return;
-    }
+    setActive(index);
+    props.handleSelect(excelTemplate[index].key);
+    return;
   };
 
   return (
@@ -172,7 +169,10 @@ const Select = (props) => {
                   <div
                     key={index}
                     className="select__item"
-                    onClick={() => onSelect(index)}
+                    onClick={() => {
+                      onSelect(index);
+                      setOpen(false);
+                    }}
                   >
                     <input
                       type="radio"

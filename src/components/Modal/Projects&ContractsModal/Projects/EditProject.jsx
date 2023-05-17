@@ -140,6 +140,8 @@ const EditProject = (props) => {
     }
   }, [props.isSubmit]);
 
+  console.log(props.current_project);
+
   return (
     <Styles>
       <div className="current_project">

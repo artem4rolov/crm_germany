@@ -45,6 +45,7 @@ export const createProject = createAsyncThunk(
         {
           name: obj.name,
           description: obj.description,
+          excel_template: obj.excel_template,
         },
         config
       );
