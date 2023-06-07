@@ -5,6 +5,7 @@ import {
   getProjectsByFilterDate,
 } from "../../../redux/slices/projects/projectsActions";
 import { getProjectsByFilter } from "../../../redux/slices/timesheet/timesheetActions";
+import { setBillableFilterProjects } from "../../../redux/slices/projects/projects";
 
 const CheckBoxFilters = (props) => {
   // стейт "оплачиваемые"
@@ -25,17 +26,10 @@ const CheckBoxFilters = (props) => {
   const handleChange = (checkTitle) => {
     if (checkTitle === "Оплачиваемые") {
       setBillable((prev) => !prev);
+      dispatch(setBillableFilterProjects(billable));
       return;
     }
   };
-
-  React.useEffect(() => {
-    if (billable) {
-      dispatch(getBillableProjects(filterDateProjects));
-    } else dispatch(getProjectsByFilterDate(filterDateProjects));
-
-    return () => {};
-  }, [billable, filterDateProjects]);
 
   // console.log(active);
 
@@ -51,6 +45,7 @@ const CheckBoxFilters = (props) => {
               className="check-box"
               id={title}
               onChange={() => handleChange(title)}
+              checked={billableFilter}
             />
             <label htmlFor={title}>{title}</label>
           </div>

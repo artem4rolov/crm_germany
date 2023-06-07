@@ -3,6 +3,8 @@ import React from "react";
 import CalendarImage from "../../../assets/icon_calendar.svg";
 import ClockImage from "../../../assets/icon_time.svg";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import { getContractsByDate } from "../../../redux/slices/timesheet/timesheetActions";
 
 const Styles = styled.div`
   width: 100%;
@@ -32,7 +34,7 @@ const Styles = styled.div`
           color: #32363a;
         }
         select {
-          width: 610px;
+          width: 100%;
           background: #ffffff;
           border: 1px solid #e1e1e1;
           border-radius: 4px;
@@ -76,7 +78,7 @@ const Styles = styled.div`
       .first,
       .second {
         width: 100%;
-        max-height: 175px;
+        max-height: 140px;
         display: flex;
         flex-direction: column;
         justify-content: start;
@@ -98,6 +100,7 @@ const Styles = styled.div`
       }
     }
     .time {
+      width: 100%;
       display: flex;
       justify-content: start;
       align-items: center;
@@ -110,6 +113,7 @@ const Styles = styled.div`
       .zeit {
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
         gap: 8px;
 
         font-weight: 500;
@@ -122,7 +126,7 @@ const Styles = styled.div`
         .bis__content,
         .pause__content,
         .zeit__content {
-          max-width: 106px;
+          max-width: fit-content;
           background: #ffffff;
           border: 1px solid #e1e1e1;
           border-radius: 4px;
@@ -145,7 +149,22 @@ const Styles = styled.div`
 `;
 
 const RemoveProjectToday = (props) => {
-  console.log(props);
+  const dispatch = useDispatch();
+  const { contracts } = useSelector((state) => state.timesheet);
+
+  console.log(props.remove_project_today);
+
+  const [state, setState] = React.useState({
+    // excel_template: props.current_project.excel_template,
+    // name: props.current_project.name,
+    // description: props.current_project.description,
+  });
+
+  React.useEffect(() => {
+    dispatch(getContractsByDate(props.remove_project_today._d));
+  }, []);
+
+  console.log(contracts);
 
   return (
     <Styles>
@@ -180,7 +199,12 @@ const RemoveProjectToday = (props) => {
               <label htmlFor="date">
                 <img src={CalendarImage} alt="calendar icon" />
               </label>
-              <input disabled type="date" id="date" />
+              <input
+                disabled
+                type="date"
+                id="date"
+                value={props.remove_project_today._d}
+              />
             </div>
           </div>
           <div className="von">

@@ -354,7 +354,7 @@ const Timesheet = () => {
                               src={TrashIcon}
                               alt="trash icon"
                               onClick={() => {
-                                setCurrentProject(row[2]);
+                                setCurrentProject(row);
                                 setToggleRemoveProjectToday((prev) => !prev);
                               }}
                             />
@@ -407,7 +407,7 @@ const Timesheet = () => {
         {toggleEditProjectToday && (
           <Modal
             edit_project_today={currentProject}
-            title={currentProject[2]}
+            title={"Edit project"}
             toggle={setToggleEditProjectToday}
           />
         )}
@@ -416,7 +416,7 @@ const Timesheet = () => {
           <Modal
             footer_delete
             remove_project_today={currentProject}
-            title={"REMOVE " + currentProject[2]}
+            title={"Remove project"}
             toggle={setToggleRemoveProjectToday}
           />
         )}

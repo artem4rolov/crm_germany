@@ -6,9 +6,9 @@ import Loader from "../Loader/Loader";
 
 const Styles = styled.div`
   .select {
-    width: 100%;
+    width: fit-content;
 
-    min-width: 500px;
+    min-width: 200px;
     margin: 0 auto;
     position: relative;
 
@@ -113,23 +113,28 @@ const Select = (props) => {
   const [active, setActive] = useState(0);
 
   React.useEffect(() => {
-    // получаем все шаблоны с сервера
-    dispatch(getExcelTemplates());
+    // если не переданы никакие значения для Select
+    if (!props.titles) {
+      // получаем все шаблоны с сервера
+      dispatch(getExcelTemplates());
 
-    // проверяем, что в пропсах - если пустое значение - устанавливаем стейт в 0, если не пустое, ищем индекс в массиве шаблонов и устанавливаем стейт (чтобы отображать выбранное значение в Select)
-    if (props.excelTemplate && excelTemplate) {
-      const index = excelTemplate.findIndex(
-        (template) => template.key === props.excelTemplate
-      );
+      // проверяем, что в пропсах - если пустое значение - устанавливаем стейт в 0, если не пустое, ищем индекс в массиве шаблонов и устанавливаем стейт (чтобы отображать выбранное значение в Select)
+      if (props.excelTemplate && excelTemplate) {
+        const index = excelTemplate.findIndex(
+          (template) => template.key === props.excelTemplate
+        );
 
-      if (index > 0) {
-        setActive(index);
+        if (index > 0) {
+          setActive(index);
+          return;
+        } else {
+          setActive(0);
+        }
+        // setActive(index);
         return;
-      } else {
-        setActive(0);
       }
-      // setActive(index);
-      return;
+    } else if (props.titles) {
+      setActive(0);
     }
 
     return () => {};
@@ -137,53 +142,92 @@ const Select = (props) => {
 
   const onSelect = (index) => {
     setActive(index);
-    props.handleSelect(excelTemplate[index].key);
+    if (!props.titles) {
+      props.handleSelect(excelTemplate[index].key);
+    }
+    if (props.titles) {
+      props.handleSelect(props.titles[index]);
+    }
     return;
   };
 
   return (
     <Styles>
-      {excelTemplate && !loadingProjects ? (
+      {(excelTemplate && !loadingProjects) || props.titles ? (
         <div className={`select ${props.titles ? "titles" : ""}`}>
           {/* header, выбранный option */}
-          <div
-            className={`select__header ${props.disabled ? "disabled" : ""}`}
-            onClick={() => setOpen((prev) => !prev)}
-          >
-            <span className="select__current">
-              {excelTemplate[active].label === ""
-                ? "Nothing"
-                : excelTemplate[active].label}
-            </span>
+          {/* если не переданы какие-либо данные в props */}
+          {!props.titles && (
             <div
-              className={`select__icon ${open ? "active" : ""}`}
-              // onClick={() => setOpen((prev) => !prev)}
-            />
-          </div>
+              className={`select__header ${props.disabled ? "disabled" : ""}`}
+              onClick={() => setOpen((prev) => !prev)}
+            >
+              <span className="select__current">
+                {excelTemplate[active].label === ""
+                  ? "Nothing"
+                  : excelTemplate[active].label}
+              </span>
+              <div
+                className={`select__icon ${open ? "active" : ""}`}
+                // onClick={() => setOpen((prev) => !prev)}
+              />
+            </div>
+          )}
+          {/* если переданы какие-либо названия в props */}
+          {props.titles && (
+            <div
+              className={`select__header ${props.disabled ? "disabled" : ""}`}
+              onClick={() => setOpen((prev) => !prev)}
+            >
+              <span className="select__current">{props.titles[active]}</span>
+              <div
+                className={`select__icon ${open ? "active" : ""}`}
+                // onClick={() => setOpen((prev) => !prev)}
+              />
+            </div>
+          )}
 
           {/* body, варианты options */}
           {open && !props.disabled ? (
             <div className="select__body">
-              {excelTemplate &&
-                excelTemplate.map((template, index) => (
-                  <div
-                    key={index}
-                    className="select__item"
-                    onClick={() => {
-                      onSelect(index);
-                      setOpen(false);
-                    }}
-                  >
-                    <input
-                      type="radio"
-                      checked={active === index}
-                      onChange={() => {}}
-                    />
-                    <span>
-                      {template.label === "" ? "Nothing" : template.label}
-                    </span>
-                  </div>
-                ))}
+              {excelTemplate && !props.titles
+                ? excelTemplate.map((template, index) => (
+                    <div
+                      key={index}
+                      className="select__item"
+                      onClick={() => {
+                        onSelect(index);
+                        setOpen(false);
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        checked={active === index}
+                        onChange={() => {}}
+                      />
+                      <span>
+                        {template.label === "" ? "Nothing" : template.label}
+                      </span>
+                    </div>
+                    // если переданы названия в пропсах - рендерим их
+                  ))
+                : props.titles.map((title, index) => (
+                    <div
+                      key={index}
+                      className="select__item"
+                      onClick={() => {
+                        onSelect(index);
+                        setOpen(false);
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        checked={active === index}
+                        onChange={() => {}}
+                      />
+                      <span>{title}</span>
+                    </div>
+                  ))}
             </div>
           ) : null}
         </div>

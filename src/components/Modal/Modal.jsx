@@ -14,7 +14,7 @@ import EditProjectToday from "./TimeSheetsModal/EditProjectToday";
 import RemoveItem from "./Holidays/RemoveItem";
 import AddNote from "./Note/AddNote";
 import EditNote from "./Note/EditNote";
-import RemoveProjectToday from "./TimeSheetsModal/RemoveProject";
+import RemoveProjectToday from "./TimeSheetsModal/RemoveProjectToday";
 import RemoveContract from "./Projects&ContractsModal/Contracts/RemoveContract";
 import RemoveNote from "./Note/RemoveNote";
 import ChooseFile from "./Holidays/ChooseFile";

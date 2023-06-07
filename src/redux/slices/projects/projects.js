@@ -177,5 +177,6 @@ const projectsSlice = createSlice({
   },
 });
 
-export const { setFilterDateProjects } = projectsSlice.actions;
+export const { setFilterDateProjects, setBillableFilterProjects } =
+  projectsSlice.actions;
 export default projectsSlice.reducer;

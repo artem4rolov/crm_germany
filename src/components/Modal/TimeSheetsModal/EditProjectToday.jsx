@@ -4,6 +4,8 @@ import CalendarIcon from "../../../assets/icon_calendar.svg";
 import ClockImage from "../../../assets/icon_time.svg";
 import styled from "styled-components";
 import Select from "../../Select/Select";
+import { useDispatch, useSelector } from "react-redux";
+import { getContractsByDate } from "../../../redux/slices/timesheet/timesheetActions";
 
 const Styles = styled.div`
   width: 100%;
@@ -33,7 +35,7 @@ const Styles = styled.div`
           color: #32363a;
         }
         select {
-          width: 610px;
+          width: 100%;
           background: #ffffff;
           border: 1px solid #e1e1e1;
           border-radius: 4px;
@@ -69,13 +71,14 @@ const Styles = styled.div`
       .first,
       .second {
         width: 100%;
-        max-height: 175px;
+        max-height: 140px;
         display: flex;
         flex-direction: column;
         justify-content: start;
 
         textarea {
           background: #ffffff;
+
           padding: 12px;
           border: 1px solid #e1e1e1;
           border-radius: 4px;
@@ -87,6 +90,7 @@ const Styles = styled.div`
       }
     }
     .time {
+      width: 100%;
       display: flex;
       justify-content: start;
       align-items: center;
@@ -99,6 +103,7 @@ const Styles = styled.div`
       .zeit {
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
         gap: 8px;
 
         font-weight: 500;
@@ -110,7 +115,7 @@ const Styles = styled.div`
         .bis__content,
         .pause__content,
         .zeit__content {
-          max-width: 106px;
+          max-width: fit-content;
           background: #ffffff;
           border: 1px solid #e1e1e1;
           border-radius: 4px;
@@ -170,7 +175,22 @@ const Styles = styled.div`
 `;
 
 const EditProjectToday = (props) => {
+  const dispatch = useDispatch();
+  const { contracts } = useSelector((state) => state.timesheet);
+
   console.log(props.edit_project_today);
+
+  const [state, setState] = React.useState({
+    // excel_template: props.current_project.excel_template,
+    // name: props.current_project.name,
+    // description: props.current_project.description,
+  });
+
+  React.useEffect(() => {
+    dispatch(getContractsByDate(props.edit_project_today._d));
+  }, []);
+
+  console.log(contracts);
 
   return (
     <Styles>
@@ -184,7 +204,11 @@ const EditProjectToday = (props) => {
           <div className="project-select">
             <label className="mb-2">.</label>
             <Select
+              handleSelect={(value) => {
+                // setState((state) => ({ ...state, excel_template: value }));
+              }}
               titles={[
+                "Abrechnung 1:1",
                 "Abrechnung mit 0.00 PT",
                 "Abrechnung mit 0.25 PT",
                 "Abrechnung mit 0.50 PT",
@@ -214,6 +238,7 @@ const EditProjectToday = (props) => {
               <input
                 type="date"
                 className="start"
+                value={props.edit_project_today._d}
                 onInput={({ target: { value } }) => {
                   // setState((state) => ({ ...state, start: value }));
                 }}

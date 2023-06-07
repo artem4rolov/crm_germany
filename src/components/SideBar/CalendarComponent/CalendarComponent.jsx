@@ -172,6 +172,11 @@ const CalendarComponent = (props) => {
 
   const dispatch = useDispatch();
 
+  // скрываем календарь после выбора даты
+  React.useEffect(() => {
+    setShowCalendar(false);
+  }, [date]);
+
   // при изменении даты - меняем значения в Redux Store
   React.useEffect(() => {
     if (date) {

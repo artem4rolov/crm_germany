@@ -1,26 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 // функция авторизации
-import {} from "./timesheetActions";
+import { getContractsByDate } from "./timesheetActions";
 import moment from "moment";
-
-const actualyDay = new Date().getDay();
-const actualyYear = new Date().getFullYear();
-const actualyMonth = new Date().getMonth();
-
-function addZero(num) {
-  if (num > 0 && num < 10) {
-    return `0${num}`;
-  } else {
-    return num;
-  }
-}
 
 const initialState = {
   needRefreshData: false, // после удаления необходимо заново по установленным фильтрам запросить актуальные данные
   loadingProjects: false, // отображение загрузки
   projects: null, // пользователь
   error: null, // значение ошибки
-  filter: null, // ВЫБРАННЫЙ фильтр регионов
+  constracts: [], // список контрактов для dropDown
   filterDateTimesheet: `${moment()
     .subtract(42, "days")
     .format("DD.MM.YYYY")}-${moment().format("DD")}.${moment().format(
@@ -45,21 +33,21 @@ const timesheetSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // builder;
-    // получить все праздники текущего года
-    // .addCase(getHolidaysNowYear.pending, (state) => {
-    //   state.loadingHolidays = true;
-    //   state.holidays = null;
-    // })
-    // .addCase(getHolidaysNowYear.fulfilled, (state, action) => {
-    //   state.loadingHolidays = false;
-    //   state.holidays = action.payload.data;
-    // })
-    // .addCase(getHolidaysNowYear.rejected, (state, action) => {
-    //   state.loadingHolidays = false;
-    //   state.holidays = null;
-    //   state.error = action.payload;
-    // });
+    builder
+      // получить все праздники текущего года
+      .addCase(getContractsByDate.pending, (state) => {
+        state.loadingProjects = true;
+        state.constracts = null;
+      })
+      .addCase(getContractsByDate.fulfilled, (state, action) => {
+        state.loadingProjects = false;
+        state.constracts = action.payload.data;
+      })
+      .addCase(getContractsByDate.rejected, (state, action) => {
+        state.loadingProjects = false;
+        state.constracts = null;
+        state.error = action.payload;
+      });
   },
 });
 

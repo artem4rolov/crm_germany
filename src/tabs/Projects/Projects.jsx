@@ -196,33 +196,13 @@ const Projects = () => {
     return;
   };
 
-  // если установлен фильтр "оплачиваемые" - делаем запрос с этим фильтром
   React.useEffect(() => {
     if (billableFilter) {
       dispatch(getBillableProjects(filterDateProjects));
-      return;
-    }
-
-    if (!billableFilter && filterDateProjects) {
-      dispatch(getProjectsByFilterDate(filterDateProjects));
-      return;
-    }
+    } else dispatch(getProjectsByFilterDate(filterDateProjects));
 
     return () => {};
-  }, [billableFilter]);
-
-  // если необходимо обновить данные - снова получам проекты по фильтрам
-  React.useEffect(() => {
-    dispatch(getProjectsByFilterDate(filterDateProjects));
-
-    return () => {};
-  }, [needRefreshData]);
-
-  React.useEffect(() => {
-    dispatch(getProjectsByFilterDate(filterDateProjects));
-  }, []);
-
-  console.log(projects);
+  }, [billableFilter, filterDateProjects]);
 
   return (
     <Styles>

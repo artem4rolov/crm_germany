@@ -1,23 +1,26 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import apiClient from "../../services/api";
 
-// получаем праздники текущего года с 1 января по 31 декабря сразу при загрузке страницы Holidays.jsx
-export const getProjects = createAsyncThunk("auth/getProjects", async () => {
-  // try {
-  //   const { data } = await apiClient
-  //     .get(`/api/holidays/01.01.2020-31.12.2020`)
-  //     .then((response) => {
-  //       return response;
-  //     });
-  //   return data;
-  // } catch (error) {
-  //   return error;
-  // }
-});
+// получаем
+export const getProjects = createAsyncThunk(
+  "timesheet/getProjects",
+  async () => {
+    // try {
+    //   const { data } = await apiClient
+    //     .get(`/api/holidays/01.01.2020-31.12.2020`)
+    //     .then((response) => {
+    //       return response;
+    //     });
+    //   return data;
+    // } catch (error) {
+    //   return error;
+    // }
+  }
+);
 
-// получаем праздники текущего года с 1 января по 31 декабря
+// получаем
 export const getProjectsByFilter = createAsyncThunk(
-  "auth/getProjectsByFilter"
+  "timesheet/getProjectsByFilter"
   // async ({ date, region }) => {
   //   try {
   //     // если фильтр региона не выбран - оставляем только дату для запроса
@@ -41,4 +44,21 @@ export const getProjectsByFilter = createAsyncThunk(
   //     return error;
   //   }
   // }
+);
+
+// получаем список контрактов по дате для dropDown в модалке
+export const getContractsByDate = createAsyncThunk(
+  "timesheet/getContractsByDate",
+  async (date) => {
+    try {
+      const { data } = await apiClient
+        .get(`/api/contracts/${date}`)
+        .then((response) => {
+          return response;
+        });
+      return data;
+    } catch (error) {
+      return error;
+    }
+  }
 );
