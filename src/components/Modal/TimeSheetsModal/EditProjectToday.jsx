@@ -6,6 +6,7 @@ import styled from "styled-components";
 import Select from "../../Select/Select";
 import { useDispatch, useSelector } from "react-redux";
 import { getContractsByDate } from "../../../redux/slices/timesheet/timesheetActions";
+import moment from "moment";
 
 const Styles = styled.div`
   width: 100%;
@@ -178,6 +179,8 @@ const EditProjectToday = (props) => {
   const dispatch = useDispatch();
   const { contracts } = useSelector((state) => state.timesheet);
 
+  const [contractsArr, setContractsArr] = React.useState(null);
+
   console.log(props.edit_project_today);
 
   const [state, setState] = React.useState({
@@ -187,8 +190,26 @@ const EditProjectToday = (props) => {
   });
 
   React.useEffect(() => {
-    dispatch(getContractsByDate(props.edit_project_today._d));
+    dispatch(
+      getContractsByDate(
+        moment(props.edit_project_today._d).format("DD.MM.YYYY")
+      )
+    );
   }, []);
+
+  React.useEffect(() => {
+    if (contracts) {
+      const newArr = [];
+      contracts.forEach((contract) => {
+        const { name, budget_available, budget } = contract;
+        newArr.push(`${name} (${budget_available / budget})`);
+      });
+
+      console.log(newArr);
+
+      setContractsArr(newArr);
+    }
+  }, [contracts]);
 
   console.log(contracts);
 
@@ -199,7 +220,12 @@ const EditProjectToday = (props) => {
         <div className="inputs">
           <div className="vertrag">
             <label className="mb-2">Vertrag</label>
-            <select name="" id=""></select>
+            <Select
+              handleSelect={(value) => {
+                // setState((state) => ({ ...state, excel_template: value }));
+              }}
+              titles={contractsArr ? contractsArr : ["No data"]}
+            />
           </div>
           <div className="project-select">
             <label className="mb-2">.</label>

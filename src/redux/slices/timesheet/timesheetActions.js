@@ -52,7 +52,7 @@ export const getContractsByDate = createAsyncThunk(
   async (date) => {
     try {
       const { data } = await apiClient
-        .get(`/api/contracts/${date}`)
+        .get(`/api/contracts/${date}-${date}`)
         .then((response) => {
           return response;
         });

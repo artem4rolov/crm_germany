@@ -8,7 +8,7 @@ const initialState = {
   loadingProjects: false, // отображение загрузки
   projects: null, // пользователь
   error: null, // значение ошибки
-  constracts: [], // список контрактов для dropDown
+  contracts: [], // список контрактов для dropDown
   filterDateTimesheet: `${moment()
     .subtract(42, "days")
     .format("DD.MM.YYYY")}-${moment().format("DD")}.${moment().format(
@@ -37,15 +37,15 @@ const timesheetSlice = createSlice({
       // получить все праздники текущего года
       .addCase(getContractsByDate.pending, (state) => {
         state.loadingProjects = true;
-        state.constracts = null;
+        state.contracts = null;
       })
       .addCase(getContractsByDate.fulfilled, (state, action) => {
         state.loadingProjects = false;
-        state.constracts = action.payload.data;
+        state.contracts = action.payload.data;
       })
       .addCase(getContractsByDate.rejected, (state, action) => {
         state.loadingProjects = false;
-        state.constracts = null;
+        state.contracts = null;
         state.error = action.payload;
       });
   },
