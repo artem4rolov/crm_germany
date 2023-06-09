@@ -3,6 +3,10 @@ import styled from "styled-components";
 import SideBar from "../../../components/SideBar/SideBar";
 import { Container, Table } from "react-bootstrap";
 import data from "../../../mock/work-days-per-month.json";
+import { useDispatch, useSelector } from "react-redux";
+import { getContractsExcel } from "../../../redux/slices/reports/excel/excelActions";
+import moment from "moment";
+import Loader from "../../../components/Loader/Loader";
 
 const Styles = styled.div`
   table {
@@ -92,6 +96,19 @@ const columnTitle = [
 ];
 
 const Excel = () => {
+  const dispatch = useDispatch();
+  const { contractsExcel, loadingContracts, filterDateExcel } = useSelector(
+    (state) => state.excel
+  );
+
+  React.useEffect(() => {
+    const year = new Date(filterDateExcel.split("-")[0]).getFullYear();
+
+    dispatch(getContractsExcel(year));
+  }, [filterDateExcel]);
+
+  console.log(contractsExcel);
+
   return (
     <Styles>
       <div className="excel-wrapper">
@@ -125,35 +142,63 @@ const Excel = () => {
               </tr>
             </thead>
             <tbody>
-              {data.map((row, index) => (
-                <tr key={index}>
-                  {/* {row.map((col, index) => (
-                    <td key={index}>
-                      {col}
-                      {Array.isArray(col) &&
-                        col.map((hours, index) => (
-                          <Table>
-                            <td key={index}>{hours}</td>
-                          </Table>
-                        ))}
-                    </td>
-                  ))} */}
-                  <td>{row[0]}</td>
-                  <td>{row[1]}</td>
-                  <td>{row[2]}</td>
-                  <td>{row[3]}</td>
-                  <td className="text-center">{row[4]}</td>
-                  <td>
-                    <Table>
-                      {row[5].map((hours, index) => (
+              {contractsExcel && !loadingContracts ? (
+                contractsExcel.map((contract, index) => (
+                  <tr key={index}>
+                    <td>{`${index + 1}.`}</td>
+                    <td>{contract.name}</td>
+                    <td>{moment(contract.start_date).format("DD.MM.YYYY")}</td>
+                    <td>{moment(contract.end_date).format("DD.MM.YYYY")}</td>
+                    <td className="text-center">{`${contract.budget} / ${contract.budget_consumed}`}</td>
+                    <td>
+                      <Table>
                         <td className="hours" key={index}>
-                          {hours}
+                          {contract.m01}
                         </td>
-                      ))}
-                    </Table>
+                        <td className="hours" key={index}>
+                          {contract.m02}
+                        </td>
+                        <td className="hours" key={index}>
+                          {contract.m03}
+                        </td>
+                        <td className="hours" key={index}>
+                          {contract.m04}
+                        </td>
+                        <td className="hours" key={index}>
+                          {contract.m05}
+                        </td>
+                        <td className="hours" key={index}>
+                          {contract.m06}
+                        </td>
+                        <td className="hours" key={index}>
+                          {contract.m07}
+                        </td>
+                        <td className="hours" key={index}>
+                          {contract.m08}
+                        </td>
+                        <td className="hours" key={index}>
+                          {contract.m09}
+                        </td>
+                        <td className="hours" key={index}>
+                          {contract.m10}
+                        </td>
+                        <td className="hours" key={index}>
+                          {contract.m11}
+                        </td>
+                        <td className="hours" key={index}>
+                          {contract.m12}
+                        </td>
+                      </Table>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={12}>
+                    <Loader big />
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </Table>
         </Container>
