@@ -142,6 +142,13 @@ const Excel = () => {
               </tr>
             </thead>
             <tbody>
+              {contractsExcel &&
+                contractsExcel.length === 0 &&
+                !loadingContracts && (
+                  <tr className="table-content">
+                    <td colSpan={12}>Keine contract vorhanden</td>
+                  </tr>
+                )}
               {contractsExcel && !loadingContracts ? (
                 contractsExcel.map((contract, index) => (
                   <tr key={index}>
