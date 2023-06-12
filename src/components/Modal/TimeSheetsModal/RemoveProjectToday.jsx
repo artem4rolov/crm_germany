@@ -150,7 +150,9 @@ const Styles = styled.div`
 
 const RemoveProjectToday = (props) => {
   const dispatch = useDispatch();
-  const { contracts } = useSelector((state) => state.timesheet);
+  const { contractsTimeSheetDropDown } = useSelector(
+    (state) => state.timesheet
+  );
 
   console.log(props.remove_project_today);
 
@@ -163,8 +165,6 @@ const RemoveProjectToday = (props) => {
   React.useEffect(() => {
     dispatch(getContractsByDate(props.remove_project_today._d));
   }, []);
-
-  console.log(contracts);
 
   return (
     <Styles>

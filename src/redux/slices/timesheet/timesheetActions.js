@@ -2,19 +2,19 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import apiClient from "../../services/api";
 
 // получаем
-export const getProjects = createAsyncThunk(
-  "timesheet/getProjects",
-  async () => {
-    // try {
-    //   const { data } = await apiClient
-    //     .get(`/api/holidays/01.01.2020-31.12.2020`)
-    //     .then((response) => {
-    //       return response;
-    //     });
-    //   return data;
-    // } catch (error) {
-    //   return error;
-    // }
+export const getContractsTimeSheet = createAsyncThunk(
+  "timesheet/getContractsTimeSheet",
+  async (date) => {
+    try {
+      const { data } = await apiClient
+        .get(`/api/timesheet/${date}`)
+        .then((response) => {
+          return response;
+        });
+      return data;
+    } catch (error) {
+      return error;
+    }
   }
 );
 

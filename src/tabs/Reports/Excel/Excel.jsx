@@ -102,12 +102,14 @@ const Excel = () => {
   );
 
   React.useEffect(() => {
-    const year = new Date(filterDateExcel.split("-")[0]).getFullYear();
+    // const year = moment(filterDateExcel.split("-")[0]).format("YYYY");
 
-    dispatch(getContractsExcel(year));
+    // console.log(year);
+
+    dispatch(getContractsExcel(filterDateExcel.split("-")[0].split(".")[2]));
   }, [filterDateExcel]);
 
-  console.log(contractsExcel);
+  console.log(filterDateExcel.split("-")[0].split(".")[2]);
 
   return (
     <Styles>
@@ -151,7 +153,7 @@ const Excel = () => {
                 )}
               {contractsExcel && !loadingContracts ? (
                 contractsExcel.map((contract, index) => (
-                  <tr key={index}>
+                  <tr key={contract.id}>
                     <td>{`${index + 1}.`}</td>
                     <td>{contract.name}</td>
                     <td>{moment(contract.start_date).format("DD.MM.YYYY")}</td>

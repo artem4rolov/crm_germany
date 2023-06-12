@@ -11,6 +11,8 @@ import TrashIcon from "../../assets/icon_trash-can.svg";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment/moment";
 import { getHolidaysByFilter } from "../../redux/slices/holidays/holidaysActions";
+import { getContractsTimeSheet } from "../../redux/slices/timesheet/timesheetActions";
+import Loader from "../../components/Loader/Loader";
 
 const Styles = styled.div`
   .timesheet-wrapper {
@@ -134,7 +136,12 @@ const Timesheet = () => {
   const dispatch = useDispatch();
 
   // достаем переменные из стейта timesheet
-  const { filterDateTimesheet } = useSelector((state) => state.timesheet);
+  const {
+    filterDateTimesheet,
+    contractsTimesheet,
+    loadingTimeSheet,
+    filterClearEmpty,
+  } = useSelector((state) => state.timesheet);
   // достаем переменные из стейта holidays
   const { holidays, needRefreshData } = useSelector((state) => state.holidays);
 
@@ -148,58 +155,70 @@ const Timesheet = () => {
     useState(false);
   //стейт для установки current project
   const [currentProject, setCurrentProject] = useState(null);
+  // стейт для загрузки (при формировании массива календаря с контрактами и праздниками)
+  const [loading, setLoading] = useState(false);
 
   function getRangeArray() {
-    // обозначаем начало и конец промежутка дат, чтобы создать массив с количеством дней выбранного диапазона
-    const startDay = moment(
-      filterDateTimesheet.split("-")[0].split(".").reverse().join("-")
-    );
-    const endDay = moment(
-      filterDateTimesheet.split("-")[1].split(".").reverse().join("-")
-    );
+    if (!loadingTimeSheet) {
+      // обозначаем начало и конец промежутка дат, чтобы создать массив с количеством дней выбранного диапазона
+      const startDay = moment(
+        filterDateTimesheet.split("-")[0].split(".").reverse().join("-")
+      );
+      const endDay = moment(
+        filterDateTimesheet.split("-")[1].split(".").reverse().join("-")
+      );
 
-    // будущий массив из диапазона дат с объектами, в которых будут проекты или праздники
-    const calendar = [];
+      // будущий массив из диапазона дат с объектами, в которых будут проекты или праздники
+      const calendar = [];
 
-    const day = startDay.clone();
+      const day = startDay.clone();
 
-    // если в массиве текущий день "меньше" чем конец массива выбранных дат - добавляем в массив calendar этот день, чтобы создать диапазон дат
-    while (!day.isAfter(endDay)) {
-      calendar.push(day.clone());
-      day.add(1, "day");
+      // если в массиве текущий день "меньше" чем конец массива выбранных дат - добавляем в массив calendar этот день, чтобы создать диапазон дат
+      while (!day.isAfter(endDay)) {
+        calendar.push(day.clone());
+        day.add(1, "day");
+      }
+
+      // мутируем массив с датами
+      calendar.map((day, index) => {
+        // очищаем объект даты от ненужных ключей, оставляем только дату в формуте string (YYYY-MM-DD)
+        Object.keys(day).forEach((n) => (n !== "_d" ? delete day[n] : null));
+        day._d = moment(day._d).format("YYYY-MM-DD");
+        // здесь же перебираем массив полученных праздников и сравниваем даты этих праздников с выбранным диапазоном дат для проектов
+        holidays &&
+          holidays.length > 0 &&
+          holidays.map((holiday, index) => {
+            if (holiday.date === day._d) {
+              // если даты совпадают - отображаем праздник в текущем дне и останавливаем цикл перебора праздников
+              return (day.holiday = holiday);
+            } else {
+              // иначе ничего не делаем
+              return null;
+            }
+          });
+        contractsTimesheet &&
+          contractsTimesheet.map((contract, index) => {
+            if (contract.date === day._d) {
+              // если даты совпадают - отображаем праздник в текущем дне и останавливаем цикл перебора праздников
+              return (day.contract = contract);
+            } else {
+              // иначе ничего не делаем
+              return null;
+            }
+          });
+
+        return day;
+      });
+
+      // console.log(calendar);
+      // console.log(contractsTimesheet);
+      setTableDays(calendar.reverse());
     }
 
-    // мутируем массив с датами
-    calendar.map((day, index) => {
-      // очищаем объект даты от ненужных ключей, оставляем только дату в формуте string (YYYY-MM-DD)
-      Object.keys(day).forEach((n) => (n !== "_d" ? delete day[n] : null));
-      day._d = moment(day._d).format("YYYY-MM-DD");
-      // здесь же перебираем массив полученных праздников и сравниваем даты этих праздников с выбранным диапазоном дат для проектов
-      holidays &&
-        holidays.length > 0 &&
-        holidays.map((holiday, index) => {
-          if (holiday.date === day._d) {
-            // если даты совпадают - отображаем праздник в текущем дне и останавливаем цикл перебора праздников
-            return (day.holiday = holiday);
-          } else {
-            // иначе ничего не делаем
-            return null;
-          }
-        });
-      day.project = null;
-
-      return day;
-    });
-
-    console.log(holidays);
-
-    // тут что-то делаем с полученными данными (из них нужно создать список проектов и пустых дней, где нет проектов, при этом, рядом с каждым понедельником необходимо выводить номер недели конкретного года)
-    // data.map((project) => {});
-
-    setTableDays(calendar.reverse());
+    return;
   }
 
-  console.log(tableDays);
+  // console.log(tableDays);
 
   // при первом рендере получаем ВСЕ праздники с  сервера
   useEffect(() => {
@@ -215,10 +234,35 @@ const Timesheet = () => {
   }, []);
 
   useEffect(() => {
-    if (holidays && holidays.length > 0) {
+    if (
+      holidays &&
+      holidays.length > 0 &&
+      contractsTimesheet &&
+      contractsTimesheet.length > 0
+    ) {
+      // строим календарь с контрактами
       getRangeArray();
     }
-  }, [filterDateTimesheet, holidays]);
+
+    return () => {};
+  }, [filterDateTimesheet, holidays, contractsTimesheet]);
+
+  useEffect(() => {
+    dispatch(getContractsTimeSheet(filterDateTimesheet));
+
+    return () => {};
+  }, [filterDateTimesheet]);
+
+  // для кнопки "очистить пустые"
+  useEffect(() => {
+    // if (tableDays && tableDays.length > 0) {
+    //   const newArr = tableDays.filter((day, index) => day.contract && day.holiday )
+    // }
+
+    return () => {};
+  }, [filterClearEmpty]);
+
+  console.log(loading);
 
   return (
     <Styles>
@@ -244,7 +288,13 @@ const Timesheet = () => {
               </tr>
             </thead>
             <tbody>
+              {
+                <tr key="">
+                  <td colSpan={12}>{loadingTimeSheet && <Loader big />}</td>
+                </tr>
+              }
               {tableDays &&
+                !loadingTimeSheet &&
                 tableDays.map((row, index) =>
                   // если нет праздников - выводим обычный стиль для дня календаря
                   // если есть праздник - красим в красный цвет день каледнаря
@@ -266,7 +316,7 @@ const Timesheet = () => {
 
                       {/* выводим дни недели с праздниками, выходными и проектами */}
                       <tr
-                        key={index}
+                        key={row._d}
                         className={`table-content ${
                           moment(row._d).format("dddd") === "Samstag" ||
                           moment(row._d).format("dddd") === "Sonntag"
@@ -274,10 +324,10 @@ const Timesheet = () => {
                             : ""
                         }`}
                       >
-                        {/* KW */}
+                        {/* KW (тут выводим номер недели напротив каждого воскресенья) */}
                         {console.log()}
                         <th>
-                          {/* номер недели на каждом понедельнике Monday */}
+                          {/* номер недели на каждом воскресенье Sonntag */}
                           {moment(row._d).format("dddd") === "Sonntag"
                             ? moment(row._d).week()
                             : null}
@@ -288,47 +338,49 @@ const Timesheet = () => {
                           .substring(0, 3)}., ${moment(row._d).format(
                           "DD.MM.YY"
                         )}`}</th>
-                        {/* Project */}
+                        {/* contract */}
                         <th>
-                          {row.project && row.project.name
-                            ? row.project.name
+                          {row.contract && row.contract.description
+                            ? row.contract.description
                             : ""}
                         </th>
                         {/* Von */}
                         <th>
-                          {row.project && row.project.von
-                            ? row.project.von
+                          {row.contract && row.contract.start_time
+                            ? row.contract.start_time
                             : ""}
                         </th>
                         {/* Bis */}
                         <th>
-                          {row.project && row.project.bis
-                            ? row.project.bis
+                          {row.contract && row.contract.end_time
+                            ? row.contract.end_time
                             : ""}
                         </th>
                         {/* Pause */}
                         <th>
-                          {row.project && row.project.pause
-                            ? row.project.pause
+                          {row.contract && row.contract.break_time
+                            ? row.contract.break_time
                             : ""}
                         </th>
                         {/* Zeit */}
                         <th>
-                          {row.project && row.project.zeit
-                            ? row.project.zeit
+                          {row.contract && row.contract.total_time
+                            ? row.contract.total_time
                             : ""}
                         </th>
                         {/* PT */}
                         <th>
-                          {row.project && row.project.pt ? row.project.pt : ""}
+                          {row.contract && row.contract.pt
+                            ? row.contract.pt
+                            : "???"}
                         </th>
                         {/* Tätigkeiten */}
                         <th>
-                          {row.project && row.project.note
-                            ? row.project.note
+                          {row.contract && row.contract.notes
+                            ? row.contract.notes
                             : ""}
                         </th>
-                        {/* модалка в углу строки при клике на строку */}
+                        {/* модалка в углу строки при наведении на строку */}
                         <th className="row-modal">
                           <div>
                             <img
@@ -363,13 +415,14 @@ const Timesheet = () => {
                       </tr>
                     </>
                   ) : (
+                    //  если нет контрактов - выводим праздники (если есть)
                     <tr
                       key={index}
                       className={`table-content ${
                         row.holiday.public_holiday ? "holiday" : ""
                       }`}
                     >
-                      {/* Week number on every Monday */}
+                      {/* Номер недели напротив каждого воскресенья */}
                       <th>
                         {moment(row._d).format("dddd") === "Sonntag"
                           ? moment(row._d).week()

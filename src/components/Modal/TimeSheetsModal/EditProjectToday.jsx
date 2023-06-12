@@ -177,7 +177,9 @@ const Styles = styled.div`
 
 const EditProjectToday = (props) => {
   const dispatch = useDispatch();
-  const { contracts } = useSelector((state) => state.timesheet);
+  const { contractsTimeSheetDropDown } = useSelector(
+    (state) => state.timesheet
+  );
 
   const [contractsArr, setContractsArr] = React.useState(null);
 
@@ -198,9 +200,9 @@ const EditProjectToday = (props) => {
   }, []);
 
   React.useEffect(() => {
-    if (contracts) {
+    if (contractsTimeSheetDropDown) {
       const newArr = [];
-      contracts.forEach((contract) => {
+      contractsTimeSheetDropDown.forEach((contract) => {
         const { name, budget_available, budget } = contract;
         newArr.push(`${name} (${budget_available / budget})`);
       });
@@ -209,9 +211,7 @@ const EditProjectToday = (props) => {
 
       setContractsArr(newArr);
     }
-  }, [contracts]);
-
-  console.log(contracts);
+  }, [contractsTimeSheetDropDown]);
 
   return (
     <Styles>

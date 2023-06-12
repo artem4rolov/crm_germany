@@ -29,6 +29,14 @@ const CheckBoxFilters = (props) => {
       dispatch(setBillableFilterProjects(billable));
       return;
     }
+
+    if (checkTitle === "Очистить пустые") {
+      setBillable((prev) => !prev);
+      dispatch(setBillableFilterProjects(billable));
+      return;
+    }
+
+    return;
   };
 
   // console.log(active);

@@ -1,14 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 // функция авторизации
-import { getContractsByDate } from "./timesheetActions";
+import { getContractsByDate, getContractsTimeSheet } from "./timesheetActions";
 import moment from "moment";
 
 const initialState = {
+  filterClearEmpty: null, // чек-бокс "очистить пустые"
   needRefreshData: false, // после удаления необходимо заново по установленным фильтрам запросить актуальные данные
-  loadingProjects: false, // отображение загрузки
-  projects: null, // пользователь
+  loadingTimeSheet: false, // отображение загрузки
+  contractsTimesheet: null, // пользователь
   error: null, // значение ошибки
-  contracts: [], // список контрактов для dropDown
+  contractsTimeSheetDropDown: [], // список контрактов для dropDown
   filterDateTimesheet: `${moment()
     .subtract(42, "days")
     .format("DD.MM.YYYY")}-${moment().format("DD")}.${moment().format(
@@ -20,13 +21,9 @@ const timesheetSlice = createSlice({
   name: "timesheet",
   initialState,
   reducers: {
-    // setFilterRegion: (state, { payload }) => {
-    //   // если выбран Alle - делаем запрос без фильтров по регионам
-    //   if (payload == ["Alle"]) {
-    //     return (state.filterRegion = null);
-    //   }
-    //   state.filterRegion = payload;
-    // },
+    setFilterClearEmpty: (state, { action, payload }) => {
+      state.filterClearEmpty = action.payload;
+    },
     setFilterDateTimesheet: (state, { payload }) => {
       state.filterDateTimesheet = payload;
       state.needRefreshData = true;
@@ -36,16 +33,30 @@ const timesheetSlice = createSlice({
     builder
       // получить все праздники текущего года
       .addCase(getContractsByDate.pending, (state) => {
-        state.loadingProjects = true;
-        state.contracts = null;
+        state.loadingTimeSheet = true;
+        state.contractsTimeSheetDropDown = null;
       })
       .addCase(getContractsByDate.fulfilled, (state, action) => {
-        state.loadingProjects = false;
-        state.contracts = action.payload.data;
+        state.loadingTimeSheet = false;
+        state.contractsTimeSheetDropDown = action.payload.data;
       })
       .addCase(getContractsByDate.rejected, (state, action) => {
-        state.loadingProjects = false;
-        state.contracts = null;
+        state.loadingTimeSheet = false;
+        state.contractsTimeSheetDropDown = null;
+        state.error = action.payload;
+      })
+      // получить все праздники текущего года
+      .addCase(getContractsTimeSheet.pending, (state) => {
+        state.loadingTimeSheet = true;
+        state.contractsTimesheet = null;
+      })
+      .addCase(getContractsTimeSheet.fulfilled, (state, action) => {
+        state.loadingTimeSheet = false;
+        state.contractsTimesheet = action.payload.data;
+      })
+      .addCase(getContractsTimeSheet.rejected, (state, action) => {
+        state.loadingTimeSheet = false;
+        state.contractsTimesheet = null;
         state.error = action.payload;
       });
   },
