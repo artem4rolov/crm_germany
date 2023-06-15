@@ -5,6 +5,7 @@ import ClockImage from "../../../assets/icon_time.svg";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { getContractsByDate } from "../../../redux/slices/timesheet/timesheetActions";
+import Select from "../../Select/Select";
 
 const Styles = styled.div`
   width: 100%;
@@ -177,18 +178,38 @@ const RemoveProjectToday = (props) => {
           </div>
           <div className="project-select">
             <label className="mb-2">.</label>
-            <select disabled name="" id=""></select>
+            <Select
+              disabled
+              handleSelect={(value) => {
+                // setState((state) => ({ ...state, excel_template: value }));
+              }}
+              titles={[
+                { label: "Abrechnung 1:1", key: null },
+                { label: "Abrechnung mit 0.00 PT", key: 0 },
+                { label: "Abrechnung mit 0.25 PT", key: 0.25 },
+                { label: "Abrechnung mit 0.50 PT", key: 0.5 },
+                { label: "Abrechnung mit 0.75 PT", key: 0.75 },
+                { label: "Abrechnung mit 1.00 PT", key: 1 },
+              ]}
+              currentTitle={
+                props.remove_project_today.contract.man_day_override
+              }
+            />
           </div>
         </div>
         {/* поля текста textarea */}
         <div className="textareas">
           <div className="first">
             <label className="mb-2">Tätigkeiten</label>
-            <textarea disabled name="" id="" cols="30" rows="10"></textarea>
+            <textarea disabled name="" id="" cols="30" rows="10">
+              {props.remove_project_today.contract.description}
+            </textarea>
           </div>
           <div className="second">
             <label className="mb-2">Kommentar</label>
-            <textarea disabled name="" id="" cols="30" rows="10"></textarea>
+            <textarea disabled name="" id="" cols="30" rows="10">
+              {props.remove_project_today.contract.notes}
+            </textarea>
           </div>
         </div>
         {/* время внизу */}
@@ -211,28 +232,52 @@ const RemoveProjectToday = (props) => {
             <label>Von</label>
             <div className="von__content">
               <img src={ClockImage} alt="von icon" />
-              <input disabled type="text" id="date" />
+              <input
+                disabled
+                type="text"
+                id="date"
+                value={props.remove_project_today.contract.total_time}
+                onChange={() => {}}
+              />
             </div>
           </div>
           <div className="bis">
             <label>Bis</label>
             <div className="bis__content">
               <img src={ClockImage} alt="bis icon" />
-              <input disabled type="text" id="date" />
+              <input
+                disabled
+                type="text"
+                id="date"
+                value={props.remove_project_today.contract.total_time}
+                onChange={() => {}}
+              />
             </div>
           </div>
           <div className="pause">
             <label>Pause</label>
             <div className="pause__content">
               <img src={ClockImage} alt="pause icon" />
-              <input disabled type="text" id="date" />
+              <input
+                disabled
+                type="text"
+                id="date"
+                value={props.remove_project_today.contract.total_time}
+                onChange={() => {}}
+              />
             </div>
           </div>
           <div className="zeit">
             <label>Zeit</label>
             <div className="zeit__content">
               <img src={ClockImage} alt="zeit icon" />
-              <input disabled type="text" id="date" />
+              <input
+                disabled
+                type="text"
+                id="date"
+                value={props.remove_project_today.contract.total_time}
+                onChange={() => {}}
+              />
             </div>
           </div>
         </div>

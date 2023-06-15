@@ -234,13 +234,14 @@ const EditProjectToday = (props) => {
                 // setState((state) => ({ ...state, excel_template: value }));
               }}
               titles={[
-                "Abrechnung 1:1",
-                "Abrechnung mit 0.00 PT",
-                "Abrechnung mit 0.25 PT",
-                "Abrechnung mit 0.50 PT",
-                "Abrechnung mit 0.75 PT",
-                "Abrechnung mit 1.00 PT",
+                { label: "Abrechnung 1:1", key: null },
+                { label: "Abrechnung mit 0.00 PT", key: 0 },
+                { label: "Abrechnung mit 0.25 PT", key: 0.25 },
+                { label: "Abrechnung mit 0.50 PT", key: 0.5 },
+                { label: "Abrechnung mit 0.75 PT", key: 0.75 },
+                { label: "Abrechnung mit 1.00 PT", key: 1 },
               ]}
+              currentTitle={props.edit_project_today.contract.man_day_override}
             />
           </div>
         </div>
@@ -248,11 +249,15 @@ const EditProjectToday = (props) => {
         <div className="textareas">
           <div className="first">
             <label className="mb-2">Tätigkeiten</label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
+            <textarea name="" id="" cols="30" rows="10">
+              {props.edit_project_today.contract.description}
+            </textarea>
           </div>
           <div className="second">
             <label className="mb-2">Kommentar</label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
+            <textarea name="" id="" cols="30" rows="10">
+              {props.edit_project_today.contract.notes}
+            </textarea>
           </div>
         </div>
         {/* время внизу */}
@@ -275,28 +280,48 @@ const EditProjectToday = (props) => {
             <label>Von</label>
             <div className="von__content">
               <img src={ClockImage} alt="von icon" />
-              <input type="text" id="date" />
+              <input
+                type="text"
+                id="date"
+                value={props.edit_project_today.contract.start_time}
+                onChange={() => {}}
+              />
             </div>
           </div>
           <div className="bis">
             <label>Bis</label>
             <div className="bis__content">
               <img src={ClockImage} alt="bis icon" />
-              <input type="text" id="date" />
+              <input
+                type="text"
+                id="date"
+                value={props.edit_project_today.contract.end_time}
+                onChange={() => {}}
+              />
             </div>
           </div>
           <div className="pause">
             <label>Pause</label>
             <div className="pause__content">
               <img src={ClockImage} alt="pause icon" />
-              <input type="text" id="date" />
+              <input
+                type="text"
+                id="date"
+                value={props.edit_project_today.contract.break_time}
+                onChange={() => {}}
+              />
             </div>
           </div>
           <div className="zeit">
             <label>Zeit</label>
             <div className="zeit__content">
               <img src={ClockImage} alt="zeit icon" />
-              <input type="text" id="date" />
+              <input
+                type="text"
+                id="date"
+                value={props.edit_project_today.contract.total_time}
+                onChange={() => {}}
+              />
             </div>
           </div>
         </div>

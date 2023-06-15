@@ -113,13 +113,14 @@ const Select = (props) => {
   const [active, setActive] = useState(0);
 
   React.useEffect(() => {
-    // если не переданы никакие значения для Select
+    // для модалок на странице Projects.jsx
     if (!props.titles) {
       // получаем все шаблоны с сервера
       dispatch(getExcelTemplates());
 
       // проверяем, что в пропсах - если пустое значение - устанавливаем стейт в 0, если не пустое, ищем индекс в массиве шаблонов и устанавливаем стейт (чтобы отображать выбранное значение в Select)
       if (props.excelTemplate && excelTemplate) {
+        // ищем индекс переданного значения в excelTemplate по массиву в пропсах excelTemplate
         const index = excelTemplate.findIndex(
           (template) => template.key === props.excelTemplate
         );
@@ -133,8 +134,29 @@ const Select = (props) => {
         // setActive(index);
         return;
       }
-    } else if (props.titles) {
-      setActive(0);
+      // для страницы Timesheets.jsx
+    } else if (props.titles && props.currentTitle) {
+      // проверяем, если в currentTitle = null, устанавливаем индекс в 0 (это Abrechnung 1:1)
+      if (!props.currentTitle) {
+        setActive(0);
+        return;
+      }
+
+      // ищем индекс переданного currentTitle в массиве props.titles
+      const index = props.titles.findIndex(
+        (title) => title.key === props.currentTitle
+      );
+
+      // если такое есть - задаем его
+
+      if (index > 0) {
+        setActive(index);
+        return;
+      } else {
+        setActive(0);
+      }
+      // setActive(index);
+      return;
     }
 
     return () => {};
@@ -146,17 +168,19 @@ const Select = (props) => {
       props.handleSelect(excelTemplate[index].key);
     }
     if (props.titles) {
-      props.handleSelect(props.titles[index]);
+      props.handleSelect(props.titles[index].label);
     }
     return;
   };
+
+  // console.log(props.titles && props.titles[active].label);
 
   return (
     <Styles>
       {(excelTemplate && !loadingProjects) || props.titles ? (
         <div className={`select ${props.titles ? "titles" : ""}`}>
           {/* header, выбранный option */}
-          {/* если не переданы какие-либо данные в props */}
+          {/* если не переданы какие-либо данные в props (для страницы Projects.jsx) */}
           {!props.titles && (
             <div
               className={`select__header ${props.disabled ? "disabled" : ""}`}
@@ -173,13 +197,16 @@ const Select = (props) => {
               />
             </div>
           )}
-          {/* если переданы какие-либо названия в props */}
-          {props.titles && (
+          {/* если переданы какие-либо названия в props (для страницы Timesheets.jsx) */}
+          {props.titles && props.titles.length > 0 && (
             <div
               className={`select__header ${props.disabled ? "disabled" : ""}`}
               onClick={() => setOpen((prev) => !prev)}
             >
-              <span className="select__current">{props.titles[active]}</span>
+              <span className="select__current">
+                {(props.titles && props.titles[active].label) ||
+                  props.titles[active]}
+              </span>
               <div
                 className={`select__icon ${open ? "active" : ""}`}
                 // onClick={() => setOpen((prev) => !prev)}
@@ -211,7 +238,8 @@ const Select = (props) => {
                     </div>
                     // если переданы названия в пропсах - рендерим их
                   ))
-                : props.titles.map((title, index) => (
+                : // для страницы Timesheets.jsx
+                  props.titles.map((title, index) => (
                     <div
                       key={index}
                       className="select__item"
@@ -225,7 +253,8 @@ const Select = (props) => {
                         checked={active === index}
                         onChange={() => {}}
                       />
-                      <span>{title}</span>
+                      {/* dropdown контрактами (vertag - просто title), dropdown с коэффициентами (titles.label) */}
+                      <span>{title.label || title}</span>
                     </div>
                   ))}
             </div>

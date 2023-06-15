@@ -154,7 +154,6 @@ const Notes = () => {
           calendar
           columnTitle={columnTitle}
           addNote={setToggleAddNote}
-          search
           tab={"notes"}
         />
         <div className="table-titles-wrapper"></div>

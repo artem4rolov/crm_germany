@@ -49,6 +49,10 @@ const Styles = styled.div`
           color: #ffffff;
           border: 1px solid #4f6780;
         }
+
+        &.red {
+          color: #db1f77;
+        }
       }
     }
 
@@ -155,8 +159,6 @@ const Timesheet = () => {
     useState(false);
   //стейт для установки current project
   const [currentProject, setCurrentProject] = useState(null);
-  // стейт для загрузки (при формировании массива календаря с контрактами и праздниками)
-  const [loading, setLoading] = useState(false);
 
   function getRangeArray() {
     if (!loadingTimeSheet) {
@@ -218,8 +220,6 @@ const Timesheet = () => {
     return;
   }
 
-  // console.log(tableDays);
-
   // при первом рендере получаем ВСЕ праздники с  сервера
   useEffect(() => {
     const actualyYear = new Date().getFullYear();
@@ -262,7 +262,7 @@ const Timesheet = () => {
     return () => {};
   }, [filterClearEmpty]);
 
-  console.log(loading);
+  // console.log(currentProject);
 
   return (
     <Styles>
@@ -270,7 +270,6 @@ const Timesheet = () => {
         <SideBar
           filters={[{ title: "Очистить пустые" }]}
           columnTitle={columnTitle}
-          search
           doubleCalendar
           tab={"timesheet"}
         />
@@ -338,7 +337,7 @@ const Timesheet = () => {
                           .substring(0, 3)}., ${moment(row._d).format(
                           "DD.MM.YY"
                         )}`}</th>
-                        {/* contract */}
+                        {/* project */}
                         <th>
                           {row.contract && row.contract.description
                             ? row.contract.description
@@ -369,16 +368,30 @@ const Timesheet = () => {
                             : ""}
                         </th>
                         {/* PT */}
-                        <th>
-                          {row.contract && row.contract.pt
-                            ? row.contract.pt
-                            : "???"}
-                        </th>
-                        {/* Tätigkeiten */}
-                        <th>
-                          {row.contract && row.contract.notes
-                            ? row.contract.notes
+                        <th
+                          className={`${
+                            row.contract && row.contract.man_day_overriden
+                              ? "red"
+                              : ""
+                          }`}
+                        >
+                          {row.contract && row.contract.man_day
+                            ? row.contract.man_day
                             : ""}
+                        </th>
+                        {/* Tätigkeiten*/}
+                        <th>
+                          {row.contract && row.contract.description
+                            ? row.contract.description
+                            : ""}
+                          {row.contract && row.contract.notes ? (
+                            <th className="red">
+                              <br />
+                              {row.contract.notes}
+                            </th>
+                          ) : (
+                            ""
+                          )}
                         </th>
                         {/* модалка в углу строки при наведении на строку */}
                         <th className="row-modal">

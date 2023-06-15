@@ -118,7 +118,6 @@ const Excel = () => {
           calendar
           columnTitle={columnTitle}
           tableInTable
-          search
           tab={"excel"}
         />
         <div className="table-titles-wrapper"></div>
