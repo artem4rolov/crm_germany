@@ -18,32 +18,94 @@ export const getContractsTimeSheet = createAsyncThunk(
   }
 );
 
-// получаем
-export const getProjectsByFilter = createAsyncThunk(
-  "timesheet/getProjectsByFilter"
-  // async ({ date, region }) => {
-  //   try {
-  //     // если фильтр региона не выбран - оставляем только дату для запроса
-  //     if (region == null) {
-  //       const { data } = await apiClient
-  //         .get(`/api/holidays/${date}`)
-  //         .then((response) => {
-  //           return response;
-  //         });
-  //       return data;
-  //     }
+// создаем контракт
+export const createContractTimesheet = createAsyncThunk(
+  "timesheet/createContractTimesheet",
+  async ({ obj }) => {
+    try {
+      const config = {
+        "Content-type": "application/x-www-form-urlencoded",
+        Accept: "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+      };
+      // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
+      const { data } = await apiClient.post(
+        `/api/timesheet`,
+        {
+          contract_id: obj.contract_id,
+          date: obj.date,
+          start_time: obj.start_time,
+          end_time: obj.end_time,
+          break_time: obj.break_time,
+          description: obj.description,
+          notes: obj.notes,
+          man_day_override: obj.man_day_override,
+        },
+        config
+      );
 
-  //     // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
-  //     const { data } = await apiClient
-  //       .get(`/api/holidays/${date}/${region}`)
-  //       .then((response) => {
-  //         return response;
-  //       });
-  //     return data;
-  //   } catch (error) {
-  //     return error;
-  //   }
-  // }
+      return data.data;
+    } catch (error) {
+      return error.status;
+    }
+  }
+);
+
+// обновляем контракт
+export const updateContractTimesheet = createAsyncThunk(
+  "timesheet/updateContractTimesheet",
+  async ({ obj, id }) => {
+    try {
+      const config = {
+        "Content-type": "application/x-www-form-urlencoded",
+        Accept: "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+      };
+      // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
+      const { data } = await apiClient.put(
+        `/api/timesheet/${id}`,
+        {
+          contract_id: obj.contract_id,
+          date: obj.date,
+          start_time: obj.start_time,
+          end_time: obj.end_time,
+          break_time: obj.break_time,
+          description: obj.description,
+          notes: obj.notes,
+          man_day_override: obj.man_day_override,
+        },
+        config
+      );
+
+      return data.data;
+    } catch (error) {
+      return error.status;
+    }
+  }
+);
+
+// обновляем контракт
+export const removeContractTimesheet = createAsyncThunk(
+  "timesheet/removeContractTimesheet",
+  async ({ id }) => {
+    try {
+      const config = {
+        "Content-type": "application/x-www-form-urlencoded",
+        Accept: "*/*",
+        "Accept-Encoding": "gzip, deflate, br",
+      };
+      // если все фильтры активны (не null) - делаем запрос в зависимости от выбранных значений фильтро
+      const { data } = await apiClient.delete(
+        `/api/timesheet/${id}`,
+
+        config
+      );
+
+      return data.data;
+    } catch (error) {
+      return error.status;
+    }
+  }
 );
 
 // получаем список контрактов по дате для dropDown в модалке

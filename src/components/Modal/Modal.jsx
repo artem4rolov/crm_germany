@@ -281,13 +281,17 @@ const Modal = (props) => {
               >
                 {/* страница Zeiterfassung (Timesheet.jsx - список недель в году) */}
                 {/* добавить новый проект */}
-                {props.add_project_today && <AddProjectTodayModal />}
+                {props.add_project_today && (
+                  <AddProjectTodayModal {...props} isSubmit={isSubmit} />
+                )}
                 {/* редактироватть текущий контракт */}
-                {props.edit_project_today && <EditProjectToday {...props} />}
+                {props.edit_project_today && (
+                  <EditProjectToday {...props} isSubmit={isSubmit} />
+                )}
                 {/* удалить текущий проект */}
                 {/* передаем родителю (Modal.jsx) данные о проекте, который хотим удалить (он есть в пропсах) */}
                 {props.remove_project_today && (
-                  <RemoveProjectToday {...props} />
+                  <RemoveProjectToday {...props} isRemove={isRemove} />
                 )}
 
                 {/* страница Projecte (Projects.jsx - проекты с контрактами) */}

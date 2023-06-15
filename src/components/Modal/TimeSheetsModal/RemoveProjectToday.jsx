@@ -4,7 +4,10 @@ import CalendarImage from "../../../assets/icon_calendar.svg";
 import ClockImage from "../../../assets/icon_time.svg";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { getContractsByDate } from "../../../redux/slices/timesheet/timesheetActions";
+import {
+  getContractsByDate,
+  removeContractTimesheet,
+} from "../../../redux/slices/timesheet/timesheetActions";
 import Select from "../../Select/Select";
 
 const Styles = styled.div`
@@ -151,21 +154,22 @@ const Styles = styled.div`
 
 const RemoveProjectToday = (props) => {
   const dispatch = useDispatch();
-  const { contractsTimeSheetDropDown } = useSelector(
-    (state) => state.timesheet
-  );
 
-  console.log(props.remove_project_today);
-
-  const [state, setState] = React.useState({
-    // excel_template: props.current_project.excel_template,
-    // name: props.current_project.name,
-    // description: props.current_project.description,
-  });
-
+  // следим за стейтом родительской модалки (если там будет клик по кнопке "отправить" - отправляем данные на сервер)
   React.useEffect(() => {
-    dispatch(getContractsByDate(props.remove_project_today._d));
-  }, []);
+    // если кнопка "отправить" была нажата и в стейте этого компонента есть formData, то оправляем данные
+    if (props.isRemove) {
+      dispatch(
+        removeContractTimesheet({
+          id: props.remove_project_today.contract.contract_id,
+        })
+      );
+      // скрываем модалку
+      props.toggle();
+    }
+  }, [props.isRemove]);
+
+  console.log(props);
 
   return (
     <Styles>

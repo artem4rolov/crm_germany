@@ -5,6 +5,8 @@ import ClockImage from "../../../assets/icon_time.svg";
 import styled from "styled-components";
 import Select from "../../Select/Select";
 import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { createContractTimesheet } from "../../../redux/slices/timesheet/timesheetActions";
 
 const Styles = styled.div`
   width: 100%;
@@ -172,14 +174,34 @@ const Styles = styled.div`
   /* *********************************** */
 `;
 
-const AddProjectTodayModal = () => {
+const AddProjectTodayModal = (props) => {
   const dispatch = useDispatch();
 
   const [state, setState] = React.useState({
-    // excel_template: props.current_project.excel_template,
-    // name: props.current_project.name,
-    // description: props.current_project.description,
+    contract_id: props.add_project_today.contract.contract_id,
+    date: "",
+    start_time: "",
+    end_time: "",
+    break_time: "",
+    description: "",
+    notes: "",
+    man_day_override: null,
   });
+
+  // следим за стейтом родительской модалки (если там будет клик по кнопке "отправить" - отправляем данные на сервер)
+  useEffect(() => {
+    // если кнопка "отправить" была нажата и в стейте этого компонента есть formData, то оправляем данные
+    if (props.isSubmit) {
+      dispatch(createContractTimesheet({ obj: state }));
+      // скрываем модалку
+      props.toggle();
+      // console.log(state);
+    }
+  }, [props.isSubmit]);
+
+  // console.log(props.isSubmit);
+
+  // console.log(props);
 
   return (
     <Styles>
@@ -194,15 +216,15 @@ const AddProjectTodayModal = () => {
             <label className="mb-2">.</label>
             <Select
               handleSelect={(value) => {
-                // setState((state) => ({ ...state, excel_template: value }));
+                setState((state) => ({ ...state, man_day_override: value }));
               }}
               titles={[
-                "Abrechnung 1:1",
-                "Abrechnung mit 0.00 PT",
-                "Abrechnung mit 0.25 PT",
-                "Abrechnung mit 0.50 PT",
-                "Abrechnung mit 0.75 PT",
-                "Abrechnung mit 1.00 PT",
+                { label: "Abrechnung 1:1", key: null },
+                { label: "Abrechnung mit 0.00 PT", key: 0 },
+                { label: "Abrechnung mit 0.25 PT", key: 0.25 },
+                { label: "Abrechnung mit 0.50 PT", key: 0.5 },
+                { label: "Abrechnung mit 0.75 PT", key: 0.75 },
+                { label: "Abrechnung mit 1.00 PT", key: 1 },
               ]}
             />
           </div>
@@ -211,11 +233,27 @@ const AddProjectTodayModal = () => {
         <div className="textareas">
           <div className="first">
             <label className="mb-2">Tätigkeiten</label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
+            <textarea
+              name=""
+              id=""
+              cols="30"
+              rows="10"
+              onInput={({ target: { value } }) => {
+                setState((state) => ({ ...state, description: value }));
+              }}
+            ></textarea>
           </div>
           <div className="second">
             <label className="mb-2">Kommentar</label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
+            <textarea
+              name=""
+              id=""
+              cols="30"
+              rows="10"
+              onInput={({ target: { value } }) => {
+                setState((state) => ({ ...state, notes: value }));
+              }}
+            ></textarea>
           </div>
         </div>
         {/* время внизу */}
@@ -228,7 +266,7 @@ const AddProjectTodayModal = () => {
                 type="date"
                 className="start"
                 onInput={({ target: { value } }) => {
-                  // setState((state) => ({ ...state, start: value }));
+                  setState((state) => ({ ...state, date: value }));
                 }}
               />
             </div>
@@ -237,28 +275,52 @@ const AddProjectTodayModal = () => {
             <label>Von</label>
             <div className="von__content">
               <img src={ClockImage} alt="von icon" />
-              <input type="text" id="date" />
+              <input
+                type="text"
+                id="date"
+                onInput={({ target: { value } }) => {
+                  setState((state) => ({ ...state, start_time: value }));
+                }}
+              />
             </div>
           </div>
           <div className="bis">
             <label>Bis</label>
             <div className="bis__content">
               <img src={ClockImage} alt="bis icon" />
-              <input type="text" id="date" />
+              <input
+                type="text"
+                id="date"
+                onInput={({ target: { value } }) => {
+                  setState((state) => ({ ...state, end_time: value }));
+                }}
+              />
             </div>
           </div>
           <div className="pause">
             <label>Pause</label>
             <div className="pause__content">
               <img src={ClockImage} alt="pause icon" />
-              <input type="text" id="date" />
+              <input
+                type="text"
+                id="date"
+                onInput={({ target: { value } }) => {
+                  setState((state) => ({ ...state, break_time: value }));
+                }}
+              />
             </div>
           </div>
           <div className="zeit">
             <label>Zeit</label>
             <div className="zeit__content">
               <img src={ClockImage} alt="zeit icon" />
-              <input type="text" id="date" />
+              <input
+                type="text"
+                id="date"
+                // onInput={({ target: { value } }) => {
+                //   setState((state) => ({ ...state, start_time: value }));
+                // }}
+              />
             </div>
           </div>
         </div>

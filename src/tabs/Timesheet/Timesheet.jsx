@@ -145,9 +145,10 @@ const Timesheet = () => {
     contractsTimesheet,
     loadingTimeSheet,
     filterClearEmpty,
+    needRefreshData,
   } = useSelector((state) => state.timesheet);
   // достаем переменные из стейта holidays
-  const { holidays, needRefreshData } = useSelector((state) => state.holidays);
+  const { holidays } = useSelector((state) => state.holidays);
 
   // массив дней, который мы будем выводить
   const [tableDays, setTableDays] = useState(null);
@@ -251,7 +252,7 @@ const Timesheet = () => {
     dispatch(getContractsTimeSheet(filterDateTimesheet));
 
     return () => {};
-  }, [filterDateTimesheet]);
+  }, [filterDateTimesheet, needRefreshData]);
 
   // для кнопки "очистить пустые"
   useEffect(() => {
@@ -399,9 +400,10 @@ const Timesheet = () => {
                             <img
                               src={PlusIcon}
                               alt="plus icon"
-                              onClick={() =>
-                                setToggleAddProjectToday((prev) => !prev)
-                              }
+                              onClick={() => {
+                                setCurrentProject(row);
+                                setToggleAddProjectToday((prev) => !prev);
+                              }}
                             />
                           </div>
                           <div>
@@ -464,7 +466,7 @@ const Timesheet = () => {
         {/* добавить новый проект */}
         {toggleAddProjectToday && (
           <Modal
-            add_project_today
+            add_project_today={currentProject}
             title="Projekt hinzufügen"
             toggle={setToggleAddProjectToday}
           />

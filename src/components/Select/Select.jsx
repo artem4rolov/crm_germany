@@ -168,7 +168,7 @@ const Select = (props) => {
       props.handleSelect(excelTemplate[index].key);
     }
     if (props.titles) {
-      props.handleSelect(props.titles[index].label);
+      props.handleSelect(props.titles[index].key);
     }
     return;
   };

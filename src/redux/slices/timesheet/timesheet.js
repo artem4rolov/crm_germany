@@ -1,6 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 // функция авторизации
-import { getContractsByDate, getContractsTimeSheet } from "./timesheetActions";
+import {
+  createContractTimesheet,
+  getContractsByDate,
+  getContractsTimeSheet,
+  removeContractTimesheet,
+  updateContractTimesheet,
+} from "./timesheetActions";
 import moment from "moment";
 
 const initialState = {
@@ -57,6 +63,51 @@ const timesheetSlice = createSlice({
       .addCase(getContractsTimeSheet.rejected, (state, action) => {
         state.loadingTimeSheet = false;
         state.contractsTimesheet = null;
+        state.error = action.payload;
+      })
+      // создать контракт
+      .addCase(createContractTimesheet.pending, (state) => {
+        state.loadingTimeSheet = true;
+        state.needRefreshData = false;
+        state.error = null;
+      })
+      .addCase(createContractTimesheet.fulfilled, (state, action) => {
+        state.loadingTimeSheet = false;
+        state.needRefreshData = true;
+      })
+      .addCase(createContractTimesheet.rejected, (state, action) => {
+        state.loadingTimeSheet = false;
+        state.needRefreshData = false;
+        state.error = action.payload;
+      })
+      // обновить контракт
+      .addCase(updateContractTimesheet.pending, (state) => {
+        state.loadingTimeSheet = true;
+        state.needRefreshData = false;
+        state.error = null;
+      })
+      .addCase(updateContractTimesheet.fulfilled, (state, action) => {
+        state.loadingTimeSheet = false;
+        state.needRefreshData = true;
+      })
+      .addCase(updateContractTimesheet.rejected, (state, action) => {
+        state.loadingTimeSheet = false;
+        state.needRefreshData = false;
+        state.error = action.payload;
+      })
+      // удалить контракт
+      .addCase(removeContractTimesheet.pending, (state) => {
+        state.loadingTimeSheet = true;
+        state.needRefreshData = false;
+        state.error = null;
+      })
+      .addCase(removeContractTimesheet.fulfilled, (state, action) => {
+        state.loadingTimeSheet = false;
+        state.needRefreshData = true;
+      })
+      .addCase(removeContractTimesheet.rejected, (state, action) => {
+        state.loadingTimeSheet = false;
+        state.needRefreshData = false;
         state.error = action.payload;
       });
   },

@@ -5,7 +5,10 @@ import ClockImage from "../../../assets/icon_time.svg";
 import styled from "styled-components";
 import Select from "../../Select/Select";
 import { useDispatch, useSelector } from "react-redux";
-import { getContractsByDate } from "../../../redux/slices/timesheet/timesheetActions";
+import {
+  getContractsByDate,
+  updateContractTimesheet,
+} from "../../../redux/slices/timesheet/timesheetActions";
 import moment from "moment";
 
 const Styles = styled.div`
@@ -183,14 +186,29 @@ const EditProjectToday = (props) => {
 
   const [contractsArr, setContractsArr] = React.useState(null);
 
-  console.log(props.edit_project_today);
-
   const [state, setState] = React.useState({
-    // excel_template: props.current_project.excel_template,
-    // name: props.current_project.name,
-    // description: props.current_project.description,
+    contract_id: props.edit_project_today.contract.contract_id,
+    date: props.edit_project_today.contract.date,
+    start_time: props.edit_project_today.contract.start_time,
+    end_time: props.edit_project_today.contract.end_time,
+    break_time: props.edit_project_today.contract.break_time,
+    description: props.edit_project_today.contract.description,
+    notes: props.edit_project_today.contract.notes,
+    man_day_override: props.edit_project_today.contract.man_day_override,
   });
 
+  // следим за стейтом родительской модалки (если там будет клик по кнопке "отправить" - отправляем данные на сервер)
+  React.useEffect(() => {
+    // если кнопка "отправить" была нажата и в стейте этого компонента есть formData, то оправляем данные
+    if (props.isSubmit) {
+      dispatch(updateContractTimesheet({ obj: state, id: state.contract_id }));
+      // скрываем модалку
+      props.toggle();
+      // console.log(state);
+    }
+  }, [props.isSubmit]);
+
+  // получаем контракты для dropDown (слва)
   React.useEffect(() => {
     dispatch(
       getContractsByDate(
@@ -199,6 +217,7 @@ const EditProjectToday = (props) => {
     );
   }, []);
 
+  // формируем массив контрактов dropDown после их получения (бюджет / использованный бюджет)
   React.useEffect(() => {
     if (contractsTimeSheetDropDown) {
       const newArr = [];
@@ -207,7 +226,7 @@ const EditProjectToday = (props) => {
         newArr.push(`${name} (${budget_available / budget})`);
       });
 
-      console.log(newArr);
+      // console.log(newArr);
 
       setContractsArr(newArr);
     }
@@ -231,7 +250,7 @@ const EditProjectToday = (props) => {
             <label className="mb-2">.</label>
             <Select
               handleSelect={(value) => {
-                // setState((state) => ({ ...state, excel_template: value }));
+                setState((state) => ({ ...state, man_day_override: value }));
               }}
               titles={[
                 { label: "Abrechnung 1:1", key: null },
@@ -241,7 +260,7 @@ const EditProjectToday = (props) => {
                 { label: "Abrechnung mit 0.75 PT", key: 0.75 },
                 { label: "Abrechnung mit 1.00 PT", key: 1 },
               ]}
-              currentTitle={props.edit_project_today.contract.man_day_override}
+              currentTitle={state.man_day_override}
             />
           </div>
         </div>
@@ -249,14 +268,30 @@ const EditProjectToday = (props) => {
         <div className="textareas">
           <div className="first">
             <label className="mb-2">Tätigkeiten</label>
-            <textarea name="" id="" cols="30" rows="10">
-              {props.edit_project_today.contract.description}
+            <textarea
+              name=""
+              id=""
+              cols="30"
+              rows="10"
+              onInput={({ target: { value } }) => {
+                setState((state) => ({ ...state, description: value }));
+              }}
+            >
+              {state.description}
             </textarea>
           </div>
           <div className="second">
             <label className="mb-2">Kommentar</label>
-            <textarea name="" id="" cols="30" rows="10">
-              {props.edit_project_today.contract.notes}
+            <textarea
+              name=""
+              id=""
+              cols="30"
+              rows="10"
+              onInput={({ target: { value } }) => {
+                setState((state) => ({ ...state, notes: value }));
+              }}
+            >
+              {state.notes}
             </textarea>
           </div>
         </div>
@@ -269,9 +304,9 @@ const EditProjectToday = (props) => {
               <input
                 type="date"
                 className="start"
-                value={props.edit_project_today._d}
+                value={state.date}
                 onInput={({ target: { value } }) => {
-                  // setState((state) => ({ ...state, start: value }));
+                  setState((state) => ({ ...state, date: value }));
                 }}
               />
             </div>
@@ -283,8 +318,10 @@ const EditProjectToday = (props) => {
               <input
                 type="text"
                 id="date"
-                value={props.edit_project_today.contract.start_time}
-                onChange={() => {}}
+                value={state.start_time}
+                onInput={({ target: { value } }) => {
+                  setState((state) => ({ ...state, start_time: value }));
+                }}
               />
             </div>
           </div>
@@ -295,8 +332,10 @@ const EditProjectToday = (props) => {
               <input
                 type="text"
                 id="date"
-                value={props.edit_project_today.contract.end_time}
-                onChange={() => {}}
+                value={state.end_time}
+                onInput={({ target: { value } }) => {
+                  setState((state) => ({ ...state, end_time: value }));
+                }}
               />
             </div>
           </div>
@@ -307,8 +346,10 @@ const EditProjectToday = (props) => {
               <input
                 type="text"
                 id="date"
-                value={props.edit_project_today.contract.break_time}
-                onChange={() => {}}
+                value={state.break_time}
+                onInput={({ target: { value } }) => {
+                  setState((state) => ({ ...state, break_time: value }));
+                }}
               />
             </div>
           </div>
@@ -319,8 +360,10 @@ const EditProjectToday = (props) => {
               <input
                 type="text"
                 id="date"
-                value={props.edit_project_today.contract.total_time}
-                onChange={() => {}}
+                value={state.total_time}
+                // onInput={({ target: { value } }) => {
+                //   setState((state) => ({ ...state, start_time: value }));
+                // }}
               />
             </div>
           </div>
