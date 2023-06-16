@@ -1,11 +1,8 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getBillableProjects,
-  getProjectsByFilterDate,
-} from "../../../redux/slices/projects/projectsActions";
-import { getProjectsByFilter } from "../../../redux/slices/timesheet/timesheetActions";
+
 import { setBillableFilterProjects } from "../../../redux/slices/projects/projects";
+import { setFilterClearEmpty } from "../../../redux/slices/timesheet/timesheet";
 
 const CheckBoxFilters = (props) => {
   // стейт "оплачиваемые"
@@ -14,25 +11,23 @@ const CheckBoxFilters = (props) => {
   // const [finished, setFinished] = React.useState(false);
 
   // достаем переменные из стейта Redux для фильтра проектов
-  const {
-    loadingProjects,
-    projects,
-    needRefreshData,
-    filterDateProjects,
-    billableFilter,
-  } = useSelector((state) => state.projects);
+  const { billableFilter } = useSelector((state) => state.projects);
+
+  const { filterClearEmpty } = useSelector((state) => state.timesheet);
+
   const dispatch = useDispatch();
 
   const handleChange = (checkTitle) => {
     if (checkTitle === "Оплачиваемые") {
       setBillable((prev) => !prev);
-      dispatch(setBillableFilterProjects(billable));
+      const value = billable;
+      dispatch(setBillableFilterProjects(value));
       return;
     }
 
     if (checkTitle === "Очистить пустые") {
       setBillable((prev) => !prev);
-      dispatch(setBillableFilterProjects(billable));
+      dispatch(setFilterClearEmpty(billable));
       return;
     }
 
@@ -53,7 +48,9 @@ const CheckBoxFilters = (props) => {
               className="check-box"
               id={title}
               onChange={() => handleChange(title)}
-              checked={billableFilter}
+              checked={
+                title === "Оплачиваемые" ? billableFilter : filterClearEmpty
+              }
             />
             <label htmlFor={title}>{title}</label>
           </div>

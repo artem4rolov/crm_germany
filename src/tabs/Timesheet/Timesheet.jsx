@@ -256,9 +256,17 @@ const Timesheet = () => {
 
   // для кнопки "очистить пустые"
   useEffect(() => {
-    // if (tableDays && tableDays.length > 0) {
-    //   const newArr = tableDays.filter((day, index) => day.contract && day.holiday )
-    // }
+    if (tableDays && tableDays.length > 0 && filterClearEmpty) {
+      const newArr = tableDays.filter(
+        (day, index) => day.contract && day.contract.start_time !== null
+      );
+      setTableDays(newArr);
+      return;
+    } else {
+      // строим календарь с контрактами
+      getRangeArray();
+      return;
+    }
 
     return () => {};
   }, [filterClearEmpty]);

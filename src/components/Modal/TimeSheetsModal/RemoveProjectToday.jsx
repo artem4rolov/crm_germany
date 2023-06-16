@@ -161,7 +161,7 @@ const RemoveProjectToday = (props) => {
     if (props.isRemove) {
       dispatch(
         removeContractTimesheet({
-          id: props.remove_project_today.contract.contract_id,
+          id: props.remove_project_today.contract.id,
         })
       );
       // скрываем модалку

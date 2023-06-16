@@ -18,7 +18,7 @@ const initialState = {
   loadingProjects: false, // отображение загрузки
   projects: null, // пользователь
   error: null, // значение ошибки
-  billableFilter: null, // фильтр "оплачиваемые"
+  billableFilter: false, // фильтр "оплачиваемые"
   excelTemplate: null,
   // finishFilter: null, // фильтр "завершенные"
   filterDateProjects: `01.01.${actualyYear}-31.12.${actualyYear}`, // фильтр дат

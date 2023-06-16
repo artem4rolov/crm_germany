@@ -27,12 +27,11 @@ const timesheetSlice = createSlice({
   name: "timesheet",
   initialState,
   reducers: {
-    setFilterClearEmpty: (state, { action, payload }) => {
-      state.filterClearEmpty = action.payload;
+    setFilterClearEmpty: (state, { payload }) => {
+      state.filterClearEmpty = payload;
     },
     setFilterDateTimesheet: (state, { payload }) => {
       state.filterDateTimesheet = payload;
-      state.needRefreshData = true;
     },
   },
   extraReducers: (builder) => {
@@ -113,5 +112,6 @@ const timesheetSlice = createSlice({
   },
 });
 
-export const { setFilterDateTimesheet } = timesheetSlice.actions;
+export const { setFilterDateTimesheet, setFilterClearEmpty } =
+  timesheetSlice.actions;
 export default timesheetSlice.reducer;
