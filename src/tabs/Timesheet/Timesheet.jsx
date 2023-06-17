@@ -409,6 +409,7 @@ const Timesheet = () => {
                               src={PlusIcon}
                               alt="plus icon"
                               onClick={() => {
+                                console.log(row);
                                 setCurrentProject(row);
                                 setToggleAddProjectToday((prev) => !prev);
                               }}
@@ -419,6 +420,7 @@ const Timesheet = () => {
                               src={EditIcon}
                               alt="edit icon"
                               onClick={() => {
+                                console.log(row);
                                 setCurrentProject(row);
                                 setToggleEditProjectToday((prev) => !prev);
                               }}

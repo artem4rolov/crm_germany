@@ -4,9 +4,13 @@ import CalendarIcon from "../../../assets/icon_calendar.svg";
 import ClockImage from "../../../assets/icon_time.svg";
 import styled from "styled-components";
 import Select from "../../Select/Select";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { createContractTimesheet } from "../../../redux/slices/timesheet/timesheetActions";
+import {
+  createContractTimesheet,
+  getContractsByDate,
+} from "../../../redux/slices/timesheet/timesheetActions";
+import moment from "moment";
 
 const Styles = styled.div`
   width: 100%;
@@ -176,10 +180,17 @@ const Styles = styled.div`
 
 const AddProjectTodayModal = (props) => {
   const dispatch = useDispatch();
+  const { contractsTimeSheetDropDown } = useSelector(
+    (state) => state.timesheet
+  );
+
+  // тут будут контракты для левого верхнего dorpDown
+  // чтобы понять, какие даты у контракта - можно преейти на страницу Projects.jsx  и посмотреть диапазон действия того или иного контракта
+  const [contractsArr, setContractsArr] = React.useState(null);
 
   const [state, setState] = React.useState({
-    contract_id: props.add_project_today.contract.contract_id,
-    date: "",
+    contract_id: null,
+    date: props.add_project_today._d,
     start_time: "",
     end_time: "",
     break_time: "",
@@ -191,7 +202,7 @@ const AddProjectTodayModal = (props) => {
   // следим за стейтом родительской модалки (если там будет клик по кнопке "отправить" - отправляем данные на сервер)
   useEffect(() => {
     // если кнопка "отправить" была нажата и в стейте этого компонента есть formData, то оправляем данные
-    if (props.isSubmit) {
+    if (props.isSubmit && state.contract_id !== null) {
       dispatch(createContractTimesheet({ obj: state }));
       // скрываем модалку
       props.toggle();
@@ -199,9 +210,36 @@ const AddProjectTodayModal = (props) => {
     }
   }, [props.isSubmit]);
 
+  // получаем контракты для dropDown (слва)
+  React.useEffect(() => {
+    dispatch(
+      getContractsByDate(
+        moment(props.add_project_today._d).format("DD.MM.YYYY")
+      )
+    );
+  }, []);
+
+  // формируем массив контрактов dropDown после их получения (бюджет / использованный бюджет)
+  React.useEffect(() => {
+    if (contractsTimeSheetDropDown) {
+      const newArr = [];
+      contractsTimeSheetDropDown.forEach((contract) => {
+        const { name, budget_available, budget, id } = contract;
+        newArr.push({
+          label: `${name} (${budget_available / budget})`,
+          key: id,
+        });
+      });
+
+      // console.log(newArr);
+
+      setContractsArr(newArr);
+    }
+  }, [contractsTimeSheetDropDown]);
+
   // console.log(props.isSubmit);
 
-  // console.log(props);
+  console.log(state);
 
   return (
     <Styles>
@@ -210,7 +248,13 @@ const AddProjectTodayModal = (props) => {
         <div className="inputs">
           <div className="vertrag">
             <label className="mb-2">Vertrag</label>
-            <select name="" id=""></select>
+            <Select
+              handleSelect={(value) => {
+                setState((state) => ({ ...state, contract_id: value }));
+              }}
+              titles={contractsArr ? contractsArr : ["No data"]}
+              currentTitle={state.contract_id}
+            />
           </div>
           <div className="project-select">
             <label className="mb-2">.</label>
@@ -265,6 +309,8 @@ const AddProjectTodayModal = (props) => {
               <input
                 type="date"
                 className="start"
+                value={state.date ? state.date : null}
+                onChange={() => {}}
                 onInput={({ target: { value } }) => {
                   setState((state) => ({ ...state, date: value }));
                 }}

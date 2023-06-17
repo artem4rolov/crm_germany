@@ -184,6 +184,8 @@ const EditProjectToday = (props) => {
     (state) => state.timesheet
   );
 
+  // тут будут контракты для левого верхнего dorpDown
+  // чтобы понять, какие даты у контракта - можно преейти на страницу Projects.jsx  и посмотреть диапазон действия того или иного контракта
   const [contractsArr, setContractsArr] = React.useState(null);
 
   const [state, setState] = React.useState({
@@ -201,7 +203,12 @@ const EditProjectToday = (props) => {
   React.useEffect(() => {
     // если кнопка "отправить" была нажата и в стейте этого компонента есть formData, то оправляем данные
     if (props.isSubmit) {
-      dispatch(updateContractTimesheet({ obj: state, id: state.contract_id }));
+      dispatch(
+        updateContractTimesheet({
+          obj: state,
+          id: props.edit_project_today.contract.id,
+        })
+      );
       // скрываем модалку
       props.toggle();
       // console.log(state);
@@ -222,8 +229,11 @@ const EditProjectToday = (props) => {
     if (contractsTimeSheetDropDown) {
       const newArr = [];
       contractsTimeSheetDropDown.forEach((contract) => {
-        const { name, budget_available, budget } = contract;
-        newArr.push(`${name} (${budget_available / budget})`);
+        const { name, budget_available, budget, id } = contract;
+        newArr.push({
+          label: `${name} (${budget_available / budget})`,
+          key: id,
+        });
       });
 
       // console.log(newArr);
@@ -231,6 +241,8 @@ const EditProjectToday = (props) => {
       setContractsArr(newArr);
     }
   }, [contractsTimeSheetDropDown]);
+
+  console.log(state);
 
   return (
     <Styles>
@@ -241,9 +253,10 @@ const EditProjectToday = (props) => {
             <label className="mb-2">Vertrag</label>
             <Select
               handleSelect={(value) => {
-                // setState((state) => ({ ...state, excel_template: value }));
+                setState((state) => ({ ...state, contract_id: value }));
               }}
               titles={contractsArr ? contractsArr : ["No data"]}
+              currentTitle={state.contract_id}
             />
           </div>
           <div className="project-select">
