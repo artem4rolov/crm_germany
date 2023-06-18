@@ -4,8 +4,8 @@ import SideBar from "../../components/SideBar/SideBar";
 import styled from "styled-components";
 import { VictoryBar, VictoryChart, VictoryAxis, VictoryStack } from "victory";
 import { useDispatch, useSelector } from "react-redux";
-import { Modal } from "bootstrap";
 import { setSettingsOpen } from "../../redux/slices/dashboard/dashboard";
+import Modal from "../../components/Modal/Modal";
 
 const Styles = styled.div`
   .dashboard-wrapper {
