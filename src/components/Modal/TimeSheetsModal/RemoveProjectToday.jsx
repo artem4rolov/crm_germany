@@ -9,6 +9,7 @@ import {
   removeContractTimesheet,
 } from "../../../redux/slices/timesheet/timesheetActions";
 import Select from "../../Select/Select";
+import moment from "moment";
 
 const Styles = styled.div`
   width: 100%;
@@ -154,6 +155,13 @@ const Styles = styled.div`
 
 const RemoveProjectToday = (props) => {
   const dispatch = useDispatch();
+  const { contractsTimeSheetDropDown } = useSelector(
+    (state) => state.timesheet
+  );
+
+  // тут будут контракты для левого верхнего dorpDown
+  // чтобы понять, какие даты у контракта - можно преейти на страницу Projects.jsx  и посмотреть диапазон действия того или иного контракта
+  const [contractsArr, setContractsArr] = React.useState(null);
 
   // следим за стейтом родительской модалки (если там будет клик по кнопке "отправить" - отправляем данные на сервер)
   React.useEffect(() => {
@@ -161,13 +169,40 @@ const RemoveProjectToday = (props) => {
     if (props.isRemove) {
       dispatch(
         removeContractTimesheet({
-          id: props.remove_project_today.contract.id,
+          id: props.remove_project_today.id,
         })
       );
       // скрываем модалку
       props.toggle();
     }
   }, [props.isRemove]);
+
+  // получаем контракты для dropDown (слва)
+  React.useEffect(() => {
+    dispatch(
+      getContractsByDate(
+        moment(props.remove_project_today.date).format("DD.MM.YYYY")
+      )
+    );
+  }, []);
+
+  // формируем массив контрактов dropDown после их получения (бюджет / использованный бюджет)
+  React.useEffect(() => {
+    if (contractsTimeSheetDropDown) {
+      const newArr = [];
+      contractsTimeSheetDropDown.forEach((contract) => {
+        const { name, budget_available, budget, id } = contract;
+        newArr.push({
+          label: `${name} (${budget_available / budget})`,
+          key: id,
+        });
+      });
+
+      // console.log(newArr);
+
+      setContractsArr(newArr);
+    }
+  }, [contractsTimeSheetDropDown]);
 
   console.log(props);
 
@@ -178,7 +213,14 @@ const RemoveProjectToday = (props) => {
         <div className="inputs">
           <div className="vertrag">
             <label className="mb-2">Vertrag</label>
-            <select disabled name="" id=""></select>
+            <Select
+              disabled
+              handleSelect={(value) => {
+                // setState((state) => ({ ...state, contract_id: value }));
+              }}
+              titles={contractsArr ? contractsArr : ["No data"]}
+              currentTitle={props.remove_project_today.contract_id}
+            />
           </div>
           <div className="project-select">
             <label className="mb-2">.</label>
@@ -195,9 +237,7 @@ const RemoveProjectToday = (props) => {
                 { label: "Abrechnung mit 0.75 PT", key: 0.75 },
                 { label: "Abrechnung mit 1.00 PT", key: 1 },
               ]}
-              currentTitle={
-                props.remove_project_today.contract.man_day_override
-              }
+              currentTitle={props.remove_project_today.man_day_override}
             />
           </div>
         </div>
@@ -205,15 +245,25 @@ const RemoveProjectToday = (props) => {
         <div className="textareas">
           <div className="first">
             <label className="mb-2">Tätigkeiten</label>
-            <textarea disabled name="" id="" cols="30" rows="10">
-              {props.remove_project_today.contract.description}
-            </textarea>
+            <textarea
+              disabled
+              name=""
+              id=""
+              cols="30"
+              rows="10"
+              value={props.remove_project_today.description}
+            />
           </div>
           <div className="second">
             <label className="mb-2">Kommentar</label>
-            <textarea disabled name="" id="" cols="30" rows="10">
-              {props.remove_project_today.contract.notes}
-            </textarea>
+            <textarea
+              disabled
+              name=""
+              id=""
+              cols="30"
+              rows="10"
+              value={props.remove_project_today.notes}
+            />
           </div>
         </div>
         {/* время внизу */}
@@ -228,7 +278,7 @@ const RemoveProjectToday = (props) => {
                 disabled
                 type="date"
                 id="date"
-                value={props.remove_project_today._d}
+                value={props.remove_project_today.date}
               />
             </div>
           </div>
@@ -240,7 +290,7 @@ const RemoveProjectToday = (props) => {
                 disabled
                 type="text"
                 id="date"
-                value={props.remove_project_today.contract.total_time}
+                value={props.remove_project_today.total_time}
                 onChange={() => {}}
               />
             </div>
@@ -253,7 +303,7 @@ const RemoveProjectToday = (props) => {
                 disabled
                 type="text"
                 id="date"
-                value={props.remove_project_today.contract.total_time}
+                value={props.remove_project_today.total_time}
                 onChange={() => {}}
               />
             </div>
@@ -266,7 +316,7 @@ const RemoveProjectToday = (props) => {
                 disabled
                 type="text"
                 id="date"
-                value={props.remove_project_today.contract.total_time}
+                value={props.remove_project_today.total_time}
                 onChange={() => {}}
               />
             </div>
@@ -279,7 +329,7 @@ const RemoveProjectToday = (props) => {
                 disabled
                 type="text"
                 id="date"
-                value={props.remove_project_today.contract.total_time}
+                value={props.remove_project_today.total_time}
                 onChange={() => {}}
               />
             </div>

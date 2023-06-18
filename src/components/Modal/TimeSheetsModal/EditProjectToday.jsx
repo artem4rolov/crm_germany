@@ -189,14 +189,14 @@ const EditProjectToday = (props) => {
   const [contractsArr, setContractsArr] = React.useState(null);
 
   const [state, setState] = React.useState({
-    contract_id: props.edit_project_today.contract.contract_id,
-    date: props.edit_project_today.contract.date,
-    start_time: props.edit_project_today.contract.start_time,
-    end_time: props.edit_project_today.contract.end_time,
-    break_time: props.edit_project_today.contract.break_time,
-    description: props.edit_project_today.contract.description,
-    notes: props.edit_project_today.contract.notes,
-    man_day_override: props.edit_project_today.contract.man_day_override,
+    contract_id: props.edit_project_today.contract_id,
+    date: props.edit_project_today.date,
+    start_time: props.edit_project_today.start_time,
+    end_time: props.edit_project_today.end_time,
+    break_time: props.edit_project_today.break_time,
+    description: props.edit_project_today.description,
+    notes: props.edit_project_today.notes,
+    man_day_override: props.edit_project_today.man_day_override,
   });
 
   // следим за стейтом родительской модалки (если там будет клик по кнопке "отправить" - отправляем данные на сервер)
@@ -206,7 +206,7 @@ const EditProjectToday = (props) => {
       dispatch(
         updateContractTimesheet({
           obj: state,
-          id: props.edit_project_today.contract.id,
+          id: props.edit_project_today.id,
         })
       );
       // скрываем модалку
@@ -219,7 +219,7 @@ const EditProjectToday = (props) => {
   React.useEffect(() => {
     dispatch(
       getContractsByDate(
-        moment(props.edit_project_today._d).format("DD.MM.YYYY")
+        moment(props.edit_project_today.date).format("DD.MM.YYYY")
       )
     );
   }, []);

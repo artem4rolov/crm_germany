@@ -190,7 +190,7 @@ const AddProjectTodayModal = (props) => {
 
   const [state, setState] = React.useState({
     contract_id: null,
-    date: props.add_project_today._d,
+    date: props.add_project_today._d || props.add_project_today.date,
     start_time: "",
     end_time: "",
     break_time: "",
@@ -212,17 +212,13 @@ const AddProjectTodayModal = (props) => {
 
   // получаем контракты для dropDown (слва)
   React.useEffect(() => {
-    dispatch(
-      getContractsByDate(
-        moment(props.add_project_today._d).format("DD.MM.YYYY")
-      )
-    );
+    dispatch(getContractsByDate(moment(state.date).format("DD.MM.YYYY")));
   }, []);
 
   // формируем массив контрактов dropDown после их получения (бюджет / использованный бюджет)
   React.useEffect(() => {
     if (contractsTimeSheetDropDown) {
-      const newArr = [];
+      const newArr = [{ label: "Choose variant", key: null }];
       contractsTimeSheetDropDown.forEach((contract) => {
         const { name, budget_available, budget, id } = contract;
         newArr.push({

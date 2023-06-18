@@ -187,6 +187,8 @@ const Timesheet = () => {
         // очищаем объект даты от ненужных ключей, оставляем только дату в формуте string (YYYY-MM-DD)
         Object.keys(day).forEach((n) => (n !== "_d" ? delete day[n] : null));
         day._d = moment(day._d).format("YYYY-MM-DD");
+
+        day.contracts = [];
         // здесь же перебираем массив полученных праздников и сравниваем даты этих праздников с выбранным диапазоном дат для проектов
         holidays &&
           holidays.length > 0 &&
@@ -203,7 +205,7 @@ const Timesheet = () => {
           contractsTimesheet.map((contract, index) => {
             if (contract.date === day._d) {
               // если даты совпадают - отображаем праздник в текущем дне и останавливаем цикл перебора праздников
-              return (day.contract = contract);
+              day.contracts.push(contract);
             } else {
               // иначе ничего не делаем
               return null;
@@ -271,7 +273,7 @@ const Timesheet = () => {
     return () => {};
   }, [filterClearEmpty]);
 
-  // console.log(currentProject);
+  console.log(currentProject);
 
   return (
     <Styles>
@@ -307,138 +309,199 @@ const Timesheet = () => {
                   // если нет праздников - выводим обычный стиль для дня календаря
                   // если есть праздник - красим в красный цвет день каледнаря
                   !row.holiday ? (
-                    <>
-                      {/* если следующая строка имеет другой месяц И если это не первый элемент массива - рендерим сначала синюю полосу с названием нового месяца, количеством выходных и праздников */}
-                      {moment(row._d).month() !==
-                        moment(row._d).add(1, "day").month() && index !== 0 ? (
-                        <tr>
-                          <th></th>
-                          <th colSpan={5} className="month_name">
-                            {moment(row._d).format("MMMM")}
-                          </th>
-                          <th className="month_name"></th>
-                          <th className="month_name">Arbeitstage: </th>
-                          <th className="month_name">Feiertage: </th>
-                        </tr>
-                      ) : null}
+                    row.contracts && row.contracts.length > 0 ? (
+                      <>
+                        {/* если следующая строка имеет другой месяц И если это не первый элемент массива - рендерим сначала синюю полосу с названием нового месяца, количеством выходных и праздников */}
+                        {moment(row._d).month() !==
+                          moment(row._d).add(1, "day").month() &&
+                        index !== 0 ? (
+                          <tr>
+                            <th></th>
+                            <th colSpan={5} className="month_name">
+                              {moment(row._d).format("MMMM")}
+                            </th>
+                            <th className="month_name"></th>
+                            <th className="month_name">Arbeitstage: </th>
+                            <th className="month_name">Feiertage: </th>
+                          </tr>
+                        ) : null}
 
-                      {/* выводим дни недели с праздниками, выходными и проектами */}
-                      <tr
-                        key={row._d}
-                        className={`table-content ${
-                          moment(row._d).format("dddd") === "Samstag" ||
-                          moment(row._d).format("dddd") === "Sonntag"
-                            ? "weekend"
-                            : ""
-                        }`}
-                      >
-                        {/* KW (тут выводим номер недели напротив каждого воскресенья) */}
-                        {console.log()}
-                        <th>
-                          {/* номер недели на каждом воскресенье Sonntag */}
-                          {moment(row._d).format("dddd") === "Sonntag"
-                            ? moment(row._d).week()
-                            : null}
-                        </th>
-                        {/* Datum "Mon, 01.01.2001" формат "de" (немецкий) */}
-                        <th className="text-left">{`${moment(row._d)
-                          .format("dd")
-                          .substring(0, 3)}., ${moment(row._d).format(
-                          "DD.MM.YY"
-                        )}`}</th>
-                        {/* project */}
-                        <th>
-                          {row.contract && row.contract.description
-                            ? row.contract.description
-                            : ""}
-                        </th>
-                        {/* Von */}
-                        <th>
-                          {row.contract && row.contract.start_time
-                            ? row.contract.start_time
-                            : ""}
-                        </th>
-                        {/* Bis */}
-                        <th>
-                          {row.contract && row.contract.end_time
-                            ? row.contract.end_time
-                            : ""}
-                        </th>
-                        {/* Pause */}
-                        <th>
-                          {row.contract && row.contract.break_time
-                            ? row.contract.break_time
-                            : ""}
-                        </th>
-                        {/* Zeit */}
-                        <th>
-                          {row.contract && row.contract.total_time
-                            ? row.contract.total_time
-                            : ""}
-                        </th>
-                        {/* PT */}
-                        <th
-                          className={`${
-                            row.contract && row.contract.man_day_overriden
-                              ? "red"
+                        {/* выводим дни недели с праздниками, выходными и проектами */}
+                        {row.contracts.map((contract, index) => (
+                          <tr
+                            key={contract.id}
+                            className={`table-content ${
+                              moment(row.contracts[0].date).format("dddd") ===
+                                "Samstag" ||
+                              moment(row.contracts[0].date).format("dddd") ===
+                                "Sonntag"
+                                ? "weekend"
+                                : ""
+                            }`}
+                          >
+                            {/* KW (тут выводим номер недели напротив каждого воскресенья) */}
+
+                            <th>
+                              {/* номер недели на каждом воскресенье Sonntag */}
+                              {index === 0 &&
+                              moment(row.contracts[0].date).format("dddd") ===
+                                "Sonntag"
+                                ? moment(row.contracts[0].date).week()
+                                : null}
+                            </th>
+                            {/* Datum "Mon, 01.01.2001" формат "de" (немецкий) */}
+                            <th className="text-left">{`${
+                              index === 0
+                                ? moment(row.contracts[0].date)
+                                    .format("dd")
+                                    .substring(0, 3) + "., "
+                                : " "
+                            } ${
+                              index === 0
+                                ? moment(row.contracts[0].date).format(
+                                    "DD.MM.YY"
+                                  )
+                                : " "
+                            }`}</th>
+                            {/* project */}
+                            <th>{contract ? contract.description : ""}</th>
+                            {/* Von */}
+                            <th>{contract ? contract.start_time : ""}</th>
+                            {/* Bis */}
+                            <th>{contract ? contract.end_time : ""}</th>
+                            {/* Pause */}
+                            <th>{contract ? contract.break_time : ""}</th>
+                            {/* Zeit */}
+                            <th>{contract ? contract.total_time : ""}</th>
+                            {/* PT */}
+                            <th
+                              className={`${
+                                contract && contract.man_day_overriden
+                                  ? "red"
+                                  : ""
+                              }`}
+                            >
+                              {contract ? contract.man_day : ""}
+                            </th>
+                            {/* Tätigkeiten*/}
+                            <th>
+                              {contract ? contract.description : ""}
+                              {contract && contract.notes ? (
+                                <th className="red">
+                                  <br />
+                                  {contract.notes}
+                                </th>
+                              ) : (
+                                ""
+                              )}
+                            </th>
+                            {/* модалка в углу строки при наведении на строку */}
+                            <th className="row-modal">
+                              <div>
+                                <img
+                                  src={PlusIcon}
+                                  alt="plus icon"
+                                  onClick={() => {
+                                    setCurrentProject(contract);
+                                    setToggleAddProjectToday((prev) => !prev);
+                                  }}
+                                />
+                              </div>
+                              <div>
+                                <img
+                                  src={EditIcon}
+                                  alt="edit icon"
+                                  onClick={() => {
+                                    setCurrentProject(contract);
+                                    setToggleEditProjectToday((prev) => !prev);
+                                  }}
+                                />
+                              </div>
+                              <div>
+                                <img
+                                  src={TrashIcon}
+                                  alt="trash icon"
+                                  onClick={() => {
+                                    setCurrentProject(contract);
+                                    setToggleRemoveProjectToday(
+                                      (prev) => !prev
+                                    );
+                                  }}
+                                />
+                              </div>
+                            </th>
+                          </tr>
+                        ))}
+                      </>
+                    ) : (
+                      <>
+                        {/* если контрактов нет - выводим пустые дни с датами */}
+                        {moment(row._d).month() !==
+                          moment(row._d).add(1, "day").month() &&
+                        index !== 0 ? (
+                          <tr>
+                            <th></th>
+                            <th colSpan={5} className="month_name">
+                              {moment(row._d).format("MMMM")}
+                            </th>
+                            <th className="month_name"></th>
+                            <th className="month_name">Arbeitstage: </th>
+                            <th className="month_name">Feiertage: </th>
+                          </tr>
+                        ) : null}
+                        <tr
+                          key={row._d}
+                          className={`table-content ${
+                            moment(row._d).format("dddd") === "Samstag" ||
+                            moment(row._d).format("dddd") === "Sonntag"
+                              ? "weekend"
                               : ""
                           }`}
                         >
-                          {row.contract && row.contract.man_day
-                            ? row.contract.man_day
-                            : ""}
-                        </th>
-                        {/* Tätigkeiten*/}
-                        <th>
-                          {row.contract && row.contract.description
-                            ? row.contract.description
-                            : ""}
-                          {row.contract && row.contract.notes ? (
-                            <th className="red">
-                              <br />
-                              {row.contract.notes}
-                            </th>
-                          ) : (
-                            ""
-                          )}
-                        </th>
-                        {/* модалка в углу строки при наведении на строку */}
-                        <th className="row-modal">
-                          <div>
-                            <img
-                              src={PlusIcon}
-                              alt="plus icon"
-                              onClick={() => {
-                                console.log(row);
-                                setCurrentProject(row);
-                                setToggleAddProjectToday((prev) => !prev);
-                              }}
-                            />
-                          </div>
-                          <div>
-                            <img
-                              src={EditIcon}
-                              alt="edit icon"
-                              onClick={() => {
-                                console.log(row);
-                                setCurrentProject(row);
-                                setToggleEditProjectToday((prev) => !prev);
-                              }}
-                            />
-                          </div>
-                          <div>
-                            <img
-                              src={TrashIcon}
-                              alt="trash icon"
-                              onClick={() => {
-                                setCurrentProject(row);
-                                setToggleRemoveProjectToday((prev) => !prev);
-                              }}
-                            />
-                          </div>
-                        </th>
-                      </tr>
-                    </>
+                          {/* KW (тут выводим номер недели напротив каждого воскресенья) */}
+                          {console.log()}
+                          <th>
+                            {/* номер недели на каждом воскресенье Sonntag */}
+                            {moment(row._d).format("dddd") === "Sonntag"
+                              ? moment(row._d).week()
+                              : null}
+                          </th>
+                          {/* Datum "Mon, 01.01.2001" формат "de" (немецкий) */}
+                          <th className="text-left">{`${moment(row._d)
+                            .format("dd")
+                            .substring(0, 3)}., ${moment(row._d).format(
+                            "DD.MM.YY"
+                          )}`}</th>
+                          {/* project */}
+                          <th></th>
+                          {/* Von */}
+                          <th></th>
+                          {/* Bis */}
+                          <th></th>
+                          {/* Pause */}
+                          <th></th>
+                          {/* Zeit */}
+                          <th></th>
+                          {/* PT */}
+                          <th></th>
+                          {/* Tätigkeiten*/}
+                          <th></th>
+                          {/* модалка в углу строки при наведении на строку */}
+                          <th className="row-modal">
+                            <div>
+                              <img
+                                src={PlusIcon}
+                                alt="plus icon"
+                                onClick={() => {
+                                  setCurrentProject(row);
+                                  setToggleAddProjectToday((prev) => !prev);
+                                }}
+                              />
+                            </div>
+                          </th>
+                        </tr>
+                      </>
+                    )
                   ) : (
                     //  если нет контрактов - выводим праздники (если есть)
                     <tr
