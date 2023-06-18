@@ -260,7 +260,7 @@ const Timesheet = () => {
   useEffect(() => {
     if (tableDays && tableDays.length > 0 && filterClearEmpty) {
       const newArr = tableDays.filter(
-        (day, index) => day.contract && day.contract.start_time !== null
+        (day, index) => day.contracts && day.contracts.length > 0
       );
       setTableDays(newArr);
       return;
@@ -307,11 +307,10 @@ const Timesheet = () => {
                 !loadingTimeSheet &&
                 tableDays.map((row, index) =>
                   // если нет праздников - выводим обычный стиль для дня календаря
-                  // если есть праздник - красим в красный цвет день каледнаря
                   !row.holiday ? (
                     row.contracts && row.contracts.length > 0 ? (
+                      // если следующая строка имеет другой месяц И если это не первый элемент массива - рендерим сначала синюю полосу с названием нового месяца, количеством выходных и праздников
                       <>
-                        {/* если следующая строка имеет другой месяц И если это не первый элемент массива - рендерим сначала синюю полосу с названием нового месяца, количеством выходных и праздников */}
                         {moment(row._d).month() !==
                           moment(row._d).add(1, "day").month() &&
                         index !== 0 ? (
@@ -434,6 +433,7 @@ const Timesheet = () => {
                         ))}
                       </>
                     ) : (
+                      // если нет контрактов - выводим пустые дни календаря
                       <>
                         {/* если контрактов нет - выводим пустые дни с датами */}
                         {moment(row._d).month() !==
@@ -503,34 +503,153 @@ const Timesheet = () => {
                       </>
                     )
                   ) : (
-                    //  если нет контрактов - выводим праздники (если есть)
-                    <tr
-                      key={index}
-                      className={`table-content ${
-                        row.holiday.public_holiday ? "holiday" : ""
-                      }`}
-                    >
-                      {/* Номер недели напротив каждого воскресенья */}
-                      <th>
-                        {moment(row._d).format("dddd") === "Sonntag"
-                          ? moment(row._d).week()
-                          : null}
-                      </th>
-                      <th>{`${moment(row._d)
-                        .format("dddd")
-                        .substring(0, 3)}., ${moment(row._d).format(
-                        "DD.MM.YY"
-                      )}`}</th>
-                      <th className="holiday_desc">{`${row.holiday.summary} (${row.holiday.region_aggregated})`}</th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
-                      <th></th>
-                      <th className="holiday_desc">
-                        {row.holiday.notes_aggregated}
-                      </th>
-                    </tr>
+                    // если нет контрактов, но есть праздники выводим праздники (если есть)
+                    <>
+                      <tr
+                        key={index}
+                        className={`table-content ${
+                          row.holiday.public_holiday ? "holiday" : ""
+                        }`}
+                      >
+                        {/* Номер недели напротив каждого воскресенья */}
+                        <th>
+                          {moment(row._d).format("dddd") === "Sonntag"
+                            ? moment(row._d).week()
+                            : null}
+                        </th>
+                        <th>{`${moment(row._d)
+                          .format("dddd")
+                          .substring(0, 2)}., ${moment(row._d).format(
+                          "DD.MM.YY"
+                        )}`}</th>
+                        <th className="holiday_desc">{`${row.holiday.summary} (${row.holiday.region_aggregated})`}</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th className="holiday_desc">
+                          {row.holiday.notes_aggregated}
+                        </th>
+                        {/* модалка в углу строки при наведении на строку */}
+                        <th className="row-modal">
+                          <div>
+                            <img
+                              src={PlusIcon}
+                              alt="plus icon"
+                              onClick={() => {
+                                setCurrentProject(row);
+                                setToggleAddProjectToday((prev) => !prev);
+                              }}
+                            />
+                          </div>
+                          <div>
+                            <img
+                              src={EditIcon}
+                              alt="edit icon"
+                              onClick={() => {
+                                setCurrentProject(row);
+                                setToggleEditProjectToday((prev) => !prev);
+                              }}
+                            />
+                          </div>
+                          <div>
+                            <img
+                              src={TrashIcon}
+                              alt="trash icon"
+                              onClick={() => {
+                                setCurrentProject(row);
+                                setToggleRemoveProjectToday((prev) => !prev);
+                              }}
+                            />
+                          </div>
+                        </th>
+                      </tr>
+                      {/* если у праздников есть контракты - выводим контракты */}
+                      {row.contracts &&
+                        row.contracts.length > 0 &&
+                        row.contracts.map((contract, index) => (
+                          <tr
+                            key={contract.id}
+                            className={`table-content ${
+                              row.holiday.public_holiday ? "holiday" : ""
+                            }`}
+                          >
+                            {/* KW (тут выводим номер недели напротив каждого воскресенья) */}
+
+                            <th></th>
+                            {/* Datum "Mon, 01.01.2001" формат "de" (немецкий) */}
+                            <th></th>
+                            {/* project */}
+                            <th>{contract ? contract.description : ""}</th>
+                            {/* Von */}
+                            <th>{contract ? contract.start_time : ""}</th>
+                            {/* Bis */}
+                            <th>{contract ? contract.end_time : ""}</th>
+                            {/* Pause */}
+                            <th>{contract ? contract.break_time : ""}</th>
+                            {/* Zeit */}
+                            <th>{contract ? contract.total_time : ""}</th>
+                            {/* PT */}
+                            <th
+                              className={`${
+                                contract && contract.man_day_overriden
+                                  ? "red"
+                                  : ""
+                              }`}
+                            >
+                              {contract ? contract.man_day : ""}
+                            </th>
+                            {/* Tätigkeiten*/}
+                            <th>
+                              {contract ? contract.description : ""}
+                              {contract && contract.notes ? (
+                                <th className="red">
+                                  <br />
+                                  {contract.notes}
+                                </th>
+                              ) : (
+                                ""
+                              )}
+                            </th>
+                            {/* модалка в углу строки при наведении на строку */}
+                            <th className="row-modal">
+                              <div>
+                                <img
+                                  src={PlusIcon}
+                                  alt="plus icon"
+                                  onClick={() => {
+                                    setCurrentProject(contract);
+                                    setToggleAddProjectToday((prev) => !prev);
+                                  }}
+                                />
+                              </div>
+                              <div>
+                                <img
+                                  src={EditIcon}
+                                  alt="edit icon"
+                                  onClick={() => {
+                                    setCurrentProject(contract);
+                                    setToggleEditProjectToday((prev) => !prev);
+                                  }}
+                                />
+                              </div>
+                              <div>
+                                <img
+                                  src={TrashIcon}
+                                  alt="trash icon"
+                                  onClick={() => {
+                                    setCurrentProject(contract);
+                                    setToggleRemoveProjectToday(
+                                      (prev) => !prev
+                                    );
+                                  }}
+                                />
+                              </div>
+                            </th>
+                          </tr>
+                        ))}
+                    </>
                   )
                 )}
             </tbody>
