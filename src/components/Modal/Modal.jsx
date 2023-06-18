@@ -20,6 +20,7 @@ import RemoveNote from "./Note/RemoveNote";
 import ChooseFile from "./Holidays/ChooseFile";
 import RemoveProject from "./Projects&ContractsModal/Projects/RemoveProject";
 import moment from "moment";
+import ChangeWorkTime from "./Dashboard/ChangeWorkTime";
 
 const Styles = styled.div`
   .modal-wrapper {
@@ -279,6 +280,9 @@ const Modal = (props) => {
                     : ""
                 }`}
               >
+                {/* страница Dashboard.jsx */}
+                {props.work_time && <ChangeWorkTime />}
+
                 {/* страница Zeiterfassung (Timesheet.jsx - список недель в году) */}
                 {/* добавить новый проект */}
                 {props.add_project_today && (

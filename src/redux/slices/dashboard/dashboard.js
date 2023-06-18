@@ -5,7 +5,7 @@ const actualyYear = new Date().getFullYear();
 const initialState = {
   needRefreshData: false, // после удаления необходимо заново по установленным фильтрам запросить актуальные данные
   loadingDashboard: false, // отображение загрузки
-  dashboard: null, // пользователь
+  settingsOpen: false, // пользователь
   error: null, // значение ошибки
   filterDateDashboard: `01.01.${actualyYear}-31.12.${actualyYear}`, // фильтр дат
 };
@@ -15,7 +15,10 @@ const dashboardSlice = createSlice({
   initialState,
   reducers: {
     setFilterDateDashboard: (state, { payload }) => {
-      state.filterDateNotes = payload;
+      state.filterDateDashboard = payload;
+    },
+    setSettingsOpen: (state, { payload }) => {
+      state.settingsOpen = payload;
     },
   },
   extraReducers: (builder) => {
@@ -38,5 +41,6 @@ const dashboardSlice = createSlice({
   },
 });
 
-export const { setFilterDateDashboard } = dashboardSlice.actions;
+export const { setFilterDateDashboard, setSettingsOpen } =
+  dashboardSlice.actions;
 export default dashboardSlice.reducer;

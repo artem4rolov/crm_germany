@@ -1,7 +1,6 @@
 import React from "react";
 import { Container, Table } from "react-bootstrap";
 
-import SettingsImage from "../../assets/icon_setting.svg";
 import SearchImage from "../../assets/icon_search.svg";
 import styled from "styled-components";
 import { useState } from "react";
@@ -13,6 +12,7 @@ import CalendarComponent from "./CalendarComponent/CalendarComponent";
 import UploadDownload from "./UploadDownload/UploadDownload";
 import DoubleCalendarComponent from "./DoubleCalendarComponent/DoubleCalendarComponent";
 import CheckBoxFilters from "./CheckBoxFilters/CheckBoxFilters";
+import SettingsDashboard from "./SettingsDashboard/SettingsDashboard";
 
 const Styles = styled.div`
   tbody,
@@ -123,26 +123,6 @@ const Styles = styled.div`
     }
   }
 
-  .sidebar-settings {
-    width: 40px;
-    height: 40px;
-    border: 1px solid #bebebe;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 4px;
-    padding: 8px;
-    cursor: pointer;
-
-    &:hover {
-      border: 1px solid #354a5f;
-    }
-
-    &:actvie {
-      border: 1px solid #351a50;
-    }
-  }
-
   .sidebar-filters {
     display: flex;
     align-items: center;
@@ -231,11 +211,7 @@ const SideBar = (props) => {
               )}
 
               {/* если переданы настройки - рендерим их */}
-              {props.settings && (
-                <div className="sidebar-settings">
-                  <img src={SettingsImage} alt="" />
-                </div>
-              )}
+              {props.settings && <SettingsDashboard />}
 
               {/* если переданы фильтры (чекбоксы) - рендерим их */}
               {props.filters && <CheckBoxFilters {...props} />}
